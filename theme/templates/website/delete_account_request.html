@@ -1,0 +1,265 @@
+{% extends 'website/base.html' %}
+{% block title %}
+  Delete Account Request | TopGrade Innovation
+{% endblock %}
+
+{% block content %}
+  <style>
+    @keyframes scroll-text {
+      0% {
+        transform: translateX(0);
+      }
+    
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    
+    .animate-scroll-text {
+      animation: scroll-text 30s linear infinite;
+    }
+    
+    /* Faster on mobile */
+    @media (max-width: 768px) {
+      .animate-scroll-text {
+        animation: scroll-text 15s linear infinite;
+        /* increase speed */
+      }
+    }
+    
+    .hero-background-enhanced {
+      background-color: #2c1e12;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,5 A95,95 0 1,1 99.9,5 Z'/%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,25 A75,75 0 1,1 99.9,25 Z'/%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,45 A55,55 0 1,1 99.9,45 Z'/%3e%3c/svg%3e"), linear-gradient(160deg, #4d2c1a 0%, #2c1e12 50%, #1a120a 100%);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 600px, 100% 100%;
+    }
+  </style>
+  <main class="bg-gray-50 min-h-screen">
+    <!-- HERO SECTION -->
+    <section class="hero-background-enhanced py-20 md:py-24">
+      <div class="container mx-auto px-4 text-center text-white">
+        <h1 class="text-5xl md:text-6xl font-extrabold">Delete Account Request</h1>
+        <p class="mt-4 text-lg text-white/80 max-w-2xl mx-auto">Submit a request to delete your TopGrade account and associated data</p>
+        <div class="flex items-center justify-center gap-2 text-blue-200">
+          <span>TopGrade Innovation</span>
+          <span>•</span>
+          <span>Secure & Confidential</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Delete Account Request Form -->
+    <section class="py-16">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+          <!-- Information Box -->
+          <div class="bg-orange-50 border-l-4 border-[#ef7d00] p-6 mb-8 rounded-r-lg">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-[#ef7d00]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Important Information</h3>
+                <ul class="list-disc list-inside text-gray-700 space-y-1 text-sm">
+                  <li>Account deletion requests are processed within 7-10 business days</li>
+                  <li>Once deleted, your account and data cannot be recovered</li>
+                  <li>You will receive a confirmation email once the request is processed</li>
+                  <li>Provide the email or phone number associated with your account</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Title -->
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Request Account Deletion</h2>
+            <p class="text-gray-600">Please provide your account information below. We'll process your request as soon as possible.</p>
+          </div>
+
+          <!-- Delete Account Form -->
+          <form id="deleteAccountForm" class="space-y-6">
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                Email Address <span class="text-gray-500">(Optional if phone provided)</span>
+              </label>
+              <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ef7d00] focus:border-transparent transition-colors" placeholder="your.email@example.com">
+            </div>
+
+            <div class="text-center text-gray-500 font-medium">- OR -</div>
+
+            <div>
+              <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-2">
+                Phone Number <span class="text-gray-500">(Optional if email provided)</span>
+              </label>
+              <input type="tel" id="phone_number" name="phone_number" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ef7d00] focus:border-transparent transition-colors" placeholder="+91 1234567890">
+            </div>
+
+            <div>
+              <label for="reason" class="block text-sm font-medium text-gray-700 mb-2">
+                Reason for Deletion <span class="text-gray-500">(Optional)</span>
+              </label>
+              <textarea id="reason" name="reason" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ef7d00] focus:border-transparent transition-colors resize-none" placeholder="Please share why you want to delete your account (optional)"></textarea>
+            </div>
+
+            <!-- Success/Error Messages -->
+            <div id="messageContainer" class="hidden">
+              <div id="successMessage" class="hidden bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-green-800" id="successText"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="errorMessage" class="hidden bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-red-800" id="errorText"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-4">
+              <button type="submit" id="submitButton" class="w-full bg-gradient-to-r from-[#d27306] to-[#ef7d00] text-white font-bold py-4 px-6 rounded-lg hover:from-[#ef7d00] hover:to-[#d27306] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                <span id="buttonText">Submit Deletion Request</span>
+                <span id="buttonLoading" class="hidden">
+                  <svg class="animate-spin h-5 w-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Additional Info -->
+          <div class="mt-8 pt-6 border-t border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-900 mb-3">Need Help?</h4>
+            <p class="text-gray-600 mb-3">If you have questions about account deletion or data privacy, please contact our support team:</p>
+            <div class="space-y-2">
+              <p class="text-gray-700">
+                📧 Email: <a href="mailto:support@topgradeinnovations.com" class="text-[#ef7d00] hover:underline font-medium">support@topgradeinnovations.com</a>
+              </p>
+              <p class="text-gray-700">
+                📞 Phone: <a href="tel:+918904465305" class="text-[#ef7d00] hover:underline font-medium">+91 89044 65305</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Links -->
+    <section class="bg-gradient-to-r from-[#d27306] to-[#4f2c0e] py-16">
+      <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h3 class="text-3xl font-bold text-white mb-4">Related Information</h3>
+        <p class="text-xl text-orange-100 mb-8">Learn more about how we handle your data</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="{% url 'privacy' %}" class="bg-white text-[#ef7d00] font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors">Privacy Policy</a>
+          <a href="{% url 'terms' %}" class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-[#ef7d00] transition-colors">Terms & Conditions</a>
+          <a href="{% url 'contact' %}" class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-[#ef7d00] transition-colors">Contact Us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('deleteAccountForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitButton = document.getElementById('submitButton');
+      const buttonText = document.getElementById('buttonText');
+      const buttonLoading = document.getElementById('buttonLoading');
+      const messageContainer = document.getElementById('messageContainer');
+      const successMessage = document.getElementById('successMessage');
+      const errorMessage = document.getElementById('errorMessage');
+      const successText = document.getElementById('successText');
+      const errorText = document.getElementById('errorText');
+      
+      // Get form data
+      const email = document.getElementById('email').value.trim();
+      const phone_number = document.getElementById('phone_number').value.trim();
+      const reason = document.getElementById('reason').value.trim();
+      
+      // Validate input
+      if (!email && !phone_number) {
+        messageContainer.classList.remove('hidden');
+        errorMessage.classList.remove('hidden');
+        successMessage.classList.add('hidden');
+        errorText.textContent = 'Please provide either an email address or phone number.';
+        return;
+      }
+      
+      // Show loading state
+      submitButton.disabled = true;
+      buttonText.classList.add('hidden');
+      buttonLoading.classList.remove('hidden');
+      messageContainer.classList.add('hidden');
+      
+      try {
+        // Get CSRF token
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+                          document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1];
+        
+        const response = await fetch('{% url "delete_account_request" %}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+          },
+          body: JSON.stringify({
+            email: email,
+            phone_number: phone_number,
+            reason: reason
+          })
+        });
+        
+        const data = await response.json();
+        
+        // Show message
+        messageContainer.classList.remove('hidden');
+        
+        if (data.success) {
+          successMessage.classList.remove('hidden');
+          errorMessage.classList.add('hidden');
+          successText.textContent = data.message;
+          
+          // Clear form
+          document.getElementById('deleteAccountForm').reset();
+          
+          // Scroll to message
+          messageContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          errorMessage.classList.remove('hidden');
+          successMessage.classList.add('hidden');
+          errorText.textContent = data.message;
+        }
+      } catch (error) {
+        messageContainer.classList.remove('hidden');
+        errorMessage.classList.remove('hidden');
+        successMessage.classList.add('hidden');
+        errorText.textContent = 'An error occurred while submitting your request. Please try again.';
+      } finally {
+        // Reset button state
+        submitButton.disabled = false;
+        buttonText.classList.remove('hidden');
+        buttonLoading.classList.add('hidden');
+      }
+    });
+  </script>
+{% endblock %}

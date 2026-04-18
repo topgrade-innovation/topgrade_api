@@ -1,0 +1,1056 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block title %}Program Enquiries{% endblock %}
+
+{% block content %}
+
+    <!-- Start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Program Enquiries</h4>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Program Enquiries</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End page title -->
+
+    <!-- Statistics Cards -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Enquiries</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div>
+                            <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ stats.total }}</h4>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span class="avatar-title bg-soft-success rounded fs-3">
+                                <i class="bx bx-user-plus"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">New Enquiries</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div>
+                            <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ stats.new }}</h4>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span class="avatar-title bg-soft-warning rounded fs-3">
+                                <i class="bx bx-time"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Needs Follow-up</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div>
+                            <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ stats.needs_follow_up }}</h4>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span class="avatar-title bg-soft-danger rounded fs-3">
+                                <i class="bx bx-bell"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-animate">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 overflow-hidden">
+                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Enrolled</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div>
+                            <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ stats.enrolled }}</h4>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span class="avatar-title bg-soft-success rounded fs-3">
+                                <i class="bx bx-check-circle"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-sm">
+                            <div>
+                                <h5 class="card-title mb-0">Enquiry Management</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Success/Error Messages -->
+                    <div class="mb-2" id="message-container"></div>
+
+                    <!-- Filters Form -->
+                    <form method="GET" class="row g-3 mb-4" style="margin-bottom: 36px !important" id="filter-form">
+                        <div class="col-sm-6 col-xl-3">
+                            <div class="search-box">
+                                <input type="text" name="search" id="search-input" class="form-control search" 
+                                        placeholder="Search enquiries..." value="{{ current_filters.search }}">
+                                <i class="ri-search-line search-icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-xl-2">
+                            <select class="form-select auto-submit-filter" name="status" id="status-filter">
+                                <option value="">All Status</option>
+                                {% for value, label in status_choices %}
+                                    <option value="{{ value }}" {% if current_filters.status == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6 col-xl-2">
+                            <select class="form-select auto-submit-filter" name="program" id="program-filter">
+                                <option value="">All Programs</option>
+                                {% for program in programs %}
+                                    <option value="{{ program.id }}" {% if current_filters.program == program.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ program.title }} - {{ program.subtitle }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6 col-xl-2">
+                            <select class="form-select auto-submit-filter" name="assigned" id="assigned-filter">
+                                <option value="">All Assignments</option>
+                                <option value="unassigned" {% if current_filters.assigned == "unassigned" %}selected{% endif %}>
+                                    Unassigned
+                                </option>
+                                {% for staff in staff_members %}
+                                    <option value="{{ staff.id }}" {% if current_filters.assigned == staff.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ staff.fullname|default:staff.email }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6 col-xl-3">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ri-search-line align-bottom"></i> Filter
+                                </button>
+                                <a href="{% url 'dashboard:program_enquiries' %}" class="btn btn-light">
+                                    <i class="ri-refresh-line align-bottom"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Enquiries Table -->
+                    <div class="table-responsive table-card">
+                        <table class="table table-nowrap table-striped-columns mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">
+                                        <input type="checkbox" class="form-check-input" id="select-all">
+                                    </th>
+                                    <th scope="col">Student</th>
+                                    <th scope="col">Contact</th>
+                                    <th scope="col">Program</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Assigned To</th>
+                                    <th scope="col">Days Since</th>
+                                    <th scope="col">Follow-up</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for enquiry in page_obj %}
+                                <tr data-enquiry-id="{{ enquiry.id }}">
+                                    <td>
+                                        <input type="checkbox" class="form-check-input enquiry-checkbox" 
+                                               data-enquiry-id="{{ enquiry.id }}"
+                                               data-email="{{ enquiry.email }}"
+                                               data-program-id="{{ enquiry.program.id }}"
+                                               {% if enquiry.follow_up_status == 'enrolled' %}disabled{% endif %}>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div>
+                                                <h6 class="mb-0">{{ enquiry.first_name }}</h6>
+                                                <small class="text-muted">{{ enquiry.college_name|truncatechars:30 }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <p class="mb-1">{{ enquiry.email }}</p>
+                                            <small class="text-muted">{{ enquiry.phone_number }}</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="fw-medium">{{ enquiry.program.title }}</span>
+                                        <br>
+                                        <small class="text-muted">{{ enquiry.program.subtitle }}</small>
+                                    </td>
+                                    <td>
+                                        <select class="form-select form-select-sm status-select" 
+                                                data-enquiry-id="{{ enquiry.id }}"
+                                                style="width: auto;">
+                                            {% for value, label in status_choices %}
+                                                <option value="{{ value }}" {% if enquiry.follow_up_status == value %}selected{% endif %}>
+                                                    {{ label }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-select form-select-sm assign-select" 
+                                                data-enquiry-id="{{ enquiry.id }}"
+                                                style="width: auto;">
+                                            <option value="">Unassigned</option>
+                                            {% for staff in staff_members %}
+                                                <option value="{{ staff.id }}" 
+                                                        {% if enquiry.assigned_to and enquiry.assigned_to.id == staff.id %}selected{% endif %}>
+                                                    {{ staff.fullname|default:staff.email|truncatechars:15 }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-soft-info text-info">
+                                            {% if enquiry.days_since_enquiry == 0 %}
+                                                Today
+                                            {% elif enquiry.days_since_enquiry == 1 %}
+                                                1 day
+                                            {% else %}
+                                                {{ enquiry.days_since_enquiry }} days
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if enquiry.needs_follow_up %}
+                                            <span class="badge bg-soft-danger text-danger">
+                                                <i class="ri-alarm-warning-line align-bottom"></i> Needed
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-soft-success text-success">
+                                                <i class="ri-check-line align-bottom"></i> Up to date
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            {% if enquiry.follow_up_status == 'enrolled' %}
+                                                <span class="badge bg-success-subtle text-success fs-12">
+                                                    <i class="ri-checkbox-circle-line align-bottom"></i> Assigned
+                                                </span>
+                                                <button type="button" class="btn btn-sm btn-soft-warning unassign-program-btn" 
+                                                        data-enquiry-id="{{ enquiry.id }}"
+                                                        data-student-name="{{ enquiry.first_name }}"
+                                                        data-program-name="{{ enquiry.program.title }} - {{ enquiry.program.subtitle }}"
+                                                        title="Unassign Program">
+                                                    <i class="ri-close-circle-line"></i>
+                                                </button>
+                                            {% else %}
+                                                <button type="button" class="btn btn-sm btn-success assign-single-btn" 
+                                                        data-enquiry-id="{{ enquiry.id }}"
+                                                        data-email="{{ enquiry.email }}"
+                                                        data-program-id="{{ enquiry.program.id }}"
+                                                        data-program-name="{{ enquiry.program.title }} - {{ enquiry.program.subtitle }}">
+                                                    <i class="ri-user-add-line align-bottom"></i> Assign
+                                                </button>
+                                            {% endif %}
+                                            {% if enquiry.assigned_to %}
+                                                <button type="button" class="btn btn-sm btn-soft-info unassign-staff-btn" 
+                                                        data-enquiry-id="{{ enquiry.id }}"
+                                                        title="Unassign Staff">
+                                                    <i class="ri-user-unfollow-line"></i>
+                                                </button>
+                                            {% endif %}
+                                            <button type="button" class="btn btn-sm btn-soft-danger delete-enquiry-btn" 
+                                                    data-enquiry-id="{{ enquiry.id }}"
+                                                    data-student-name="{{ enquiry.first_name }}"
+                                                    title="Delete Enquiry">
+                                                <i class="ri-delete-bin-line"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="9" class="text-center py-4">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <i class="ri-inbox-line fs-1 text-muted mb-3"></i>
+                                            <h5 class="text-muted">No enquiries found</h5>
+                                            <p class="text-muted mb-0">Try adjusting your filters or search criteria</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Bulk Actions Bar -->
+                    <div class="d-flex justify-content-between align-items-center mt-3 p-3 bg-light rounded" id="bulk-actions-bar" style="display: none !important;">
+                        <div>
+                            <span id="selected-count">0</span> enquirie(s) selected
+                        </div>
+                        <div class="d-flex gap-2 align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="require-goldpass-bulk">
+                                <label class="form-check-label" for="require-goldpass-bulk">
+                                    Require Gold Pass
+                                </label>
+                            </div>
+                            <button type="button" class="btn btn-success" id="assign-selected-btn">
+                                <i class="ri-user-add-line align-bottom"></i> Assign Programs to Selected
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if page_obj.has_other_pages %}
+                    <div class="row g-0 align-items-center pb-4 pt-3">
+                        <div class="col-sm">
+                            <div class="text-muted">
+                                Showing <span class="fw-semibold">{{ page_obj.start_index }}</span> to 
+                                <span class="fw-semibold">{{ page_obj.end_index }}</span> of 
+                                <span class="fw-semibold">{{ page_obj.paginator.count }}</span> results
+                            </div>
+                        </div>
+                        <div class="col-sm-auto">
+                            <div class="pagination-wrap hstack gap-2">
+                                {% if page_obj.has_previous %}
+                                    <a class="page-item pagination-prev" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">
+                                        Previous
+                                    </a>
+                                {% endif %}
+                                
+                                {% for num in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == num %}
+                                        <span class="page-item active">{{ num }}</span>
+                                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                        <a class="page-item" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}">{{ num }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if page_obj.has_next %}
+                                    <a class="page-item pagination-next" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}">
+                                        Next
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Program Modal -->
+    <div class="modal fade" id="assignProgramModal" tabindex="-1" aria-labelledby="assignProgramModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignProgramModalLabel">Assign Program to Student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Student Email:</label>
+                        <p class="fw-semibold" id="modal-student-email"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Program:</label>
+                        <p class="fw-semibold" id="modal-program-name"></p>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="require-goldpass-single">
+                        <label class="form-check-label" for="require-goldpass-single">
+                            <strong>Require Gold Pass</strong>
+                            <br>
+                            <small class="text-muted">Check this if the student needs a Gold Pass to access this program</small>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" id="confirm-assign-btn">
+                        <i class="ri-user-add-line align-bottom"></i> Assign Program
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Search and filters only work when clicking the Filter button
+    // No auto-submit functionality - user must click "Filter" button to search
+    
+    // Function to show message
+    function showMessage(message, type = 'success') {
+        const messageContainer = document.getElementById('message-container');
+        const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+        
+        messageContainer.innerHTML = `
+            <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                <i class="ri-${type === 'success' ? 'check-circle' : 'error-warning'}-line me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+    }
+
+    // Variables for single assignment
+    let currentEnquiryId = null;
+    let currentEmail = null;
+    let currentProgramId = null;
+
+    // Handle checkbox selection
+    const selectAllCheckbox = document.getElementById('select-all');
+    const enquiryCheckboxes = document.querySelectorAll('.enquiry-checkbox');
+    const bulkActionsBar = document.getElementById('bulk-actions-bar');
+    const selectedCountSpan = document.getElementById('selected-count');
+
+    function updateBulkActionsBar() {
+        const checkedBoxes = document.querySelectorAll('.enquiry-checkbox:checked');
+        const count = checkedBoxes.length;
+        
+        if (count > 0) {
+            bulkActionsBar.style.display = 'flex';
+            selectedCountSpan.textContent = count;
+        } else {
+            bulkActionsBar.style.display = 'none';
+        }
+    }
+
+    // Select all functionality
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            enquiryCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            updateBulkActionsBar();
+        });
+    }
+
+    // Individual checkbox selection
+    enquiryCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateBulkActionsBar();
+            
+            // Update select all checkbox state
+            const allChecked = Array.from(enquiryCheckboxes).every(cb => cb.checked);
+            const someChecked = Array.from(enquiryCheckboxes).some(cb => cb.checked);
+            
+            if (selectAllCheckbox) {
+                selectAllCheckbox.checked = allChecked;
+                selectAllCheckbox.indeterminate = someChecked && !allChecked;
+            }
+        });
+    });
+
+    // Handle single assignment button
+    document.querySelectorAll('.assign-single-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            currentEnquiryId = this.dataset.enquiryId;
+            currentEmail = this.dataset.email;
+            currentProgramId = this.dataset.programId;
+            const programName = this.dataset.programName;
+            
+            document.getElementById('modal-student-email').textContent = currentEmail;
+            document.getElementById('modal-program-name').textContent = programName;
+            document.getElementById('require-goldpass-single').checked = false;
+            
+            const modal = new bootstrap.Modal(document.getElementById('assignProgramModal'));
+            modal.show();
+        });
+    });
+
+    // Handle confirm assign button in modal
+    document.getElementById('confirm-assign-btn')?.addEventListener('click', function() {
+        const requireGoldpass = document.getElementById('require-goldpass-single').checked;
+        
+        assignProgramToStudent(currentEnquiryId, currentEmail, currentProgramId, requireGoldpass);
+    });
+
+    // Handle bulk assignment
+    document.getElementById('assign-selected-btn')?.addEventListener('click', function() {
+        const checkedBoxes = document.querySelectorAll('.enquiry-checkbox:checked');
+        const requireGoldpass = document.getElementById('require-goldpass-bulk').checked;
+        
+        if (checkedBoxes.length === 0) {
+            showMessage('Please select at least one enquiry', 'error');
+            return;
+        }
+        
+        if (!confirm(`Assign programs to ${checkedBoxes.length} student(s)?${requireGoldpass ? ' (Gold Pass required)' : ''}`)) {
+            return;
+        }
+        
+        const assignments = Array.from(checkedBoxes).map(cb => ({
+            enquiry_id: cb.dataset.enquiryId,
+            email: cb.dataset.email,
+            program_id: cb.dataset.programId
+        }));
+        
+        assignBulkPrograms(assignments, requireGoldpass);
+    });
+
+    // Function to assign program to single student
+    function assignProgramToStudent(enquiryId, email, programId, requireGoldpass) {
+        const btn = document.getElementById('confirm-assign-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Assigning...';
+        
+        fetch('{% url "dashboard:assign_program_from_enquiry" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                enquiry_id: enquiryId,
+                email: email,
+                program_id: programId,
+                require_goldpass: requireGoldpass
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="ri-user-add-line align-bottom"></i> Assign Program';
+            
+            if (data.success) {
+                showMessage(data.message, 'success');
+                bootstrap.Modal.getInstance(document.getElementById('assignProgramModal')).hide();
+                
+                // Update the button to show "Assigned" badge with unassign and delete buttons
+                const row = document.querySelector(`tr[data-enquiry-id="${currentEnquiryId}"]`);
+                if (row) {
+                    const actionCell = row.querySelector('td:last-child .d-flex');
+                    if (actionCell) {
+                        // Get program name from the button that was clicked
+                        const programName = row.querySelector('.assign-single-btn')?.dataset.programName || '';
+                        const studentName = row.querySelector('h6')?.textContent || '';
+                        
+                        // Check if there's an unassign staff button to preserve it
+                        const hasStaffButton = row.querySelector('.unassign-staff-btn') !== null;
+                        
+                        actionCell.innerHTML = `
+                            <span class="badge bg-success-subtle text-success fs-12">
+                                <i class="ri-checkbox-circle-line align-bottom"></i> Assigned
+                            </span>
+                            <button type="button" class="btn btn-sm btn-soft-warning unassign-program-btn" 
+                                    data-enquiry-id="${currentEnquiryId}"
+                                    data-student-name="${studentName}"
+                                    data-program-name="${programName}"
+                                    title="Unassign Program">
+                                <i class="ri-close-circle-line"></i>
+                            </button>
+                            ${hasStaffButton ? `
+                            <button type="button" class="btn btn-sm btn-soft-info unassign-staff-btn" 
+                                    data-enquiry-id="${currentEnquiryId}"
+                                    title="Unassign Staff">
+                                <i class="ri-user-unfollow-line"></i>
+                            </button>
+                            ` : ''}
+                            <button type="button" class="btn btn-sm btn-soft-danger delete-enquiry-btn" 
+                                    data-enquiry-id="${currentEnquiryId}"
+                                    data-student-name="${studentName}"
+                                    title="Delete Enquiry">
+                                <i class="ri-delete-bin-line"></i>
+                            </button>
+                        `;
+                        
+                        // Re-attach event listeners to the new buttons
+                        attachUnassignProgramListeners();
+                        attachDeleteEnquiryListeners();
+                        if (hasStaffButton) {
+                            attachUnassignStaffListeners();
+                        }
+                    }
+                    
+                    // Disable and uncheck the checkbox
+                    const checkbox = row.querySelector('.enquiry-checkbox');
+                    if (checkbox) {
+                        checkbox.checked = false;
+                        checkbox.disabled = true;
+                    }
+                    
+                    // Update status dropdown to "enrolled"
+                    const statusSelect = row.querySelector('.status-select');
+                    if (statusSelect) {
+                        statusSelect.value = 'enrolled';
+                        statusSelect.querySelectorAll('option').forEach(opt => opt.removeAttribute('selected'));
+                        const enrolledOption = statusSelect.querySelector('option[value="enrolled"]');
+                        if (enrolledOption) {
+                            enrolledOption.setAttribute('selected', 'selected');
+                        }
+                    }
+                }
+            } else {
+                showMessage(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="ri-user-add-line align-bottom"></i> Assign Program';
+            showMessage('Error assigning program: ' + error.message, 'error');
+        });
+    }
+
+    // Function to assign programs in bulk
+    function assignBulkPrograms(assignments, requireGoldpass) {
+        const btn = document.getElementById('assign-selected-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Assigning...';
+        
+        fetch('{% url "dashboard:assign_programs_bulk" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                assignments: assignments,
+                require_goldpass: requireGoldpass
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="ri-user-add-line align-bottom"></i> Assign Programs to Selected';
+            
+            if (data.success) {
+                showMessage(data.message, 'success');
+                
+                // Update each assigned row
+                const checkedBoxes = document.querySelectorAll('.enquiry-checkbox:checked');
+                checkedBoxes.forEach(checkbox => {
+                    const enquiryId = checkbox.dataset.enquiryId;
+                    const row = document.querySelector(`tr[data-enquiry-id="${enquiryId}"]`);
+                    
+                    if (row) {
+                        // Update the action cell to show "Assigned" badge with buttons
+                        const actionCell = row.querySelector('td:last-child .d-flex');
+                        if (actionCell) {
+                            const studentName = row.querySelector('h6')?.textContent || '';
+                            const programName = row.querySelector('.assign-single-btn')?.dataset.programName || '';
+                            const hasStaffButton = row.querySelector('.unassign-staff-btn') !== null;
+                            
+                            actionCell.innerHTML = `
+                                <span class="badge bg-success-subtle text-success fs-12">
+                                    <i class="ri-checkbox-circle-line align-bottom"></i> Assigned
+                                </span>
+                                <button type="button" class="btn btn-sm btn-soft-warning unassign-program-btn" 
+                                        data-enquiry-id="${enquiryId}"
+                                        data-student-name="${studentName}"
+                                        data-program-name="${programName}"
+                                        title="Unassign Program">
+                                    <i class="ri-close-circle-line"></i>
+                                </button>
+                                ${hasStaffButton ? `
+                                <button type="button" class="btn btn-sm btn-soft-info unassign-staff-btn" 
+                                        data-enquiry-id="${enquiryId}"
+                                        title="Unassign Staff">
+                                    <i class="ri-user-unfollow-line"></i>
+                                </button>
+                                ` : ''}
+                                <button type="button" class="btn btn-sm btn-soft-danger delete-enquiry-btn" 
+                                        data-enquiry-id="${enquiryId}"
+                                        data-student-name="${studentName}"
+                                        title="Delete Enquiry">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
+                            `;
+                        }
+                        
+                        // Disable the checkbox
+                        checkbox.disabled = true;
+                        
+                        // Update status dropdown to "enrolled"
+                        const statusSelect = row.querySelector('.status-select');
+                        if (statusSelect) {
+                            statusSelect.value = 'enrolled';
+                            statusSelect.querySelectorAll('option').forEach(opt => opt.removeAttribute('selected'));
+                            const enrolledOption = statusSelect.querySelector('option[value="enrolled"]');
+                            if (enrolledOption) {
+                                enrolledOption.setAttribute('selected', 'selected');
+                            }
+                        }
+                    }
+                });
+                
+                // Re-attach event listeners to all new buttons
+                attachUnassignProgramListeners();
+                attachDeleteEnquiryListeners();
+                attachUnassignStaffListeners();
+                
+                // Uncheck all checkboxes
+                document.querySelectorAll('.enquiry-checkbox').forEach(cb => cb.checked = false);
+                if (selectAllCheckbox) selectAllCheckbox.checked = false;
+                updateBulkActionsBar();
+            } else {
+                showMessage(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="ri-user-add-line align-bottom"></i> Assign Programs to Selected';
+            showMessage('Error assigning programs: ' + error.message, 'error');
+        });
+    }
+
+    // Handle status updates
+    document.querySelectorAll('.status-select').forEach(select => {
+        select.addEventListener('change', function() {
+            const enquiryId = this.dataset.enquiryId;
+            const newStatus = this.value;
+            const originalValue = this.querySelector('option[selected]')?.value || '';
+            
+            // Disable select while updating
+            this.disabled = true;
+            
+            fetch('{% url "dashboard:update_enquiry_status" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    enquiry_id: enquiryId,
+                    status: newStatus
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                this.disabled = false;
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    // Update the selected attribute
+                    this.querySelectorAll('option').forEach(opt => opt.removeAttribute('selected'));
+                    this.querySelector(`option[value="${newStatus}"]`).setAttribute('selected', 'selected');
+                } else {
+                    showMessage(data.message, 'error');
+                    // Revert to original value
+                    this.value = originalValue;
+                }
+            })
+            .catch(error => {
+                this.disabled = false;
+                showMessage('Error updating status: ' + error.message, 'error');
+                this.value = originalValue;
+            });
+        });
+    });
+
+    // Handle assignment updates
+    document.querySelectorAll('.assign-select').forEach(select => {
+        select.addEventListener('change', function() {
+            const enquiryId = this.dataset.enquiryId;
+            const staffId = this.value;
+            const originalValue = this.querySelector('option[selected]')?.value || '';
+            
+            // Disable select while updating
+            this.disabled = true;
+            
+            fetch('{% url "dashboard:assign_enquiry" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    enquiry_id: enquiryId,
+                    staff_id: staffId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                this.disabled = false;
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    // Update the selected attribute
+                    this.querySelectorAll('option').forEach(opt => opt.removeAttribute('selected'));
+                    if (staffId) {
+                        this.querySelector(`option[value="${staffId}"]`).setAttribute('selected', 'selected');
+                    }
+                } else {
+                    showMessage(data.message, 'error');
+                    // Revert to original value
+                    this.value = originalValue;
+                }
+            })
+            .catch(error => {
+                this.disabled = false;
+                showMessage('Error updating assignment: ' + error.message, 'error');
+                this.value = originalValue;
+            });
+        });
+    });
+
+    // Function to attach unassign staff listeners
+    function attachUnassignStaffListeners() {
+        document.querySelectorAll('.unassign-staff-btn').forEach(btn => {
+            // Remove existing listener if any
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            newBtn.addEventListener('click', function() {
+                const enquiryId = this.dataset.enquiryId;
+                const btnElement = this;
+                
+                Swal.fire({
+                    title: 'Unassign Staff?',
+                    text: 'Are you sure you want to unassign the staff member from this enquiry?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, unassign',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        btnElement.disabled = true;
+                        
+                        fetch('{% url "dashboard:unassign_enquiry" %}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify({
+                                enquiry_id: enquiryId
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: data.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: data.message
+                                });
+                                btnElement.disabled = false;
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Error unassigning staff: ' + error.message
+                            });
+                            btnElement.disabled = false;
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+    // Handle unassign staff button
+    attachUnassignStaffListeners();
+
+    // Function to attach unassign program listeners
+    function attachUnassignProgramListeners() {
+        document.querySelectorAll('.unassign-program-btn').forEach(btn => {
+            // Remove existing listener if any
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            newBtn.addEventListener('click', function() {
+                const enquiryId = this.dataset.enquiryId;
+                const studentName = this.dataset.studentName;
+                const programName = this.dataset.programName;
+                const btnElement = this;
+                
+                Swal.fire({
+                    title: 'Unassign Program?',
+                    html: `Are you sure you want to unassign the program<br><strong>"${programName}"</strong><br>from <strong>${studentName}</strong>?<br><br><span class="text-danger">This will remove their access to the program.</span>`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#f06548',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, unassign',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        btnElement.disabled = true;
+                        btnElement.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+                        
+                        fetch('{% url "dashboard:unassign_program_from_student" %}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify({
+                                enquiry_id: enquiryId
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Unassigned!',
+                                    text: data.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: data.message
+                                });
+                                btnElement.disabled = false;
+                                btnElement.innerHTML = '<i class="ri-close-circle-line"></i>';
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Error unassigning program: ' + error.message
+                            });
+                            btnElement.disabled = false;
+                            btnElement.innerHTML = '<i class="ri-close-circle-line"></i>';
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+    // Handle unassign program button
+    attachUnassignProgramListeners();
+
+    // Function to attach delete enquiry listeners
+    function attachDeleteEnquiryListeners() {
+        document.querySelectorAll('.delete-enquiry-btn').forEach(btn => {
+            // Remove existing listener if any
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            newBtn.addEventListener('click', function() {
+                const enquiryId = this.dataset.enquiryId;
+                const studentName = this.dataset.studentName;
+                
+                Swal.fire({
+                    title: 'Delete Enquiry?',
+                    html: `Are you sure you want to delete the enquiry from <strong>${studentName}</strong>?<br><br><span class="text-danger"><i class="ri-alert-line"></i> This action cannot be undone.<br>If a program is assigned, it will be automatically unassigned.</span>`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#f06548',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete it',
+                    cancelButtonText: 'Cancel',
+                    showLoaderOnConfirm: true,
+                    preConfirm: () => {
+                        return fetch('{% url "dashboard:delete_enquiry" %}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify({
+                                enquiry_id: enquiryId
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data.success) {
+                                throw new Error(data.message);
+                            }
+                            return data;
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(`Request failed: ${error}`);
+                        });
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: result.value.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+    // Handle delete enquiry button
+    attachDeleteEnquiryListeners();
+});
+</script>
+{% endblock %}

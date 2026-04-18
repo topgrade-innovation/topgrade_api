@@ -1,0 +1,174 @@
+{% extends 'website/base.html' %}
+{% block title %}
+  Privacy Policy | TopGrade Innovation
+{% endblock %}
+
+{% block content %}
+  <style>
+    @keyframes scroll-text {
+      0% {
+        transform: translateX(0);
+      }
+    
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    
+    .animate-scroll-text {
+      animation: scroll-text 30s linear infinite;
+    }
+    
+    /* Faster on mobile */
+    @media (max-width: 768px) {
+      .animate-scroll-text {
+        animation: scroll-text 15s linear infinite;
+        /* increase speed */
+      }
+    }
+    
+    .hero-background-enhanced {
+      background-color: #2c1e12;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,5 A95,95 0 1,1 99.9,5 Z'/%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,25 A75,75 0 1,1 99.9,25 Z'/%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,45 A55,55 0 1,1 99.9,45 Z'/%3e%3c/svg%3e"), linear-gradient(160deg, #4d2c15 0%, #2c1e12 100%);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 600px, 100% 100%;
+    }
+  </style>
+  <main class="bg-gray-50 min-h-screen">
+    <!-- HERO SECTION -->
+    <section class="hero-background-enhanced py-20 md:py-24">
+      <div class="container mx-auto px-4 text-center text-white">
+        <h1 class="text-5xl md:text-6xl font-extrabold">Privacy Policy</h1>
+        <p class="mt-4 text-lg text-white/80 max-w-2xl mx-auto">Your privacy and data protection are our top priorities</p>
+        <div class="flex items-center justify-center gap-2 text-blue-200">
+          <span>TopGrade Innovation</span>
+          <span>•</span>
+          <span>Last updated: January 2025</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Policy Content -->
+    <section class="py-16">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+          <!-- Main Title -->
+          <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">PRIVACY POLICY</h2>
+            <p class="text-xl text-[#ef7d00] font-semibold">TopGrade Learn Today, Lead Tomorrow</p>
+            <p class="text-gray-600 mt-4">At Top Grade Innovation, accessible via https://www.topgradeinnovation.com, protecting the privacy of our learners and visitors is one of our top priorities. This Privacy Policy explains the types of information we collect, how we record and manage that information, and the ways in which we use it to provide and improve our services.</p>
+          </div>
+
+          <!-- Privacy Policy Sections -->
+          <div class="space-y-8">
+            <!-- Section 1 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">1. Information We Collect</h3>
+              <p class="text-gray-700 leading-relaxed mb-3">We collect information that you voluntarily provide during registration, program enrollment, or communication with our support team. This may include your name, email address, phone number, educational background, and payment details.</p>
+              <p class="text-gray-700 leading-relaxed">Additionally, when you access our website or app, we may collect technical data such as your IP address, device information, browser type, and cookies to improve performance and user experience.</p>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">2. How We Use Your Information</h3>
+              <p class="text-gray-700 leading-relaxed mb-3">The information we collect is used primarily to deliver and manage your courses, process payments, provide technical support, and communicate updates or offers related to our programs.</p>
+              <p class="text-gray-700 leading-relaxed">We may also use your data for analytics, quality assurance, and compliance with legal or regulatory obligations. Top Grade Innovation will never sell, rent, or trade your personal information to third parties for marketing purposes.</p>
+            </div>
+
+            <!-- Section 3 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">3. Sharing of Information</h3>
+              <p class="text-gray-700 leading-relaxed mb-3">We may share limited information with trusted service providers, including payment gateways, hosting partners, or placement partners, who assist in operating our Platform or providing course-related services.</p>
+              <p class="text-gray-700 leading-relaxed">All such third parties are contractually obligated to maintain the confidentiality and security of your data in accordance with applicable laws.</p>
+            </div>
+
+            <!-- Section 4 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">4. Cookies and Tracking Technologies</h3>
+              <p class="text-gray-700 leading-relaxed mb-3">Our website uses cookies and similar tracking technologies to enhance your browsing experience and analyze platform performance.</p>
+              <p class="text-gray-700 leading-relaxed">You can choose to disable cookies through your browser settings, though some features may not function properly as a result.</p>
+            </div>
+
+            <!-- Section 5 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">5. Data Security</h3>
+              <p class="text-gray-700 leading-relaxed mb-3">We implement strong administrative, technical, and physical safeguards to protect your personal data against unauthorized access, disclosure, or alteration.</p>
+              <p class="text-gray-700 leading-relaxed mb-3">These measures include encrypted communication, secure data storage, and restricted employee access.</p>
+              <p class="text-gray-700 leading-relaxed">While we strive to maintain the highest standards of security, we cannot guarantee absolute protection against all threats or breaches.</p>
+            </div>
+
+            <!-- Section 6 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">6. Data Retention</h3>
+              <p class="text-gray-700 leading-relaxed mb-3">We retain your personal data only for as long as necessary to fulfill the purposes for which it was collected or as required by applicable law.</p>
+              <p class="text-gray-700 leading-relaxed">Once the retention period expires, your data will be securely deleted or anonymized.</p>
+            </div>
+
+            <!-- Section 7 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">7. Your Rights</h3>
+              <p class="text-gray-700 leading-relaxed mb-3">You have the right to access, correct, or delete your personal data, withdraw consent, or object to certain processing activities.</p>
+              <p class="text-gray-700 leading-relaxed mb-3">
+                Requests may be sent to
+                <a href="mailto:support@topgradeinnovations.com" class="text-[#ef7d00] hover:underline">support@topgradeinnovations.com</a>, and we will act upon them in accordance with the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011.
+              </p>
+              <div class="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
+                <p class="text-gray-700 leading-relaxed mb-2">
+                  <strong>Delete Your Account:</strong> If you wish to permanently delete your TopGrade account and associated data, you can submit a request through our secure deletion request form.
+                </p>
+                <a href="{% url 'delete_account_request' %}" class="inline-flex items-center text-[#ef7d00] hover:text-[#d27306] font-semibold">
+                  Submit Account Deletion Request
+                  <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Section 8 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">8. Children's Privacy</h3>
+              <p class="text-gray-700 leading-relaxed mb-3">Our Platform is intended for users aged eighteen (18) years or older.</p>
+              <p class="text-gray-700 leading-relaxed">If we become aware that information from minors has been inadvertently collected, we will promptly remove such data from our systems.</p>
+            </div>
+
+            <!-- Section 9 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">9. Policy Updates</h3>
+              <p class="text-gray-700 leading-relaxed mb-3">Top Grade Innovation may update this Privacy Policy periodically to reflect changes in our practices or applicable laws.</p>
+              <p class="text-gray-700 leading-relaxed mb-3">The revised version will be posted on our website with an updated effective date.</p>
+              <p class="text-gray-700 leading-relaxed">Continued use of our Platform after any modification constitutes acceptance of the updated Policy.</p>
+            </div>
+
+            <!-- Section 10 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">10. Contact Information</h3>
+              <p class="text-gray-700 leading-relaxed mb-4">For any questions, concerns, or requests related to this Privacy Policy, please contact us:</p>
+              <div class="space-y-2">
+                <p class="text-gray-700">
+                  📧 Email: <a href="mailto:support@topgradeinnovations.com" class="text-[#ef7d00] hover:underline">support@topgradeinnovations.com</a>
+                </p>
+                <p class="text-gray-700">
+                  📞 Phone: <a href="tel:+918904465305" class="text-[#ef7d00] hover:underline">+91 89044 65305</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="bg-gradient-to-r from-[#d27306] to-[#4f2c0e] py-16">
+      <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h3 class="text-3xl font-bold text-white mb-4">Your Privacy Matters to Us</h3>
+        <p class="text-xl text-orange-100 mb-8">Join thousands of students who trust TopGrade Innovation with their learning journey</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="{% url 'program_list' %}" class="bg-white text-[#ef7d00] font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors">Browse Programs</a>
+          <a href="{% url 'contact' %}" class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-[#ef7d00] transition-colors">Contact Us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+{% endblock %}

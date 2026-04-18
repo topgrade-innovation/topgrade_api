@@ -1,0 +1,389 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+      {% block title %}
+        TopGrade
+      {% endblock %}
+    </title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="icon" type="image/png" href="{% static 'assets/website/images/favicon.png' %}" />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+
+    {% tailwind_css %}
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      body {
+        font-family: 'Lato';
+      }
+      
+      /* Ensure the dropdown menu and submenu are hidden by default and shown on hover using Tailwind's 'group' utilities */
+      .dropdown-menu {
+        display: none;
+      }
+      
+      .dropdown-container:hover .dropdown-menu {
+        display: flex;
+      }
+      
+      .category-submenu {
+        display: none;
+      }
+      
+      .category-item:hover .category-submenu {
+        display: block;
+      }
+      
+      /* Mobile submenu collapse/expand */
+      .mobile-submenu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+      }
+      
+      details[open] > .mobile-submenu {
+        max-height: 1000px;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+      }
+      
+      /* Chevron rotation */
+      .summary-arrow i {
+        transition: transform 0.3s ease-in-out;
+        display: inline-block;
+      }
+      
+      .footer {
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-100">
+    <header class="sticky top-0 z-50 shadow-md">
+      <nav class="bg-white text-gray-800 p-4 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+          <div class="flex items-center space-x-16">
+            <div class="flex items-center">
+              <a href="{% url 'index' %}"><img src="{% static 'assets/website/images/logo.png' %}" alt="Logo" class="h-12" /></a>
+            </div>
+
+            <ul class="hidden md:flex items-center space-x-8">
+              {% if request.resolver_match.url_name != 'index' %}
+                <li class="py-4">
+                  <a href="{% url 'index' %}" class="flex items-center hover:text-[#f07c00] transition duration-300">Home</a>
+                </li>
+              {% endif %}
+              <li class="dropdown-container relative py-4 group">
+                <a href="#" class="flex items-center hover:text-[#f07c00] transition duration-300">
+                  Programs<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </a>
+                <div class="dropdown-menu absolute top-full left-0 bg-white text-black rounded-lg shadow-lg hidden group-hover:flex z-50">
+                  <ul class="w-60 p-2">
+                    {% for category in categories %}
+                      <li class="group relative category-item">
+                        <a href="{% url 'program_list' %}?category={{ category.id }}" class="flex justify-between text-black bg-white items-center p-2 rounded hover:bg-orange-100 hover:text-orange-800">
+                          <div class="flex items-center">
+                            {% if category.icon %}
+                              <i class="{{ category.icon }} mr-3 text-gray-500"></i>
+                            {% else %}
+                              <i class="fas fa-chevron-right mr-3 text-gray-500"></i>
+                            {% endif %}
+                            <span>{{ category.name }}</span>
+                          </div>
+                          {% if category.programs.all %}
+                            <i class="fas fa-chevron-right ml-auto text-xs text-gray-500"></i>
+                          {% endif %}
+                        </a>
+                        {% if category.programs.all %}
+                          <ul class="absolute left-full top-0 w-60 bg-white text-black rounded-r-lg shadow-lg hidden category-submenu p-2">
+                            {% for program in category.programs.all %}
+                              <li>
+                                <a href="{% url 'program_detail' program.id %}" class="flex items-center p-2 rounded hover:bg-gray-100">
+                                  {% if program.icon %}
+                                    <i class="{{ program.icon }} w-6 text-center mr-2 text-gray-500"></i>
+                                  {% else %}
+                                    <i class="fas fa-graduation-cap w-6 text-center mr-2 text-gray-500"></i>
+                                  {% endif %}
+                                  {{ program.subtitle }}
+                                </a>
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        {% endif %}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </li>
+              <li class="dropdown-container relative py-4 group">
+                <a href="#" class="flex items-center hover:text-[#f07c00] transition duration-300">
+                  Advanced Programs<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </a>
+                <div class="dropdown-menu absolute top-full left-0 bg-white text-black rounded-lg shadow-lg hidden group-hover:flex z-50">
+                  <ul class="w-60 p-2">
+                    {% for advance_program in advance_programs %}
+                      <li>
+                        <a href="{% url 'program_detail' advance_program.id %}" class="flex items-center p-2 rounded transition duration-200 hover:bg-orange-100 hover:text-orange-800">
+                          {% if advance_program.icon %}
+                            <i class="{{ advance_program.icon }} w-6 text-center mr-2 text-gray-500"></i>
+                          {% else %}
+                            <i class="fas fa-star w-6 text-center mr-2 text-gray-500"></i>
+                          {% endif %}
+                          {{ advance_program.subtitle }}
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </li>
+              <li class="py-4">
+                <a href="{% url 'certificate_check' %}" class="hover:text-[#f07c00] transition duration-300 {% if request.path == '/certificate-verification/' %}text-[#f07c00]{% endif %}">Certificate</a>
+              </li>
+              <li class="py-4">
+                <a href="{% url 'blog' %}" class="hover:text-[#f07c00] transition duration-300 {% if request.path == '/blog/' %}text-[#f07c00]{% endif %}">Blogs</a>
+              </li>
+              <li class="py-4">
+                <a href="{% url 'about' %}" class="flex items-center hover:text-[#f07c00] transition duration-300 {% if request.path == '/about/' %}text-[#f07c00]{% endif %}">About</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="hidden md:flex items-center space-x-4">
+            <button onclick="window.location.href = '{% url 'contact' %}';" class="bg-transparent border border-gray-300 hover:border-[#f07c00] text-gray-800 hover:text-[#f07c00] font-bold py-2 px-6 rounded-lg transition duration-300">Contact Us</button>
+          </div>
+
+          <div class="md:hidden">
+            <button id="mobile-menu-button">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden p-4 bg-white border-t border-gray-200">
+          <ul class="flex flex-col space-y-2">
+            {% if request.resolver_match.url_name != 'index' %}
+              <li>
+                <a href="{% url 'index' %}" class="block px-6 py-3 hover:bg-orange-100 hover:text-orange-800 rounded text-base">Home</a>
+              </li>
+            {% endif %}
+
+            <!-- Programs Mobile -->
+            <li>
+              <details class="group mobile-menu-details">
+                <summary class="flex items-center justify-between px-6 py-3 cursor-pointer select-none rounded hover:bg-orange-100 hover:text-orange-800 text-base">
+                  Programs
+                  <span class="summary-arrow ml-2"><i class="fas fa-chevron-right"></i></span>
+                </summary>
+                <ul class="pl-6 mt-2 mobile-submenu space-y-2">
+                  {% for category in categories %}
+                    <li>
+                      <a href="{% url 'program_list' %}?category={{ category.id }}" class="flex items-center px-4 py-2 rounded hover:bg-orange-100 hover:text-orange-800 text-sm">
+                        {% if category.icon %}
+                          <i class="{{ category.icon }} mr-2"></i>
+                        {% endif %}
+                        <span>{{ category.name }}</span>
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </details>
+            </li>
+
+            <!-- Advanced Programs Mobile -->
+            <li>
+              <details class="group mobile-menu-details">
+                <summary class="flex items-center justify-between px-6 py-3 cursor-pointer select-none rounded hover:bg-orange-100 hover:text-orange-800 text-base">
+                  Advanced Programs
+                  <span class="summary-arrow ml-2"><i class="fas fa-chevron-right"></i></span>
+                </summary>
+                <ul class="pl-6 mt-2 mobile-submenu space-y-2">
+                  {% for advance_program in advance_programs %}
+                    <li>
+                      <a href="{% url 'program_detail' advance_program.id %}" class="block px-4 py-2 rounded hover:bg-orange-100 hover:text-orange-800 text-sm">
+                        {% if advance_program.icon %}
+                          <i class="{{ advance_program.icon }} mr-2"></i>
+                        {% endif %}
+                        {{ advance_program.subtitle }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </details>
+            </li>
+
+            <!-- Certificate -->
+            <a href="{% url 'certificate_check' %}" class="block px-6 py-3 hover:bg-orange-100 hover:text-orange-800 rounded text-base">Certificate Verification</a>
+
+            <!-- Blogs -->
+            <a href="{% url 'blog' %}" class="block px-6 py-3 hover:bg-orange-100 hover:text-orange-800 rounded text-base">Blogs</a>
+
+            <!-- About -->
+            <a href="{% url 'about' %}" class="block px-6 py-3 hover:bg-orange-100 hover:text-orange-800 rounded text-base">About</a>
+
+            <!-- contact us -->
+            <li class="flex justify-center">
+              <button onclick="window.location.href = '{% url 'contact' %}';" class="bg-transparent border border-gray-300 hover:border-[#f07c00] text-gray-800 hover:text-[#f07c00] font-bold py-2 px-6 rounded-lg transition duration-300 w-full">Contact Us</button>
+            </li>
+          </ul>
+          {% block secondary_nav %}
+
+          {% endblock %}
+        </div>
+      </nav>
+    </header>
+    {% block content %}
+
+    {% endblock %}
+
+    <a href="https://wa.me/918904465305" target="_blank" class="z-50 fixed bottom-6 right-6 bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-300"><i class="fab fa-whatsapp text-4xl"></i></a>
+    <footer class="bg-[#2c1e12] text-white/80 pt-16">
+      <div class="container mx-auto px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          <!-- Logo & Newsletter -->
+          <div class="lg:col-span-2">
+            <div class="flex items-center mb-4">
+              <img src="{% static 'assets/website/images/logo.png' %}" alt="TopGrade Logo" class="w-40" />
+            </div>
+            <p class="text-sm leading-relaxed">
+              01, Ischolar JEE NEET Foundation Building,<br /> GVR Workspace, 9th main road, service road,<br /> Nearby JSS public school, HSR Layout,<br /> Bengaluru, Karnataka-560102.
+            </p>
+            <a href="mailto:support@topgradeinnovations.com" class="hover:text-[#ef7d00] transition-colors mt-2">support@topgradeinnovations.com</a>
+            <div class="flex gap-2 mt-2">
+              <a href="tel:+917619468135" class="text-sm hover:text-[#ef7d00] transition-colors">+91 7619468135</a>,
+              <a href="tel:+918904465305" class="text-sm hover:text-[#ef7d00] transition-colors">+91 89044 65305</a>
+            </div>
+            <h3 class="text-xl font-bold mt-8 mb-2 text-white">Community Exclusive</h3>
+            <p class="text-sm mb-4">Subscribe to our newsletter for exclusive updates on the latest releases and special offers.</p>
+            <div class="flex items-center max-w-sm bg-gray-200/10 p-1 rounded-lg">
+              <input type="email" id="emailInput" placeholder="Email Id" class="bg-transparent w-full text-white placeholder-gray-400 px-3 py-2 focus:outline-none" />
+              <button onclick="subscribeUser()" class="bg-[#ef7d00] hover:bg-orange-600 text-white font-semibold px-4 py-2 rounded-md transition-colors">Subscribe</button>
+            </div>
+          </div>
+
+          <!-- Company -->
+          <div>
+            <h3 class="text-lg font-bold mb-4 text-white">Company</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="{% url 'about' %}" class="hover:text-[#ef7d00] transition-colors">About Us</a>
+              </li>
+              <li>
+                <a href="{% url 'blog' %}" class="hover:text-[#ef7d00] transition-colors">Blog</a>
+              </li>
+              <li>
+                <a href="{% url 'contact' %}" class="hover:text-[#ef7d00] transition-colors">Contact Us</a>
+              </li>
+              <li>
+                <a href="{% url 'certificate_check' %}" class="hover:text-[#ef7d00] transition-colors">Certificate Verification</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Support -->
+          <div>
+            <h3 class="text-lg font-bold mb-4 text-white">Support</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="{% url 'contact' %}#faq" class="hover:text-[#ef7d00] transition-colors">FAQ</a>
+              </li>
+              <li>
+                <a href="{% url 'terms' %}" class="hover:text-[#ef7d00] transition-colors">Terms & Conditions</a>
+              </li>
+              <li>
+                <a href="{% url 'privacy' %}" class="hover:text-[#ef7d00] transition-colors">Privacy Policy</a>
+              </li>
+              <li>
+                <a href="{% url 'refund' %}" class="hover:text-[#ef7d00] transition-colors">Refund Policy</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <hr class="border-white/10 my-8" />
+
+        <!-- Bottom Bar -->
+        <div class="flex flex-col lg:flex-row items-center justify-center text-center gap-6 pb-8">
+          <p class="text-sm">Designed and Developed by Raise high tech</p>
+        </div>
+      </div>
+    </footer>
+
+    <style>
+      details.group[open] summary .group-open\:rotate-90 {
+        transform: rotate(90deg);
+      }
+    </style>
+
+    <script>
+      // Mobile menu toggle and submenu functionality
+      document.addEventListener('DOMContentLoaded', function () {
+        const mobileMenuButton = document.getElementById('mobile-menu-button')
+        const mobileMenu = document.getElementById('mobile-menu')
+      
+        if (mobileMenuButton && mobileMenu) {
+          mobileMenuButton.addEventListener('click', function () {
+            mobileMenu.classList.toggle('hidden')
+          })
+        }
+      })
+      
+      // Rotate chevrons for all details in mobile menu
+      const detailsElements = document.querySelectorAll('#mobile-menu details')
+      
+      detailsElements.forEach((detail) => {
+        const summary = detail.querySelector('summary')
+        const arrow = summary.querySelector('.summary-arrow i')
+      
+        if (arrow) {
+          detail.addEventListener('toggle', () => {
+            if (detail.open) {
+              arrow.style.transform = 'rotate(90deg)'
+            } else {
+              arrow.style.transform = 'rotate(0deg)'
+            }
+          })
+        }
+      })
+      
+      function subscribeUser() {
+        const email = document.getElementById('emailInput').value.trim()
+      
+        // Basic email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      
+        if (email === '') {
+          alert('Please enter your email address.')
+          return
+        }
+      
+        if (!emailPattern.test(email)) {
+          alert('Please enter a valid email address.')
+          return
+        }
+      
+        // Simulating subscription success
+        alert('Thank you for subscribing, ' + email + '! ')
+      
+        // Reset input after subscription
+        document.getElementById('emailInput').value = ''
+      }
+    </script>
+  </body>
+</html>

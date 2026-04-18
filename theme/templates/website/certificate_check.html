@@ -1,0 +1,880 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}
+  Certificate Verification - TopGrade
+{% endblock %}
+
+{% block content %}
+  {% csrf_token %}
+  
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  
+  <style>
+    .hero-grid-background {
+      background-color: #1c120a;
+      background-image: linear-gradient(rgba(239, 125, 0, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(239, 125, 0, 0.15) 1px, transparent 1px), linear-gradient(180deg, #2c1e12 0%, #1c120a 100%);
+      background-size: 50px 50px, 50px 50px, 100% 100%;
+      background-position: -1px -1px, -1px -1px, 0 0;
+    }
+    
+    .certificate-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border: 2px solid #e5e7eb;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .certificate-header {
+      background: linear-gradient(135deg, #f07c00 0%, #d97706 100%);
+    }
+    
+    .verification-badge {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      animation: pulse 2s infinite;
+    }
+
+    .curved-background-shape {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -50%;
+      width: 200%;
+      height: 100px;
+      /* Controls the height of the curve */
+      background-color: #2c1e12;
+      /* The dark, warm brown color */
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+      transform: scaleX(1);
+      /* Stretches the curve horizontally */
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+    
+    .input-field {
+      transition: all 0.3s ease;
+      border: 2px solid #e5e7eb;
+    }
+    
+    .input-field:focus {
+      border-color: #f07c00;
+      box-shadow: 0 0 0 3px rgba(240, 124, 0, 0.1);
+    }
+    
+    .verify-btn {
+      background: linear-gradient(135deg, #f07c00 0%, #d97706 100%);
+      transition: all 0.3s ease;
+      transform: translateY(0);
+    }
+    
+    .verify-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(240, 124, 0, 0.3);
+    }
+    
+    .certificate-details {
+      display: none;
+      animation: fadeInUp 0.6s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .detail-item {
+      border-left: 4px solid #f07c00;
+      background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+    }
+    
+    .error-message {
+      display: none;
+      background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+      border-left: 4px solid #ef4444;
+    }
+
+    /* Certificate Gallery Styles */
+    .certificate-thumbnail {
+      position: relative;
+      background: linear-gradient(135deg, #fff, #f8fafc);
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .certificate-thumbnail:hover {
+      border-color: #f07c00;
+      transform: translateY(-3px);
+    }
+
+    .certificate-thumbnail .certificate-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .certificate-thumbnail .certificate-type {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .certificate-thumbnail .certificate-status {
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .certificate-actions {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      gap: 8px;
+    }
+
+    .certificate-thumbnail:hover .certificate-actions {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .certificate-thumbnail:hover .certificate-icon,
+    .certificate-thumbnail:hover .certificate-type,
+    .certificate-thumbnail:hover .certificate-status {
+      opacity: 0.3;
+    }
+
+    .certificate-action-btn {
+      background: #f07c00;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .certificate-action-btn:hover {
+      background: #e06b00;
+      transform: scale(1.1);
+      color: white;
+    }
+
+    .certificate-action-btn.view-btn {
+      background: #10b981;
+    }
+
+    .certificate-action-btn.view-btn:hover {
+      background: #059669;
+    }
+
+    .certificate-action-btn.download-btn {
+      background: #3b82f6;
+    }
+
+    .certificate-action-btn.download-btn:hover {
+      background: #2563eb;
+    }
+
+    /* Certificate Type Icons */
+    .cert-icon-internship { color: #10b981; }
+    .cert-icon-training { color: #3b82f6; }
+    .cert-icon-credit { color: #f59e0b; }
+    .cert-icon-recommendation { color: #8b5cf6; }
+    .cert-icon-placement { color: #ef4444; }
+
+    /* Swiper Custom Styles */
+    .certificatesSwiper,
+    .certificatesSwiperDesktop {
+      padding: 40px 50px;
+    }
+
+    .certificatesSwiper .swiper-button-next,
+    .certificatesSwiper .swiper-button-prev,
+    .certificatesSwiperDesktop .swiper-button-next,
+    .certificatesSwiperDesktop .swiper-button-prev {
+      color: #f07c00;
+      background: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .certificatesSwiper .swiper-button-next:after,
+    .certificatesSwiper .swiper-button-prev:after,
+    .certificatesSwiperDesktop .swiper-button-next:after,
+    .certificatesSwiperDesktop .swiper-button-prev:after {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .certificatesSwiper .swiper-pagination-bullet,
+    .certificatesSwiperDesktop .swiper-pagination-bullet {
+      width: 10px;
+      height: 10px;
+      background: #d1d5db;
+      opacity: 1;
+    }
+
+    .certificatesSwiper .swiper-pagination-bullet-active,
+    .certificatesSwiperDesktop .swiper-pagination-bullet-active {
+      background: #f07c00;
+      width: 12px;
+      height: 12px;
+    }
+
+    /* Responsive visibility */
+    @media (min-width: 1024px) {
+      .certificatesSwiper {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 1023px) {
+      .certificatesSwiperDesktop {
+        display: none !important;
+      }
+    }
+  </style>
+
+  <!-- HERO SECTION -->
+  <section class="hero-grid-background text-white py-16 md:py-24">
+    <div class="container mx-auto px-4 text-center">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6">
+          Certificate <span class="text-[#d97706]">Verification</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-white/80 mb-8">
+          Verify the authenticity of TopGrade certificates instantly
+        </p>
+        
+        <!-- Certificate Icon -->
+        <div class="mb-8">
+          <i class="fa-solid fa-certificate text-6xl text-[#f07c00] animate-bounce"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VERIFICATION SECTION -->
+  <section class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        
+        <!-- Verification Form -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Enter Certificate Number</h2>
+            <p class="text-gray-600">Please enter the certificate number to verify its authenticity</p>
+          </div>
+          
+          <div class="max-w-2xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-4">
+              <div class="flex-1">
+                <input 
+                  type="text" 
+                  id="certificateNumber" 
+                  placeholder="Enter certificate number (e.g., TG-2024-WD-001234)"
+                  class="input-field w-full px-6 py-4 rounded-xl text-lg font-mono tracking-wider uppercase focus:outline-none"
+                  maxlength="20"
+                />
+              </div>
+              <button 
+                id="verifyBtn" 
+                class="verify-btn px-8 py-4 rounded-xl text-white font-semibold text-lg focus:outline-none"
+              >
+                <i class="fa-solid fa-search mr-2"></i>Verify Certificate
+              </button>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center mt-6 hidden">
+              <div class="inline-flex items-center">
+                <i class="fa-solid fa-spinner fa-spin text-[#f07c00] text-2xl mr-3"></i>
+                <span class="text-gray-600">Verifying certificate...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="error-message rounded-xl p-6 mb-8">
+          <div class="flex items-center">
+            <i class="fa-solid fa-exclamation-triangle text-red-500 text-2xl mr-4"></i>
+            <div>
+              <h3 class="font-semibold text-red-800">Certificate Not Found</h3>
+              <p class="text-red-600">The certificate number you entered is invalid or does not exist in our database.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Certificate Details -->
+        <div id="certificateDetails" class="certificate-details">
+          <div class="certificate-card rounded-2xl overflow-hidden">
+            
+            <!-- Certificate Header -->
+            <div class="certificate-header text-white p-8 text-center">
+              <div class="verification-badge inline-flex items-center px-4 py-2 rounded-full text-white font-semibold mb-4">
+                <i class="fa-solid fa-check-circle mr-2"></i>
+                Verified Certificate
+              </div>
+              <h2 class="text-3xl font-bold mb-2">TopGrade Innovation</h2>
+              <p class="text-white/90">Certificate of Completion</p>
+            </div>
+
+            <!-- Certificate Body -->
+            <div class="p-8">
+              
+              <!-- Student Information -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="detail-item p-6 rounded-xl">
+                  <div class="flex items-center mb-3">
+                    <i class="fa-solid fa-user text-[#f07c00] text-xl mr-3"></i>
+                    <h3 class="font-semibold text-gray-800">Student Name</h3>
+                  </div>
+                  <p class="text-xl font-bold text-gray-900" id="studentName">Rajesh Kumar Sharma</p>
+                </div>
+                
+                <div class="detail-item p-6 rounded-xl">
+                  <div class="flex items-center mb-3">
+                    <i class="fa-solid fa-id-card text-[#f07c00] text-xl mr-3"></i>
+                    <h3 class="font-semibold text-gray-800">Certificate Number</h3>
+                  </div>
+                  <p class="text-xl font-bold text-gray-900 font-mono" id="certNumber">TG-2024-WD-001234</p>
+                </div>
+              </div>
+
+              <!-- Program Information -->
+              <div class="detail-item p-6 rounded-xl mb-6">
+                <div class="flex items-center mb-4">
+                  <i class="fa-solid fa-graduation-cap text-[#f07c00] text-xl mr-3"></i>
+                  <h3 class="font-semibold text-gray-800 text-lg">Program Completed</h3>
+                </div>
+                <p class="text-2xl font-bold text-gray-900 mb-2" id="programName">Full Stack Web Development</p>
+                <p class="text-gray-600" id="programDescription">Comprehensive course covering HTML, CSS, JavaScript, React, Node.js, and MongoDB</p>
+              </div>
+
+              <!-- Duration and Provider -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="detail-item p-6 rounded-xl">
+                  <div class="flex items-center mb-3">
+                    <i class="fa-solid fa-clock text-[#f07c00] text-xl mr-3"></i>
+                    <h3 class="font-semibold text-gray-800">Learning Duration</h3>
+                  </div>
+                  <p class="text-lg font-semibold text-gray-900" id="duration">6 Months</p>
+                  <p class="text-sm text-gray-600">Intensive Training Program</p>
+                </div>
+                
+                <div class="detail-item p-6 rounded-xl">
+                  <div class="flex items-center mb-3">
+                    <i class="fa-solid fa-building text-[#f07c00] text-xl mr-3"></i>
+                    <h3 class="font-semibold text-gray-800">Certified By</h3>
+                  </div>
+                  <p class="text-lg font-semibold text-gray-900" id="provider">TopGrade Innovation Pvt. Ltd.</p>
+                  <p class="text-sm text-gray-600">A Government-Recognized Training & Skill Development Organization</p>
+                </div>
+              </div>
+
+              <!-- Issue Date and Additional Info -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="detail-item p-6 rounded-xl">
+                  <div class="flex items-center mb-3">
+                    <i class="fa-solid fa-calendar-check text-[#f07c00] text-xl mr-3"></i>
+                    <h3 class="font-semibold text-gray-800">Certificate Issued</h3>
+                  </div>
+                  <p class="text-lg font-semibold text-gray-900" id="issueDate">March 15, 2024</p>
+                  <p class="text-sm text-gray-600">Valid for lifetime</p>
+                </div>
+                
+                <div class="detail-item p-6 rounded-xl">
+                  <div class="flex items-center mb-3">
+                    <i class="fa-solid fa-star text-[#f07c00] text-xl mr-3"></i>
+                    <h3 class="font-semibold text-gray-800">Grade Achieved</h3>
+                  </div>
+                  <p class="text-lg font-semibold text-gray-900" id="grade">A+ (95%)</p>
+                  <p class="text-sm text-gray-600">Excellent Performance</p>
+                </div>
+              </div>
+
+              <!-- Certificate Gallery Section -->
+              <div class="border-t pt-6 mb-6">
+                <div class="flex items-center justify-between mb-6">
+                  <div class="flex items-center">
+                    <i class="fa-solid fa-certificate text-[#f07c00] text-xl mr-3"></i>
+                    <h3 class="font-semibold text-gray-800 text-lg">Available Certificates</h3>
+                  </div>
+                  <span class="badge bg-primary px-3 py-1 rounded-full text-sm font-semibold" id="packageTypeBadge">
+                    <span id="packageType">Standard Package</span>
+                  </span>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="certificateGallery">
+                  <!-- Certificate thumbnails will be loaded here -->
+                </div>
+              </div>
+
+              <!-- Certificate Footer -->
+              <div class="border-t pt-6 text-center">
+                <div class="flex items-center justify-center mb-4">
+                  <i class="fa-solid fa-shield-check text-green-500 text-2xl mr-3"></i>
+                  <span class="text-green-600 font-semibold">This certificate has been verified and is authentic</span>
+                </div>
+                <p class="text-sm text-gray-500">
+                  This certificate can be verified at any time by visiting our verification portal with the certificate number.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS SECTION -->
+  <section class="bg-white py-16">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-3xl font-bold text-gray-800 mb-12">How Certificate Verification Works</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="bg-[#f07c00] text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+              <i class="fa-solid fa-keyboard"></i>
+            </div>
+            <h3 class="font-semibold text-gray-800 mb-2">1. Enter Certificate Number</h3>
+            <p class="text-gray-600">Input the certificate number found on your certificate</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="bg-[#f07c00] text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+              <i class="fa-solid fa-search"></i>
+            </div>
+            <h3 class="font-semibold text-gray-800 mb-2">2. Instant Verification</h3>
+            <p class="text-gray-600">Our system instantly verifies the certificate authenticity</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="bg-[#f07c00] text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+              <i class="fa-solid fa-check-circle"></i>
+            </div>
+            <h3 class="font-semibold text-gray-800 mb-2">3. View Details</h3>
+            <p class="text-gray-600">Get complete information about the certificate and student</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATION SECTION -->
+  <section id="certifications" class="relative bg-orange-50/50 pt-16 md:pt-24 pb-32 overflow-hidden">
+    <!-- The dark curved shape at the bottom -->
+    <div class="curved-background-shape"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+      <!-- Section Title -->
+      <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-8">Certify your Success</h2>
+
+      <!-- Certificates Carousel Container -->
+      <div class="relative max-w-6xl mx-auto">
+        <!-- Swiper Container for Mobile (5 slides) -->
+        <div class="swiper certificatesSwiper lg:hidden">
+          <div class="swiper-wrapper">
+            <!-- Mobile Slide 1: Internship -->
+            <div class="swiper-slide">
+              <div class="text-center max-w-md mx-auto">
+                <div class="aspect-[4/3] bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex items-center justify-center mb-4">
+                  <img src="{% static 'assets/website/images/samples/internship_sample.webp' %}" alt="Certificate Internship" class="w-full h-full object-contain" />
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Internship Certificate</h3>
+              </div>
+            </div>
+            
+            <!-- Mobile Slide 2: Training -->
+            <div class="swiper-slide">
+              <div class="text-center max-w-md mx-auto">
+                <div class="aspect-[4/3] bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex items-center justify-center mb-4">
+                  <img src="{% static 'assets/website/images/samples/training_sample.webp' %}" alt="Certificate Training" class="w-full h-full object-contain" />
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Industrial Training Certificate</h3>
+              </div>
+            </div>
+            
+            <!-- Mobile Slide 3: Recommendation -->
+            <div class="swiper-slide">
+              <div class="text-center max-w-md mx-auto">
+                <div class="aspect-[4/3] bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex items-center justify-center mb-4">
+                  <img src="{% static 'assets/website/images/samples/recommendation_sample.webp' %}" alt="Certificate Recommendation" class="w-full h-full object-contain" />
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Letter of Recommendation</h3>
+              </div>
+            </div>
+            
+            <!-- Mobile Slide 4: Placement -->
+            <div class="swiper-slide">
+              <div class="text-center max-w-md mx-auto">
+                <div class="aspect-[4/3] bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex items-center justify-center mb-4">
+                  <img src="{% static 'assets/website/images/samples/placement_sample.webp' %}" alt="Certificate Placement" class="w-full h-full object-contain" />
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Placement Guidance Certificate</h3>
+              </div>
+            </div>
+            
+            <!-- Mobile Slide 5: Credit -->
+            <div class="swiper-slide">
+              <div class="text-center max-w-md mx-auto">
+                <div class="aspect-[4/3] bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex items-center justify-center mb-4">
+                  <img src="{% static 'assets/website/images/samples/credit_sample.webp' %}" alt="Certificate Credit" class="w-full h-full object-contain" />
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Internship Credit Point Certificate</h3>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Navigation Buttons -->
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+          
+          <!-- Pagination -->
+          <div class="swiper-pagination"></div>
+        </div>
+
+        <!-- Swiper Container for Desktop (3 slides) -->
+        <div class="swiper certificatesSwiperDesktop hidden lg:block">
+          <div class="swiper-wrapper">
+            <!-- Desktop Slide 1: Internship + Training -->
+            <div class="swiper-slide">
+              <div class="grid grid-cols-2 gap-6">
+                <div class="text-center">
+                  <div class="aspect-[4/3] bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex items-center justify-center mb-4">
+                    <img src="{% static 'assets/website/images/samples/internship_sample.webp' %}" alt="Certificate Internship" class="w-full h-full object-contain" />
+                  </div>
+                  <h3 class="text-lg font-semibold text-gray-800">Internship Certificate</h3>
+                </div>
+                <div class="text-center">
+                  <div class="aspect-[4/3] bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex items-center justify-center mb-4">
+                    <img src="{% static 'assets/website/images/samples/training_sample.webp' %}" alt="Certificate Training" class="w-full h-full object-contain" />
+                  </div>
+                  <h3 class="text-lg font-semibold text-gray-800">Industrial Training Certificate</h3>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Desktop Slide 2: Recommendation + Placement -->
+            <div class="swiper-slide">
+              <div class="grid grid-cols-2 gap-6">
+                <div class="text-center">
+                  <div class="aspect-[4/3] bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex items-center justify-center mb-4">
+                    <img src="{% static 'assets/website/images/samples/recommendation_sample.webp' %}" alt="Certificate Recommendation" class="w-full h-full object-contain" />
+                  </div>
+                  <h3 class="text-lg font-semibold text-gray-800">Letter of Recommendation</h3>
+                </div>
+                <div class="text-center">
+                  <div class="aspect-[4/3] bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex items-center justify-center mb-4">
+                    <img src="{% static 'assets/website/images/samples/placement_sample.webp' %}" alt="Certificate Placement" class="w-full h-full object-contain" />
+                  </div>
+                  <h3 class="text-lg font-semibold text-gray-800">Placement Guidance Certificate</h3>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Desktop Slide 3: Credit (centered) -->
+            <div class="swiper-slide">
+              <div class="grid grid-cols-2 gap-6">
+                <div class="text-center col-start-1 col-end-3 mx-auto max-w-lg">
+                  <div class="aspect-[4/3] bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex items-center justify-center mb-4">
+                    <img src="{% static 'assets/website/images/samples/credit_sample.webp' %}" alt="Certificate Credit" class="w-full h-full object-contain" />
+                  </div>
+                  <h3 class="text-lg font-semibold text-gray-800">Internship Credit Point Certificate</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Navigation Buttons -->
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+          
+          <!-- Pagination -->
+          <div class="swiper-pagination"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+   
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const certificateInput = document.getElementById('certificateNumber');
+      const verifyBtn = document.getElementById('verifyBtn');
+      const loadingState = document.getElementById('loadingState');
+      const certificateDetails = document.getElementById('certificateDetails');
+      const errorMessage = document.getElementById('errorMessage');
+
+      function hideAllMessages() {
+        certificateDetails.style.display = 'none';
+        errorMessage.style.display = 'none';
+        loadingState.classList.add('hidden');
+      }
+
+      function showLoading() {
+        hideAllMessages();
+        loadingState.classList.remove('hidden');
+      }
+
+      function getCertificateIcon(certType) {
+        const icons = {
+          'internship': 'fa-briefcase',
+          'training': 'fa-graduation-cap',
+          'credit': 'fa-medal',
+          'recommendation': 'fa-thumbs-up',
+          'placement': 'fa-building'
+        };
+        return icons[certType] || 'fa-certificate';
+      }
+
+      function getCertificateColor(certType) {
+        const colors = {
+          'internship': 'cert-icon-internship',
+          'training': 'cert-icon-training',
+          'credit': 'cert-icon-credit',
+          'recommendation': 'cert-icon-recommendation',
+          'placement': 'cert-icon-placement'
+        };
+        return colors[certType] || 'cert-icon-internship';
+      }
+
+      function createCertificateGallery(certificates) {
+        const gallery = document.getElementById('certificateGallery');
+        gallery.innerHTML = '';
+
+        console.log('Creating certificate gallery with certificates:', certificates);
+
+        certificates.forEach(cert => {
+          const thumbnail = document.createElement('div');
+          thumbnail.className = 'certificate-thumbnail';
+          
+          const iconClass = getCertificateIcon(cert.type_code);
+          const colorClass = getCertificateColor(cert.type_code);
+          
+          thumbnail.innerHTML = `
+            <div class="certificate-icon ${colorClass}">
+              <i class="fa-solid ${iconClass}"></i>
+            </div>
+            <div class="certificate-type">${cert.type}</div>
+            <div class="certificate-status bg-green-100 text-green-800">${cert.status}</div>
+            
+            <div class="certificate-actions">
+              ${cert.file_url ? `
+                <a href="${cert.file_url}" target="_blank" class="certificate-action-btn view-btn" title="View Certificate">
+                  <i class="fa-solid fa-eye"></i>
+                </a>
+                <a href="${cert.file_url}" download class="certificate-action-btn download-btn" title="Download Certificate">
+                  <i class="fa-solid fa-download"></i>
+                </a>
+              ` : `
+                <div class="certificate-action-btn" style="background: #6b7280; cursor: not-allowed;" title="Certificate not available">
+                  <i class="fa-solid fa-times"></i>
+                </div>
+              `}
+            </div>
+          `;
+          
+          gallery.appendChild(thumbnail);
+        });
+      }
+
+      function showCertificateDetails(certificate) {
+        hideAllMessages();
+        
+        // Update certificate details with data
+        document.getElementById('studentName').textContent = certificate.student_name;
+        document.getElementById('certNumber').textContent = certificate.certificate_number;
+        document.getElementById('programName').textContent = certificate.program_name;
+        document.getElementById('programDescription').textContent = certificate.program_description;
+        document.getElementById('provider').textContent = certificate.provider;
+        document.getElementById('issueDate').textContent = certificate.issue_date;
+        
+        // Update program duration
+        const durationElement = document.getElementById('duration');
+        if (durationElement && certificate.program_duration) {
+          durationElement.textContent = certificate.program_duration;
+        }
+        
+        // Update completion date (new field)
+        const completionDateElement = document.getElementById('completionDate');
+        if (completionDateElement) {
+          completionDateElement.textContent = certificate.completion_date;
+        }
+        
+        // Update package type
+        const packageTypeElement = document.getElementById('packageType');
+        const packageTypeBadge = document.getElementById('packageTypeBadge');
+        
+        if (packageTypeElement && packageTypeBadge) {
+          packageTypeElement.textContent = certificate.package_type;
+          
+          // Style badge based on package type
+          if (certificate.package_type.includes('Gold')) {
+            packageTypeBadge.className = 'badge bg-warning px-3 py-1 rounded-full text-sm font-semibold text-white';
+          } else {
+            packageTypeBadge.className = 'badge bg-primary px-3 py-1 rounded-full text-sm font-semibold';
+          }
+        }
+        
+        // Create certificate gallery
+        if (certificate.certificates && certificate.certificates.length > 0) {
+          createCertificateGallery(certificate.certificates);
+        }
+        
+        certificateDetails.style.display = 'block';
+        
+        // Smooth scroll to results
+        certificateDetails.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+
+      function showError(message = 'Certificate not found. Please check the certificate number and try again.') {
+        hideAllMessages();
+        
+        // Update error message
+        const errorText = errorMessage.querySelector('.text-red-600');
+        if (errorText) {
+          errorText.textContent = message;
+        }
+        
+        errorMessage.style.display = 'block';
+      }
+
+      async function verifyCertificate() {
+        const certNumber = certificateInput.value.trim().toUpperCase();
+        
+        if (!certNumber) {
+          alert('Please enter a certificate number');
+          return;
+        }
+
+        showLoading();
+
+        try {
+          const response = await fetch('{% url "verify_certificate" %}', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+              certificate_number: certNumber
+            })
+          });
+
+          const data = await response.json();
+
+          console.log('Certificate verification response:', data);
+
+          if (data.success) {
+            console.log('Certificate data:', data.certificate);
+            console.log('Debug info:', data.certificate.debug_info);
+            showCertificateDetails(data.certificate);
+          } else {
+            showError(data.message);
+          }
+        } catch (error) {
+          console.error('Verification error:', error);
+          showError('An error occurred while verifying the certificate. Please try again.');
+        }
+      }
+
+      // Event listeners
+      verifyBtn.addEventListener('click', verifyCertificate);
+      
+      certificateInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          verifyCertificate();
+        }
+      });
+
+      // Auto-format certificate number as user types
+      certificateInput.addEventListener('input', function(e) {
+        e.target.value = e.target.value.toUpperCase();
+      });
+
+      // Initialize Swiper for Mobile (5 slides)
+      const certificatesSwiperMobile = new Swiper('.certificatesSwiper', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        loop: true,
+        autoplay: {
+          delay: 4000,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: '.certificatesSwiper .swiper-pagination',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.certificatesSwiper .swiper-button-next',
+          prevEl: '.certificatesSwiper .swiper-button-prev',
+        },
+      });
+
+      // Initialize Swiper for Desktop (3 slides)
+      const certificatesSwiperDesktop = new Swiper('.certificatesSwiperDesktop', {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        loop: true,
+        autoplay: {
+          delay: 4000,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: '.certificatesSwiperDesktop .swiper-pagination',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.certificatesSwiperDesktop .swiper-button-next',
+          prevEl: '.certificatesSwiperDesktop .swiper-button-prev',
+        },
+      });
+    });
+  </script>
+  
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+{% endblock %}

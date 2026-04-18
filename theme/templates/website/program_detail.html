@@ -1,0 +1,1114 @@
+{% extends 'website/base.html' %}
+{% load static %}
+{% block title %}
+  TopGrade
+{% endblock %}
+
+{% block secondary_nav %}
+  <nav class="bg-[#2c1e12]/90 backdrop-blur-sm border-t border-white/10 -z-10">
+    <div class="container mx-auto flex items-center justify-center gap-6 md:gap-10 text-white/70 text-sm md:text-base py-3">
+      <a href="#overview" class="hover:text-white border-b-2 border-transparent hover:border-[#ef7d00] transition-all duration-300 pb-1">Overview</a>
+      <a href="#syllabus" class="hover:text-white border-b-2 border-transparent hover:border-[#ef7d00] transition-all duration-300 pb-1">Syllabus</a>
+      <a href="#certifications" class="hover:text-white border-b-2 border-transparent hover:border-[#ef7d00] transition-all duration-300 pb-1">Certification</a>
+      <a href="#faq" class="hover:text-white border-b-2 border-transparent hover:border-[#ef7d00] transition-all duration-300 pb-1">FAQ's</a>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+  <style>
+    .hero-grid-background {
+      background-color: #1c120a;
+      background-image: linear-gradient(rgba(239, 125, 0, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(239, 125, 0, 0.15) 1px, transparent 1px), linear-gradient(180deg, #2c1e12 0%, #1c120a 100%);
+      background-size: 50px 50px, 50px 50px, 100% 100%;
+      background-position: -1px -1px, -1px -1px, 0 0;
+    }
+    
+    .curved-background-shape {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -50%;
+      width: 200%;
+      height: 300px;
+      /* Controls the height of the curve */
+      background-color: #2c1e12;
+      /* The dark, warm brown color */
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+      transform: scaleX(1);
+      /* Stretches the curve horizontally */
+    }
+    
+    .faq-item.is-active {
+      border-color: #ef7d00;
+      box-shadow: 0 0 15px rgba(239, 125, 0, 0.2);
+    }
+    
+    .faq-item.is-active .faq-trigger {
+      color: #c2410c;
+      /* dark orange */
+    }
+    
+    /* Default scroll animation */
+    .testimonial-scroll {
+      display: flex;
+      flex-direction: column;
+      animation: scroll-up 10s linear infinite;
+    }
+    
+    .testimonial-scroll.reverse {
+      animation: scroll-down 10s linear infinite;
+    }
+    
+    @keyframes scroll-up {
+      0% {
+        transform: translateY(0);
+      }
+    
+      100% {
+        transform: translateY(-50%);
+      }
+    }
+    
+    @keyframes scroll-down {
+      0% {
+        transform: translateY(-50%);
+      }
+    
+      100% {
+        transform: translateY(0);
+      }
+    }
+    
+    /* ✅ Mobile one-line vertical scroll */
+    @media (max-width: 768px) {
+      .grid {
+        display: block !important;
+      }
+    
+      .testimonial-column {
+        width: 100%;
+        margin-bottom: 2rem;
+      }
+    
+      .testimonial-scroll {
+        animation: mobile-scroll-up 5s linear infinite;
+      }
+    
+      @keyframes mobile-scroll-up {
+        0% {
+          transform: translateY(0);
+        }
+    
+        100% {
+          transform: translateY(-50%);
+        }
+      }
+    }
+  </style>
+
+  <section class="hero-grid-background text-white flex flex-col items-center justify-center px-4 py-16 md:py-24 lg:py-32">
+    <div class="container mx-auto flex flex-col items-center justify-center text-center">
+      <!-- Main Heading -->
+      <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-8 md:mb-0">
+        {{ program.title|default:'The Master art of' }} <br />
+        <span class="text-[#ef7d00]">{{ program.subtitle|default:'Web Development' }}</span>
+      </h1>
+
+      <!-- Info Box -->
+      <div class="max-w-4xl w-full mt-8 md:mt-10 bg-black/20 backdrop-blur-sm border border-white/10 rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
+          <!-- Stat 1 -->
+          <div class="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 py-4 md:py-6 h-full">
+            <div class="w-16 h-16 rounded-xl flex items-center justify-center bg-white/10">
+              <i class="fa-solid fa-paw text-3xl"></i>
+            </div>
+            <div class="text-center md:text-left">
+              <p class="text-sm text-white/70">Batch Starting</p>
+              <div class="flex flex-col sm:gap-2">
+                <p class="text-xl font-bold text-[#ef7d00]">{{ program.batch_starts|default:'August' }}</p>
+                <span class="bg-white/80 text-black font-semibold px-3 py-1 rounded-full mt-2 sm:mt-0 whitespace-nowrap text-xs">{{ program.available_slots|default:'5' }} seats left</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stat 2 -->
+          <div class="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 py-4 md:py-6 h-full">
+            <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl flex items-center justify-center bg-white/10">
+              <i class="fa-solid fa-calendar-alt text-2xl md:text-3xl"></i>
+            </div>
+            <div class="text-center md:text-left">
+              <p class="text-xs md:text-sm text-white/70">Duration</p>
+              <p class="text-lg md:text-xl font-bold text-[#ef7d00]">{{ program.duration|default:'2-3 Months' }}</p>
+            </div>
+          </div>
+
+          <!-- Stat 3 -->
+          <div class="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 py-4 md:py-6 h-full">
+            <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl flex items-center justify-center bg-white/10">
+              <i class="fa-solid fa-user-check text-2xl md:text-3xl"></i>
+            </div>
+            <div class="text-center md:text-left">
+              <p class="text-xs md:text-sm text-white/70">Program Rating</p>
+              <p class="text-lg md:text-xl font-bold flex items-center justify-center md:justify-start gap-1">
+                {{ program.program_rating|default:'0.0' }}
+                <i class="fa-solid fa-star text-yellow-400"></i>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OVERVIEW SECTION -->
+  <section id="overview" class="bg-orange-50/30 py-12 md:py-16 lg:py-24">
+    <div class="container mx-auto px-4">
+      <!-- Main Dark Container -->
+      <div class="bg-[#2c1e12] text-white rounded-xl md:rounded-2xl p-6 md:p-8 lg:p-12 shadow-2xl">
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-8 md:mb-12">Overview</h2>
+
+        <!-- Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start">
+          <!-- Left Column: Program Highlights -->
+          <div class="text-white/90">
+            <h3 class="text-xl md:text-2xl font-bold mb-2">Program Highlight</h3>
+            <p class="mb-6 md:mb-8 text-sm md:text-base">Transform Your Skills with Our Comprehensive Program</p>
+
+            <ul class="space-y-6">
+              <!-- Feature 1 -->
+              <li class="flex items-center gap-4">
+                <div class="w-14 h-14 flex-shrink-0 flex items-center justify-center bg-white/10 rounded-xl">
+                  <i class="fa-solid fa-user-tie text-2xl text-[#ef7d00]"></i>
+                </div>
+                <span>Designed for executives, consultants, and entrepreneurs</span>
+              </li>
+              <!-- Feature 2 -->
+              <li class="flex items-center gap-4">
+                <div class="w-14 h-14 flex-shrink-0 flex items-center justify-center bg-white/10 rounded-xl">
+                  <i class="fa-solid fa-certificate text-2xl text-[#ef7d00]"></i>
+                </div>
+                <div class="flex items-center gap-3 flex-wrap">
+                  <span class="text-sm sm:text-base">Accreditation from NSDC</span>
+                </div>
+              </li>
+              <!-- Feature 3 -->
+              <li class="flex items-center gap-4">
+                <div class="w-14 h-14 flex-shrink-0 flex items-center justify-center bg-white/10 rounded-xl">
+                  <i class="fa-solid fa-award text-2xl text-[#ef7d00]"></i>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-start gap-3">
+                  <span class="text-sm sm:text-base text-center sm:text-left">Accreditation from Skill India</span>
+                </div>
+              </li>
+              <!-- Feature 4 -->
+              <li class="flex items-center gap-4">
+                <div class="w-14 h-14 flex-shrink-0 flex items-center justify-center bg-white/10 rounded-xl">
+                  <i class="fa-solid fa-chart-line text-2xl text-[#ef7d00]"></i>
+                </div>
+                <span>Fosters expertise and innovation for professional growth</span>
+              </li>
+              <!-- Feature 5 -->
+              <li class="flex items-center gap-4">
+                <div class="w-14 h-14 flex-shrink-0 flex items-center justify-center bg-white/10 rounded-xl">
+                  <i class="fa-solid fa-handshake text-2xl text-[#ef7d00]"></i>
+                </div>
+                <span>100+ Internship Partners</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Right Column: Application Form -->
+          <div class="bg-orange-50 p-4 md:p-6 lg:p-8 rounded-xl md:rounded-2xl shadow-lg mt-8 lg:mt-0">
+            <h3 class="text-lg md:text-xl font-bold text-gray-800 max-w-xs mb-4">Fill the form to apply for {{ program.subtitle|default:'Web Development' }} Program</h3>
+
+            <form id="application-form" class="space-y-4 md:space-y-5">
+              <!-- Success/Error Messages -->
+              <div id="form-message" class="hidden p-3 rounded-lg text-sm font-medium"></div>
+
+              <div>
+                <label for="first-name" class="block text-sm font-medium text-gray-700 mb-1">First Name <span class="text-[#ef7d00]">*</span></label>
+                <input type="text" id="first-name" name="first_name" placeholder="Name" required class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-[#ef7d00] focus:border-[#ef7d00] text-black" />
+              </div>
+              <div>
+                <label for="phone-number" class="block text-sm font-medium text-gray-700 mb-1">Phone number <span class="text-[#ef7d00]">*</span></label>
+                <input type="tel" id="phone-number" name="phone_number" placeholder="Phone number" required pattern="[0-9]{10,15}" title="Please enter a valid phone number (10-15 digits only)" maxlength="15" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-[#ef7d00] focus:border-[#ef7d00] text-black" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email ID <span class="text-[#ef7d00]">*</span></label>
+                <input type="email" id="email" name="email" placeholder="Email Address" required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" title="Please enter a valid email address" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-[#ef7d00] focus:border-[#ef7d00] text-black" />
+              </div>
+              <div>
+                <label for="college-name" class="block text-sm font-medium text-gray-700 mb-1">College name <span class="text-[#ef7d00]">*</span></label>
+                <input type="text" id="college-name" name="college_name" placeholder="College name" required class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-[#ef7d00] focus:border-[#ef7d00] text-black" />
+              </div>
+              <button type="submit" id="submit-btn" class="mt-4 w-full bg-gradient-to-r from-[#ef7d00] to-orange-500 text-white font-bold py-3 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                <span id="submit-text">Enquiry</span>
+                <span id="submit-loading" class="hidden">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>Submitting...
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS & PARTNERS SECTION -->
+  <section class="bg-orange-50/30 py-16 md:py-24">
+    <div class="container mx-auto px-4">
+      <!-- Part 1: "Why You Need to Master" Stats Bar -->
+      <div class="text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Here's Why You Need to Master <br /> {{ program.subtitle|default:'Web Development' }}</h2>
+
+        <div class="max-w-4xl mx-auto mt-8 md:mt-10 p-4 md:p-6 bg-white border border-orange-200 rounded-xl md:rounded-2xl shadow-lg">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
+            <!-- Stat 1: Job Openings -->
+            <div class="text-center py-4 sm:py-0">
+              <p class="text-2xl md:text-3xl font-bold text-[#ef7d00]">{{ program.job_openings|default:'24K+' }}</p>
+              <p class="text-gray-700 mt-1 text-sm md:text-base">Job Openings</p>
+            </div>
+            <!-- Stat 2: Market Size -->
+            <div class="text-center py-4 sm:py-0">
+              <p class="text-2xl md:text-3xl font-bold text-[#ef7d00]">{{ program.global_market_size|default:'$123.2 Billion' }}</p>
+              <p class="text-gray-700 mt-1 text-sm md:text-base">Global Market Size</p>
+            </div>
+            <!-- Stat 3: Average Salary -->
+            <div class="text-center py-4 sm:py-0">
+              <p class="text-2xl md:text-3xl font-bold text-[#ef7d00]">{{ program.avg_annual_salary|default:'$11+ Lakh' }}</p>
+              <p class="text-gray-700 mt-1 text-sm md:text-base">Average Annual Salary</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SYLLABUS SECTION - IMPROVED COLORS -->
+  <section id="syllabus" class="bg-orange-50/30 py-4 md:py-4">
+    <div class="container mx-auto px-4">
+      <!-- Section Title -->
+      <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">Syllabus</h2>
+
+      <!-- Accordion Container -->
+      <div class="max-w-4xl mx-auto bg-white p-4 md:p-6 lg:p-8 rounded-2xl md:rounded-3xl shadow-xl border border-gray-200">
+        <div id="accordion-container" class="space-y-3">
+          {% for syllabus in program.syllabuses.all %}
+            <!-- Dynamic Accordion Item -->
+            <div class="accordion-item bg-gray-50/70 border border-gray-200 rounded-2xl p-4 transition-all duration-300">
+              <button class="accordion-trigger flex justify-between items-center w-full text-left text-gray-800 font-semibold">
+                <span class="text-lg">{{ forloop.counter }}. {{ syllabus.module_title }}</span>
+                <i class="fa-solid fa-chevron-down transform transition-transform duration-300"></i>
+              </button>
+              <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+                <div class="pt-4 space-y-3 text-gray-600 border-t border-gray-200 mt-3">
+                  {% for topic in syllabus.topics.all %}
+                    <div class="flex items-center justify-between gap-2 md:gap-3 p-2 md:p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                      <div class="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+                        {% if topic.is_intro and topic.video_file %}
+                          <button class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full bg-green-100 hover:bg-green-200 transition-colors intro-video-btn flex-shrink-0" data-video-url="{{ topic.video_file.url }}" data-video-title="{{ topic.topic_title }}" data-video-duration="{{ topic.video_duration|default:'N/A' }}"><i class="fa-solid fa-play text-xs md:text-sm text-green-600"></i></button>
+                          <div class="flex items-center gap-2 flex-1 min-w-0">
+                            <span class="text-green-600 font-medium cursor-pointer intro-video-btn text-sm md:text-base truncate" data-video-url="{{ topic.video_file.url }}" data-video-title="{{ topic.topic_title }}" data-video-duration="{{ topic.video_duration|default:'N/A' }}">{{ topic.topic_title }}</span>
+                            <span class="hidden md:inline-block text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full whitespace-nowrap flex-shrink-0">FREE PREVIEW</span>
+                          </div>
+                        {% else %}
+                          <span class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full bg-gray-100 flex-shrink-0"><i class="fa-solid fa-lock text-xs md:text-sm text-gray-400"></i></span>
+                          <span class="text-gray-500 text-sm md:text-base truncate">{{ topic.topic_title }}</span>
+                        {% endif %}
+                      </div>
+                      <div class="flex items-center gap-1 md:gap-2 text-xs text-gray-400 flex-shrink-0">
+                        {% if topic.video_duration %}
+                          <i class="fa-solid fa-clock"></i>
+                          <span>{{ topic.video_duration }}</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% empty %}
+                    <div class="flex items-center gap-3 p-2">
+                      <span class="flex items-center justify-center w-8 h-8 rounded-full bg-orange-100"><i class="fa-solid fa-play text-sm text-[#ef7d00]"></i></span>
+                      <span>Content for {{ syllabus.module_title }}...</span>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <!-- Fallback if no syllabus exists -->
+            <div class="accordion-item bg-gray-50/70 border border-gray-200 rounded-2xl p-4 transition-all duration-300">
+              <button class="accordion-trigger flex justify-between items-center w-full text-left text-gray-800 font-semibold">
+                <span class="text-lg">1. {{ program.title|default:'Web Development' }} Fundamentals</span>
+                <i class="fa-solid fa-chevron-down transform transition-transform duration-300"></i>
+              </button>
+              <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+                <div class="pt-4 space-y-3 text-gray-600 border-t border-gray-200 mt-3">
+                  <p class="flex items-center gap-3">
+                    <span class="flex items-center justify-center w-6 h-6 rounded-md bg-orange-100"><i class="fa-solid fa-play text-xs text-[#ef7d00]"></i></span> Basic Concepts
+                  </p>
+                  <p class="flex items-center gap-3">
+                    <span class="flex items-center justify-center w-6 h-6 rounded-md bg-orange-100"><i class="fa-solid fa-play text-xs text-[#ef7d00]"></i></span> Practical Applications
+                  </p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATION SECTION -->
+  <section id="certifications" class="relative bg-orange-50/50 pt-16 md:pt-24 pb-32 overflow-hidden">
+    <!-- The dark curved shape at the bottom -->
+    <div class="curved-background-shape"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+      <!-- Section Title -->
+      <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-16">Certify your Success</h2>
+
+      <!-- Certificates Container -->
+      <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-6">
+        {% if certificates %}
+          {% for certificate in certificates %}
+            {# prettier-ignore-start #}
+            <div class="w-full max-w-md aspect-[4/3] bg-white rounded-lg shadow-2xl border border-gray-200 transform {% if forloop.counter|divisibleby:2 %}
+                md:-rotate-3
+              {% else %}
+                md:rotate-2 z-10
+              {% endif %} hover:rotate-0 hover:scale-105 transition-transform duration-300 overflow-hidden">
+              <img src="{{ certificate.certificate_image.url }}" alt="Certificate {{ forloop.counter }}" class="w-full h-full object-cover" />
+            </div>
+            {# prettier-ignore-end #}
+          {% endfor %}
+
+          <!-- Add second placeholder if only one certificate exists -->
+          {% if certificates|length == 1 %}
+            <div class="w-full max-w-md aspect-[4/3] bg-gray-100 rounded-lg shadow-2xl border border-gray-200 transform md:rotate-2 z-10 hover:rotate-0 hover:scale-105 transition-transform duration-300 overflow-hidden flex items-center justify-center">
+              <svg class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+              </svg>
+            </div>
+          {% endif %}
+        {% else %}
+          <!-- No certificates - show placeholder containers -->
+          <div class="w-full max-w-md aspect-[4/3] bg-gray-100 rounded-lg shadow-2xl border border-gray-200 transform md:-rotate-3 hover:rotate-0 hover:scale-105 transition-transform duration-300 overflow-hidden flex items-center justify-center">
+            <svg class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+            </svg>
+          </div>
+
+          <div class="w-full max-w-md aspect-[4/3] bg-gray-100 rounded-lg shadow-2xl border border-gray-200 transform md:rotate-2 z-10 hover:rotate-0 hover:scale-105 transition-transform duration-300 overflow-hidden flex items-center justify-center">
+            <svg class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+            </svg>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS SECTION -->
+  <section class="bg-orange-50/50 py-12 md:py-16 lg:py-24 overflow-hidden">
+    <div class="container mx-auto px-4">
+      <!-- Section Title (fixed) -->
+      <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">What Our Learners Say</h2>
+
+      {% if testimonials %}
+        <!-- Testimonial Grid Container -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 h-[70vh] max-h-[800px] overflow-hidden">
+          <!-- Column 1 -->
+          <div class="testimonial-column space-y-8 overflow-hidden">
+            <div class="testimonial-scroll" style="animation-duration:40s;">
+              <div class="space-y-8">
+                {% for testimonial in testimonials|slice:':3' %}
+                  <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center gap-4">
+                      {% if testimonial.avatar_image %}
+                        <img src="{{ testimonial.avatar_image.url }}" alt="{{ testimonial.name }}" class="w-14 h-14 rounded-full border-2 border-[#ef7d00] object-cover" />
+                      {% else %}
+                        <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="10" font-weight="bold">
+                              {{ testimonial.name|first|upper }}{% if testimonial.name|wordcount > 1 %}{{ testimonial.name|last|first|upper }}{% endif %}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <h3 class="font-bold text-lg">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500">
+                          <span class="text-[#ef7d00] font-medium">{{ testimonial.field_of_study }}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mt-4">{{ testimonial.title }}</h4>
+                    <p class="text-gray-600 text-sm mt-2">{{ testimonial.content }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+              <br />
+              <!-- Duplicate for infinite scroll -->
+              <div class="space-y-8" aria-hidden="true">
+                {% for testimonial in testimonials|slice:':3' %}
+                  <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center gap-4">
+                      {% if testimonial.avatar_image %}
+                        <img src="{{ testimonial.avatar_image.url }}" alt="{{ testimonial.name }}" class="w-14 h-14 rounded-full border-2 border-[#ef7d00] object-cover" />
+                      {% else %}
+                        <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="10" font-weight="bold">
+                              {{ testimonial.name|first|upper }}{% if testimonial.name|wordcount > 1 %}{{ testimonial.name|last|first|upper }}{% endif %}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <h3 class="font-bold text-lg">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500">
+                          <span class="text-[#ef7d00] font-medium">{{ testimonial.field_of_study }}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mt-4">{{ testimonial.title }}</h4>
+                    <p class="text-gray-600 text-sm mt-2">{{ testimonial.content }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2 -->
+          <div class="testimonial-column space-y-8 overflow-hidden">
+            <div class="testimonial-scroll reverse" style="animation-duration:45s;">
+              <div class="space-y-8">
+                {% for testimonial in testimonials|slice:'3:6' %}
+                  <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center gap-4">
+                      {% if testimonial.avatar_image %}
+                        <img src="{{ testimonial.avatar_image.url }}" alt="{{ testimonial.name }}" class="w-14 h-14 rounded-full border-2 border-[#ef7d00] object-cover" />
+                      {% else %}
+                        <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="10" font-weight="bold">
+                              {{ testimonial.name|first|upper }}{% if testimonial.name|wordcount > 1 %}{{ testimonial.name|last|first|upper }}{% endif %}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <h3 class="font-bold text-lg">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500">
+                          <span class="text-[#ef7d00] font-medium">{{ testimonial.field_of_study }}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mt-4">{{ testimonial.title }}</h4>
+                    <p class="text-gray-600 text-sm mt-2">{{ testimonial.content }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+              <br />
+              <!-- Duplicate for infinite scroll -->
+              <div class="space-y-8" aria-hidden="true">
+                {% for testimonial in testimonials|slice:'3:6' %}
+                  <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center gap-4">
+                      {% if testimonial.avatar_image %}
+                        <img src="{{ testimonial.avatar_image.url }}" alt="{{ testimonial.name }}" class="w-14 h-14 rounded-full border-2 border-[#ef7d00] object-cover" />
+                      {% else %}
+                        <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="10" font-weight="bold">
+                              {{ testimonial.name|first|upper }}{% if testimonial.name|wordcount > 1 %}{{ testimonial.name|last|first|upper }}{% endif %}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <h3 class="font-bold text-lg">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500">
+                          <span class="text-[#ef7d00] font-medium">{{ testimonial.field_of_study }}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mt-4">{{ testimonial.title }}</h4>
+                    <p class="text-gray-600 text-sm mt-2">{{ testimonial.content }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 3 -->
+          <div class="testimonial-column space-y-8 hidden lg:block overflow-hidden">
+            <div class="testimonial-scroll" style="animation-duration:50s;">
+              <div class="space-y-8">
+                {% for testimonial in testimonials|slice:'6:' %}
+                  <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center gap-4">
+                      {% if testimonial.avatar_image %}
+                        <img src="{{ testimonial.avatar_image.url }}" alt="{{ testimonial.name }}" class="w-14 h-14 rounded-full border-2 border-[#ef7d00] object-cover" />
+                      {% else %}
+                        <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="10" font-weight="bold">
+                              {{ testimonial.name|first|upper }}{% if testimonial.name|wordcount > 1 %}{{ testimonial.name|last|first|upper }}{% endif %}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <h3 class="font-bold text-lg">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500">
+                          <span class="text-[#ef7d00] font-medium">{{ testimonial.field_of_study }}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mt-4">{{ testimonial.title }}</h4>
+                    <p class="text-gray-600 text-sm mt-2">{{ testimonial.content }}</p>
+                  </div>
+                {% empty %}
+                  <!-- Fallback if no testimonials in third column -->
+                  <div class="bg-white p-6 rounded-xl shadow-lg opacity-50">
+                    <div class="flex items-center gap-4">
+                      <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gray-100 flex items-center justify-center">
+                        <i class="text-gray-400 text-xl">👤</i>
+                      </div>
+                      <div>
+                        <h3 class="font-bold text-lg text-gray-400">More testimonials coming soon...</h3>
+                        <p class="text-sm text-gray-400">Share your experience with us!</p>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+              <br />
+              <!-- Duplicate for infinite scroll -->
+              <div class="space-y-8" aria-hidden="true">
+                {% for testimonial in testimonials|slice:'6:' %}
+                  <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center gap-4">
+                      {% if testimonial.avatar_image %}
+                        <img src="{{ testimonial.avatar_image.url }}" alt="{{ testimonial.name }}" class="w-14 h-14 rounded-full border-2 border-[#ef7d00] object-cover" />
+                      {% else %}
+                        <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="10" font-weight="bold">
+                              {{ testimonial.name|first|upper }}{% if testimonial.name|wordcount > 1 %}{{ testimonial.name|last|first|upper }}{% endif %}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <h3 class="font-bold text-lg">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500">
+                          <span class="text-[#ef7d00] font-medium">{{ testimonial.field_of_study }}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mt-4">{{ testimonial.title }}</h4>
+                    <p class="text-gray-600 text-sm mt-2">{{ testimonial.content }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <!-- No testimonials fallback -->
+        <div class="text-center py-16">
+          <div class="max-w-md mx-auto">
+            <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg class="w-10 h-10 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">No testimonials yet</h3>
+            <p class="text-gray-600">We're collecting amazing stories from our learners. Check back soon!</p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section id="faq" class="bg-orange-50/40 py-16 md:py-24">
+    <div class="container mx-auto px-4">
+      <!-- Section Title -->
+      <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">FAQ's</h2>
+
+      <!-- Accordion Container -->
+      <div class="max-w-4xl mx-auto space-y-4">
+        <!-- FAQ Item 1 -->
+        <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 transition-all duration-300">
+          <button class="faq-trigger flex justify-between items-center w-full text-left text-gray-800 font-semibold p-4 md:p-6">
+            <span class="text-sm md:text-lg">What is TopGrade Innovation, and how does it help students?</span>
+            <div class="w-6 h-6 md:w-8 md:h-8 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded-full">
+              <i class="fa-solid fa-chevron-down transform transition-transform duration-300 text-xs md:text-sm"></i>
+            </div>
+          </button>
+          <div class="faq-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+            <div class="px-4 pb-4 md:px-6 md:pb-6 text-gray-600 border-t border-gray-200 pt-3 md:pt-4">
+              <p class="text-sm md:text-base">TopGrade Innovation is an ed-tech platform that offers industry-focused programs across technology, design, management, and healthcare domains. We help learners gain real-world skills through live interactive sessions, hands-on projects, and placement-driven learning with industry-recognized certificate.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 transition-all duration-300">
+          <button class="faq-trigger flex justify-between items-center w-full text-left text-gray-800 font-semibold p-4 md:p-6">
+            <span class="text-sm md:text-lg">Are the classes live or recorded?</span>
+            <div class="w-6 h-6 md:w-8 md:h-8 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded-full">
+              <i class="fa-solid fa-chevron-down transform transition-transform duration-300 text-xs md:text-sm"></i>
+            </div>
+          </button>
+          <div class="faq-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+            <div class="px-4 pb-4 md:px-6 md:pb-6 text-gray-600 border-t border-gray-200 pt-3 md:pt-4">
+              <p class="text-sm md:text-base">All sessions are recorded, so you can revisit them anytime through your student dashboard. We also host live doubt-clearing sessions to provide personalized support from our mentors.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 transition-all duration-300">
+          <button class="faq-trigger flex justify-between items-center w-full text-left text-gray-800 font-semibold p-4 md:p-6">
+            <span class="text-sm md:text-lg">Will I get a certificate after completing the program?</span>
+            <div class="w-6 h-6 md:w-8 md:h-8 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded-full">
+              <i class="fa-solid fa-chevron-down transform transition-transform duration-300 text-xs md:text-sm"></i>
+            </div>
+          </button>
+          <div class="faq-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+            <div class="px-4 pb-4 md:px-6 md:pb-6 text-gray-600 border-t border-gray-200 pt-3 md:pt-4">
+              <p class="text-sm md:text-base">Yes! You’ll receive an industry-recognized certificate from TopGrade Innovation upon successful completion of your program. You can also showcase it on your LinkedIn profile and resume to boost your career opportunities.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 4 -->
+        <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 transition-all duration-300">
+          <button class="faq-trigger flex justify-between items-center w-full text-left text-gray-800 font-semibold p-4 md:p-6">
+            <span class="text-sm md:text-lg">Do you provide placement guidance in the program?</span>
+            <div class="w-6 h-6 md:w-8 md:h-8 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded-full">
+              <i class="fa-solid fa-chevron-down transform transition-transform duration-300 text-xs md:text-sm"></i>
+            </div>
+          </button>
+          <div class="faq-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+            <div class="px-4 pb-4 md:px-6 md:pb-6 text-gray-600 border-t border-gray-200 pt-3 md:pt-4">
+              <p class="text-sm md:text-base">Absolutely! With the Gold Pack, you receive placement guidance along with your internship. We offer dedicated career and placement support that includes resume building, interview preparation, and access to our hiring partner network to help you secure top job opportunities.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 5 -->
+        <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 transition-all duration-300">
+          <button class="faq-trigger flex justify-between items-center w-full text-left text-gray-800 font-semibold p-4 md:p-6">
+            <span class="text-sm md:text-lg">What happens if I face any technical issues during the program?</span>
+            <div class="w-6 h-6 md:w-8 md:h-8 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded-full">
+              <i class="fa-solid fa-chevron-down transform transition-transform duration-300 text-xs md:text-sm"></i>
+            </div>
+          </button>
+          <div class="faq-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+            <div class="px-4 pb-4 md:px-6 md:pb-6 text-gray-600 border-t border-gray-200 pt-3 md:pt-4">
+              <p class="text-sm md:text-base">No worries! We provide dedicated technical support for all students. If you face any issues, you can reach us anytime through the chat portal, call us at 89044 65305, or email support@topgradeinnovations.com, and our team will assist you promptly.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 6 -->
+        <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 transition-all duration-300">
+          <button class="faq-trigger flex justify-between items-center w-full text-left text-gray-800 font-semibold p-4 md:p-6">
+            <span class="text-sm md:text-lg">Do you offer refunds or batch transfers?</span>
+            <div class="w-6 h-6 md:w-8 md:h-8 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded-full">
+              <i class="fa-solid fa-chevron-down transform transition-transform duration-300 text-xs md:text-sm"></i>
+            </div>
+          </button>
+          <div class="faq-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+            <div class="px-4 pb-4 md:px-6 md:pb-6 text-gray-600 border-t border-gray-200 pt-3 md:pt-4">
+              <p class="text-sm md:text-base">We do not provide refunds for programs. However, if you are unable to continue for valid reasons, you can transfer your enrollment to a future batch by paying a nominal administrative fee. Please contact our support team to assist with the transfer.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 7 -->
+        <div class="faq-item bg-white rounded-xl shadow-sm border border-gray-200 transition-all duration-300">
+          <button class="faq-trigger flex justify-between items-center w-full text-left text-gray-800 font-semibold p-4 md:p-6">
+            <span class="text-sm md:text-lg">Is there a specific time to attend the program?</span>
+            <div class="w-6 h-6 md:w-8 md:h-8 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded-full">
+              <i class="fa-solid fa-chevron-down transform transition-transform duration-300 text-xs md:text-sm"></i>
+            </div>
+          </button>
+          <div class="faq-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+            <div class="px-4 pb-4 md:px-6 md:pb-6 text-gray-600 border-t border-gray-200 pt-3 md:pt-4">
+              <p class="text-sm md:text-base">No,you can attend the sessions at your convenience, as there are no fixed timings. You can learn at your own flexible schedule.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const accordionContainer = document.getElementById('accordion-container')
+      const accordionItems = accordionContainer.querySelectorAll('.accordion-item')
+    
+      const openAccordion = (item) => {
+        const content = item.querySelector('.accordion-content')
+        const icon = item.querySelector('i')
+        item.classList.add('is-active')
+        icon.classList.add('rotate-180')
+        content.style.maxHeight = content.scrollHeight + 'px'
+      }
+    
+      const closeAccordion = (item) => {
+        const content = item.querySelector('.accordion-content')
+        const icon = item.querySelector('i')
+        item.classList.remove('is-active')
+        icon.classList.remove('rotate-180')
+        content.style.maxHeight = null
+      }
+    
+      // Initially, open the first item
+      if (accordionItems.length > 0) {
+        openAccordion(accordionItems[0])
+      }
+    
+      accordionItems.forEach((item) => {
+        const trigger = item.querySelector('.accordion-trigger')
+        trigger.addEventListener('click', () => {
+          const isOpen = item.classList.contains('is-active')
+    
+          // Close all other items
+          accordionItems.forEach((otherItem) => {
+            if (otherItem !== item) {
+              closeAccordion(otherItem)
+            }
+          })
+    
+          // Toggle the clicked item
+          if (!isOpen) {
+            openAccordion(item)
+          } else {
+            closeAccordion(item)
+          }
+        })
+      })
+    })
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const faqItems = document.querySelectorAll('.faq-item')
+    
+      const openFaq = (item) => {
+        const content = item.querySelector('.faq-content')
+        const icon = item.querySelector('i')
+        item.classList.add('is-active')
+        icon.classList.add('rotate-180')
+        content.style.maxHeight = content.scrollHeight + 'px'
+      }
+    
+      const closeFaq = (item) => {
+        const content = item.querySelector('.faq-content')
+        const icon = item.querySelector('i')
+        item.classList.remove('is-active')
+        icon.classList.remove('rotate-180')
+        content.style.maxHeight = null
+      }
+    
+      faqItems.forEach((item) => {
+        const trigger = item.querySelector('.faq-trigger')
+        trigger.addEventListener('click', () => {
+          const isOpen = item.classList.contains('is-active')
+    
+          // Close all other items for a clean experience
+          faqItems.forEach((otherItem) => {
+            if (otherItem !== item) {
+              closeFaq(otherItem)
+            }
+          })
+    
+          // Toggle the clicked item
+          if (!isOpen) {
+            openFaq(item)
+          } else {
+            closeFaq(item)
+          }
+        })
+      })
+    })
+  </script>
+
+  <!-- Video Modal -->
+  <div id="videoModal" class="fixed inset-0 bg-black/20 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div class="relative bg-white rounded-2xl overflow-hidden max-w-4xl w-full mx-4 shadow-2xl">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between p-6 border-b bg-gradient-to-r from-[#ef7d00] to-[#ef7d00] text-white">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <i class="fa-solid fa-play text-sm"></i>
+          </div>
+          <div>
+            <h3 id="videoTitle" class="text-lg font-semibold">Video Title</h3>
+            <p class="text-white/80 text-sm">
+              <i class="fa-solid fa-clock mr-1"></i>
+              <span id="videoDuration">Duration</span>
+            </p>
+          </div>
+        </div>
+        <button id="closeVideoModal" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"><i class="fa-solid fa-times text-lg"></i></button>
+      </div>
+
+      <!-- Video Container -->
+      <div class="relative bg-black">
+        <video id="videoPlayer" class="w-full h-auto max-h-[70vh]" controls preload="metadata">
+          <source id="videoSource" src="" type="video/mp4" />Your browser does not support the video tag.
+        </video>
+
+        <!-- Video Overlay when not playing -->
+        <div id="videoOverlay" class="absolute inset-0 bg-black/50 flex items-center justify-center">
+          <button id="playButton" class="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"><i class="fa-solid fa-play text-3xl text-orange-600 ml-1"></i></button>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-6 bg-gray-50 border-t">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <span class="text-sm text-gray-600">
+              <i class="fa-solid fa-eye text-orange-500 mr-1"></i>
+              Free Preview Video
+            </span>
+          </div>
+          <div class="flex gap-3">
+            <button id="closeVideoBtn" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const videoModal = document.getElementById('videoModal')
+      const videoPlayer = document.getElementById('videoPlayer')
+      const videoSource = document.getElementById('videoSource')
+      const videoTitle = document.getElementById('videoTitle')
+      const videoDuration = document.getElementById('videoDuration')
+      const videoOverlay = document.getElementById('videoOverlay')
+      const playButton = document.getElementById('playButton')
+      const closeVideoModal = document.getElementById('closeVideoModal')
+      const closeVideoBtn = document.getElementById('closeVideoBtn')
+    
+      // Video modal functionality
+      document.querySelectorAll('.intro-video-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const videoUrl = this.dataset.videoUrl
+          const title = this.dataset.videoTitle
+          const duration = this.dataset.videoDuration
+    
+          // Set video details
+          videoSource.src = videoUrl
+          videoTitle.textContent = title
+          videoDuration.textContent = duration
+    
+          // Load the video
+          videoPlayer.load()
+    
+          // Show modal
+          videoModal.classList.remove('hidden')
+          document.body.style.overflow = 'hidden'
+    
+          // Reset video state
+          videoPlayer.pause()
+          videoPlayer.currentTime = 0
+          videoOverlay.classList.remove('hidden')
+        })
+      })
+    
+      // Play button functionality
+      playButton.addEventListener('click', function () {
+        videoPlayer.play()
+        videoOverlay.classList.add('hidden')
+      })
+    
+      // Video player events
+      videoPlayer.addEventListener('play', function () {
+        videoOverlay.classList.add('hidden')
+      })
+    
+      videoPlayer.addEventListener('pause', function () {
+        if (videoPlayer.currentTime === 0) {
+          videoOverlay.classList.remove('hidden')
+        }
+      })
+    
+      videoPlayer.addEventListener('ended', function () {
+        videoOverlay.classList.remove('hidden')
+      })
+    
+      // Close modal functionality
+      function closeModal() {
+        videoModal.classList.add('hidden')
+        document.body.style.overflow = 'auto'
+        videoPlayer.pause()
+        videoPlayer.currentTime = 0
+        videoOverlay.classList.remove('hidden')
+      }
+    
+      closeVideoModal.addEventListener('click', closeModal)
+      closeVideoBtn.addEventListener('click', closeModal)
+    
+      // Close modal when clicking outside
+      videoModal.addEventListener('click', function (e) {
+        if (e.target === videoModal) {
+          closeModal()
+        }
+      })
+    
+      // Close modal with ESC key
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !videoModal.classList.contains('hidden')) {
+          closeModal()
+        }
+      })
+    
+      // Prevent modal content click from closing modal
+      videoModal.querySelector('.relative').addEventListener('click', function (e) {
+        e.stopPropagation()
+      })
+    })
+  </script>
+
+  <script>
+  // Application Form AJAX Submission
+  document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("application-form");
+  const submitBtn = document.getElementById("submit-btn");
+  const submitText = document.getElementById("submit-text");
+  const submitLoading = document.getElementById("submit-loading");
+  const messageDiv = document.getElementById("form-message");
+
+  // Debug: Check if elements are found
+  console.log("Form elements:", { form, submitBtn, submitText, submitLoading, messageDiv });
+  
+  if (!form) {
+    console.error("Application form not found!");
+    return;
+  }
+
+  // Function to show message
+  function showMessage(message, isSuccess = true) {
+    messageDiv.textContent = message;
+    messageDiv.className = `p-3 rounded-lg text-sm font-medium ${
+      isSuccess 
+        ? "bg-green-100 text-green-800 border border-green-200" 
+        : "bg-red-100 text-red-800 border border-red-200"
+    }`;
+    messageDiv.classList.remove("hidden");
+    
+    // Scroll to message
+    messageDiv.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  // Function to hide message
+  function hideMessage() {
+    messageDiv.classList.add("hidden");
+  }
+
+  // Function to set loading state
+  function setLoading(isLoading) {
+    if (isLoading) {
+      submitBtn.disabled = true;
+      submitText.classList.add("hidden");
+      submitLoading.classList.remove("hidden");
+    } else {
+      submitBtn.disabled = false;
+      submitText.classList.remove("hidden");
+      submitLoading.classList.add("hidden");
+    }
+  }
+
+  // Handle form submission
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    console.log("Form submission triggered!");
+    
+    // Hide any existing messages
+    hideMessage();
+    
+    // Get form data
+    const formData = {
+      first_name: document.getElementById("first-name").value.trim(),
+      phone_number: document.getElementById("phone-number").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      college_name: document.getElementById("college-name").value.trim(),
+      program_id: {{ program.id }}
+    };
+
+    // Basic validation
+    if (!formData.first_name || !formData.phone_number || !formData.email || !formData.college_name) {
+      showMessage("Please fill in all required fields.", false);
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      showMessage("Please enter a valid email address.", false);
+      return;
+    }
+
+    // Phone validation (digits only, 10-15 digits)
+    const phoneRegex = /^[0-9]{10,15}$/;
+    if (!phoneRegex.test(formData.phone_number)) {
+      showMessage("Please enter a valid phone number (10-15 digits only, no letters or special characters).", false);
+      return;
+    }
+
+    // Set loading state
+    setLoading(true);
+    console.log("Submitting form data:", formData);
+
+    // Submit form
+    fetch("{% url 'submit_program_enquiry' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      setLoading(false);
+      
+      if (data.success) {
+        showMessage(data.message, true);
+        // Reset form on success
+        form.reset();
+        
+        // Optional: Track conversion for analytics
+        if (typeof gtag !== "undefined") {
+          gtag("event", "form_submit", {
+            "event_category": "engagement",
+            "event_label": "program_enquiry",
+            "program_id": {{ program.id }},
+            "program_title": "{{ program.title|escapejs }}"
+          });
+        }
+        
+      } else {
+        showMessage(data.message, false);
+      }
+    })
+    .catch(error => {
+      setLoading(false);
+      console.error("Error:", error);
+      showMessage("An error occurred while submitting your enquiry. Please try again.", false);
+    });
+  });
+});
+</script>
+{% endblock %}

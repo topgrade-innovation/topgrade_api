@@ -1,0 +1,444 @@
+{% extends 'website/base.html' %}
+{% load static %}
+{% block title %}
+  TopGrade
+{% endblock %}
+{% block content %}
+  <style>
+    .empowering-background {
+      background-color: #2c1e12;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,5 A95,95 0 1,1 99.9,5 Z'/%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,25 A75,75 0 1,1 99.9,25 Z'/%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,45 A55,55 0 1,1 99.9,45 Z'/%3e%3c/svg%3e"), linear-gradient(160deg, #2c1e12 0%, #4d2c0d 100%);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 600px, 100% 100%;
+    }
+    
+    @keyframes scroll-text {
+      0% {
+        transform: translateX(0);
+      }
+    
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    
+    .animate-scroll-text {
+      animation: scroll-text 25s linear infinite;
+    }
+    
+    .hero-grid-background {
+      background-color: #1c120a;
+      background-image: linear-gradient(rgba(239, 125, 0, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(239, 125, 0, 0.15) 1px, transparent 1px), linear-gradient(180deg, #2c1e12 0%, #1c120a 100%);
+      background-size: 50px 50px, 50px 50px, 100% 100%;
+      background-position: -1px -1px, -1px -1px, 0 0;
+    }
+  </style>
+
+  <!-- Empowering Background -->
+  <section class="empowering-background text-white">
+    <div class="container mx-auto flex flex-col items-center justify-center text-center px-6 py-20">
+      <h1 class="text-5xl md:text-6xl font-bold leading-tight max-w-4xl">Your Path from Learning to <span class="text-[#ef7d00]">Earning Starts Here</span></h1>
+      <p class="mt-6 text-lg text-white/80 max-w-2xl">Bridging the gap between learning and earning with mentorship, practical skills, and industry-driven insights for every student</p>
+    </div>
+  </section>
+
+  <!-- Our Core Values -->
+  <section>
+    <div class="bg-gradient-to-r from-[#ef7d00] to-orange-500 border-y border-white/10 overflow-hidden">
+      <div class="flex animate-scroll-text whitespace-nowrap py-4">
+        <div class="flex items-center">
+          <span class="text-white text-lg font-semibold mx-6">SEO</span>
+          <span class="text-white/70 text-xl mx-6">&#10022;</span>
+          <span class="text-white text-lg font-semibold mx-6">Database Management</span>
+          <span class="text-white/70 text-xl mx-6">&#10022;</span>
+          <span class="text-white text-lg font-semibold mx-6">Data Analysis</span>
+          <span class="text-white/70 text-xl mx-6">&#10022;</span>
+          <span class="text-white text-lg font-semibold mx-6">Email Marketing</span>
+          <span class="text-white/70 text-xl mx-6">&#10022;</span>
+          <span class="text-white text-lg font-semibold mx-6">Social Media Marketing</span>
+          <span class="text-white/70 text-xl mx-6">&#10022;</span>
+          <span class="text-white text-lg font-semibold mx-6">Content Marketing</span>
+          <span class="text-white/70 text-xl mx-6">&#10022;</span>
+        </div>
+
+        <div class="flex items-center" aria-hidden="true">
+          <span class="text-white text-lg font-semibold mx-6">SEO</span>
+          <span class="text-white/70 text-xl mx-6">&#10022;</span>
+          <span class="text-white text-lg font-semibold mx-6">Database Management</span>
+          <span class="text-white/70 text-xl mx-6">&#10022;</span>
+          <span class="text-white text-lg font-semibold mx-6">Data Analysis</span>
+          <span class="text-white/70 text-xl mx-6">&#10022;</span>
+          <span class="text-white text-lg font-semibold mx-6">Email Marketing</span>
+          <span class="text-white/70 text-xl mx-6">&#10022;</span>
+          <span class="text-white text-lg font-semibold mx-6">Social Media Marketing</span>
+          <span class="text-white/70 text-xl mx-6">&#10022;</span>
+          <span class="text-white text-lg font-semibold mx-6">Content Marketing</span>
+          <span class="text-white/70 text-xl mx-6">&#10022;</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What Drives Us -->
+  <section class="bg-[#2c1e12] text-white py-16 md:py-16">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-18">What Drives Us</h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-24">
+        <div class="relative p-3 bg-gradient-to-br from-[#ef7d00] to-orange-400/50 rounded-3xl">
+          <img src="{% static 'assets/website/images/icon_card.png' %}" alt="Decorative Sparkle" class="hidden md:block w-16 h-16 absolute -top-10 -right-13 drop-shadow-lg" />
+          <div class="flex items-center gap-4">
+            <img src="{% static 'assets/website/images/what_drive_us.webp' %}" alt="Instructor teaching a class" class="w-full h-auto object-cover rounded-2xl" />
+          </div>
+        </div>
+
+        <div class="space-y-6 text-white/90 text-lg self-start">
+          <p class="md:mt-4">
+            At <span class="font-bold text-[#ef7d00]">Top Grade Innovation</span>, we bridge the gap between learning and career success. Our programs connect students with industry-leading experts who provide practical insights, mentorship, and hands-on experiences. Every course, project, and internship is designed to equip learners with the skills, confidence, and real-world knowledge needed to excel in today’s competitive job market.
+          </p>
+          <p>Whether you are just starting out or looking to upskill, we empower you to transform your education into tangible career opportunities—anywhere, anytime.</p>
+        </div>
+      </div>
+
+      <!-- CEO Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-24">
+        <div class="space-y-6 text-white/90 text-lg self-start">
+          <!-- CEO Title -->
+          <div class="space-y-2">
+            <h3 class="text-3xl md:text-4xl font-bold text-white">CEO & Founder</h3>
+            <h4 class="text-xl md:text-2xl font-semibold text-[#ef7d00]">Shyam Ganesh</h4>
+          </div>
+
+          <!-- Vision Statement -->
+          <div class="space-y-4">
+            <p class="text-lg leading-relaxed">Leading TopGrade Innovation with a vision to bridge the gap between academic learning and industry requirements. Passionate about empowering students with practical skills that transform careers and create lasting impact.</p>
+          </div>
+
+          <!-- Another Quote -->
+          <div class="bg-gradient-to-r from-blue-500/20 to-purple-600/10 p-6 rounded-2xl border-l-4 border-blue-400">
+            <blockquote class="text-lg font-medium italic text-white/95 leading-relaxed">"Success is not just about reaching the destination; it's about empowering others to discover their own path to greatness."</blockquote>
+          </div>
+
+          <!-- Contact Information -->
+          <div class="space-y-4 pt-4">
+            <h5 class="text-xl font-semibold text-white mb-4">Connect with Shyam</h5>
+
+            <!-- Email -->
+            <div class="flex items-center space-x-3 group">
+              <i class="fas fa-envelope text-[#ef7d00] text-2xl group-hover:scale-110 transition-transform duration-300"></i>
+              <a href="mailto:shyam@topgradeinnovations.com" class="text-white hover:text-[#ef7d00] transition-colors duration-300 font-medium">shyam@topgradeinnovations.com</a>
+            </div>
+
+            <!-- LinkedIn -->
+            <div class="flex items-center space-x-3 group">
+              <i class="fab fa-linkedin text-blue-400 text-2xl group-hover:scale-110 transition-transform duration-300"></i>
+              <a href="https://www.linkedin.com/in/shyam-sb-a6ba3423b" target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-400 transition-colors duration-300 font-medium">Connect on LinkedIn</a>
+            </div>
+          </div>
+        </div>
+        <div class="relative p-3 bg-gradient-to-br from-[#ef7d00] to-orange-400/50 rounded-3xl">
+          <img src="{% static 'assets/website/images/icon_card.png' %}" alt="Decorative Sparkle" class="hidden md:block w-16 h-16 absolute -top-10 -left-13 rotate-270 drop-shadow-lg" />
+          <div class="flex items-center gap-4 h-[500px] overflow-hidden">
+            <img src="{% static 'assets/website/images/ceo_topgrade.jpeg' %}" alt="Instructor teaching a class" class="w-full object-cover rounded-2xl h-[500px] object-top" />
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-8">Our Impact</h2>
+      <div class="py-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="bg-gradient-to-br from-orange-50 to-amber-100 text-gray-800 p-8 rounded-3xl flex flex-col h-full">
+          <h3 class="text-5xl font-bold text-[#ef7d00]">10x</h3>
+          <p class="mt-2 font-medium">Growth in 2024 in terms of revenue.</p>
+          <div class="flex-grow flex items-end mt-6">
+            <div class="w-full flex items-end gap-2 h-40">
+              <div class="flex-1 bg-sky-300 h-1/4 rounded-t-md"></div>
+              <div class="flex-1 bg-sky-400 h-1/2 rounded-t-md"></div>
+              <div class="flex-1 bg-sky-500 h-3/4 rounded-t-md relative">
+                <i class="fa-solid fa-arrow-trend-up text-5xl text-red-500 absolute -bottom-2 -right-4"></i>
+              </div>
+              <div class="flex-1 bg-sky-600 h-full rounded-t-md"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-orange-50 to-amber-100 text-gray-800 p-8 rounded-3xl flex flex-col h-full">
+          <h3 class="text-4xl font-bold text-[#ef7d00] leading-tight">Mentees <br /> Enrolled</h3>
+          <p class="mt-4 font-medium">8x growth in mentees</p>
+          <div class="flex-grow flex flex-col justify-end mt-6">
+            <div class="flex items-center -space-x-4">
+              <img src="https://i.pravatar.cc/150?img=1" alt="Mentee 1" class="w-12 h-12 rounded-full border-2 border-white object-cover" />
+              <img src="https://i.pravatar.cc/150?img=2" alt="Mentee 2" class="w-12 h-12 rounded-full border-2 border-white object-cover" />
+              <img src="https://i.pravatar.cc/150?img=3" alt="Mentee 3" class="w-12 h-12 rounded-full border-2 border-white object-cover" />
+              <img src="https://i.pravatar.cc/150?img=4" alt="Mentee 4" class="w-12 h-12 rounded-full border-2 border-white object-cover" />
+            </div>
+            <p class="font-bold mt-2">20K+ Mentees</p>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-orange-50 to-amber-100 text-gray-800 p-8 rounded-3xl flex flex-col h-full">
+          <h3 class="text-5xl font-bold text-[#ef7d00]">94%</h3>
+          <p class="mt-2 font-medium">Mentees satisfaction has been raised from 82% to 94%</p>
+          <div class="flex-grow flex items-end mt-6">
+            <div class="w-full aspect-video relative">
+              <img src="{% static '\assets\website\images\emoji-satisfaction-meter-gradient.png' %}" alt="Satisfaction Meter Smiley" class="max-w-full h-auto object-contain" />
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-orange-50 to-amber-100 text-gray-800 p-8 rounded-3xl flex flex-col h-full">
+          <h3 class="text-5xl font-bold text-[#ef7d00]">900+</h3>
+          <p class="mt-2 font-medium">Over 900 mentees successfully transitioned to their dream careers</p>
+          <div class="flex-grow flex items-center justify-center mt-6 relative h-40">
+            <div class="bg-[#2c1e12] text-white p-2 rounded-lg text-xs w-32 text-center absolute top-0 left-4 transform -rotate-6">
+              <img src="https://i.pravatar.cc/150?img=5" class="w-8 h-8 rounded-full mx-auto mb-1" />
+              <p class="font-bold">Pratyush Raj</p>
+              <p class="opacity-70">Web Developer</p>
+            </div>
+            <div class="bg-[#2c1e12] text-white p-2 rounded-lg text-xs w-32 text-center absolute top-10 right-0 transform rotate-6 z-10">
+              <img src="https://i.pravatar.cc/150?img=2" class="w-8 h-8 rounded-full mx-auto mb-1" />
+              <p class="font-bold">Sonal Singh</p>
+              <p class="opacity-70">Marketing Head</p>
+            </div>
+            <div class="bg-[#2c1e12] text-white p-2 rounded-lg text-xs w-32 text-center absolute bottom-0 left-12 transform rotate-3">
+              <img src="https://i.pravatar.cc/150?img=1" class="w-8 h-8 rounded-full mx-auto mb-1" />
+              <p class="font-bold">M. Sravan</p>
+              <p class="opacity-70">Tech Student</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="py-8 md:pt-8 bg-[#2c1e12] text-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">How It Works</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="bg-[#3e2e21] p-8 rounded-2xl border border-orange-500/20 shadow-lg flex flex-col items-center text-center card transition-transform duration-300 hover:scale-105 hover:shadow-2xl h-80">
+          <div class="relative flex items-center justify-center w-20 h-20 rounded-full mb-6 transition-all duration-300 transform group-hover:scale-110">
+            <i class="fa-solid fa-circle absolute text-[#ef7d00] text-5xl"></i>
+            <span class="text-white text-3xl font-extrabold z-10">1</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-2 text-orange-300">Learn</h3>
+          <p class="text-base text-gray-300">Access our structured, industry-approved curriculum with basic to advanced levels of professional access.</p>
+        </div>
+        <div class="bg-[#3e2e21] p-8 rounded-2xl border border-orange-500/20 shadow-lg flex flex-col items-center text-center card transition-transform duration-300 hover:scale-105 hover:shadow-2xl h-80">
+          <div class="relative flex items-center justify-center w-20 h-20 rounded-full mb-6 transition-all duration-300 transform group-hover:scale-110">
+            <i class="fa-solid fa-circle absolute text-[#ef7d00] text-5xl"></i>
+            <span class="text-white text-3xl font-extrabold z-10">2</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-2 text-orange-300">Practice</h3>
+          <p class="text-base text-gray-300">Work on assignments and live projects guided by mentors, involving yourself in minor and major projects.</p>
+        </div>
+
+        <div class="bg-[#3e2e21] p-8 rounded-2xl border border-orange-500/20 shadow-lg flex flex-col items-center text-center card transition-transform duration-300 hover:scale-105 hover:shadow-2xl h-80">
+          <div class="relative flex items-center justify-center w-20 h-20 rounded-full mb-6 transition-all duration-300 transform group-hover:scale-110">
+            <i class="fa-solid fa-circle absolute text-[#ef7d00] text-5xl"></i>
+            <span class="text-white text-center text-3xl font-extrabold z-10">3</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-2 text-orange-300">Intern</h3>
+          <p class="text-base text-gray-300">Gain hands-on experience with our partner companies and earn three premium certificates from MSME, Skill India, and ISO.</p>
+        </div>
+
+        <div class="bg-[#3e2e21] p-8 rounded-2xl border border-orange-500/20 shadow-lg flex flex-col items-center text-center card transition-transform duration-300 hover:scale-105 hover:shadow-2xl h-80">
+          <div class="relative flex items-center justify-center w-20 h-20 rounded-full mb-6 transition-all duration-300 transform group-hover:scale-110">
+            <i class="fa-solid fa-circle absolute text-[#ef7d00] text-5xl"></i>
+            <span class="text-white text-3xl font-extrabold z-10">4</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-2 text-orange-300">Grow</h3>
+          <p class="text-base text-gray-300">Build your resume, portfolio, and confidence to succeed in the job market.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Core Values -->
+  <section class="bg-[#2c1e12] text-white p-8 md:pt-16">
+    <div class="container mx-auto px-4">
+      <div class="text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-12">Our Core Values</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="relative bg-rose-200 text-gray-800 p-8 rounded-3xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+          <div class="absolute -bottom-8 -right-8 text-rose-300/50 text-[120px] font-serif transform rotate-12">“</div>
+          <h3 class="font-bold text-2xl text-[#ef7d00]">Ownership</h3>
+          <p class="mt-4 text-lg leading-relaxed relative">We are a set of dependable individuals. We get the job done or have the agency to get it done!</p>
+        </div>
+
+        <div class="relative bg-teal-100/70 text-gray-800 p-8 rounded-3xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+          <div class="absolute -bottom-8 -right-4 opacity-30">
+            <svg width="150" height="150" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50 90 L10 20" stroke="#0d9488" stroke-width="8" stroke-linecap="round" />
+              <path d="M50 90 L90 20" stroke="#0d9488" stroke-width="8" stroke-linecap="round" />
+              <path d="M50 90 L50 10" stroke="#0d9488" stroke-width="8" stroke-linecap="round" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-2xl text-[#ef7d00]">Growth Mindset</h3>
+          <p class="mt-4 text-lg leading-relaxed relative">We believe in intellectual honesty and constantly learn through feedback loops with all our stakeholders.</p>
+        </div>
+
+        <div class="relative bg-stone-200 text-gray-800 p-8 rounded-3xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+          <div class="absolute -bottom-10 -right-10 w-48 h-48 border-2 border-stone-300/80 rounded-full"></div>
+          <div class="absolute -bottom-5 -right-5 w-40 h-40 border-2 border-stone-300/80 rounded-full"></div>
+          <h3 class="font-bold text-2xl text-[#ef7d00]">Winning Spirit</h3>
+          <p class="mt-4 text-lg leading-relaxed relative">We want to set the standards and have others follow our lead. We want to build not just a happy team but a winning team.</p>
+        </div>
+
+        <div class="relative bg-orange-300 text-gray-800 p-8 rounded-3xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+          <div class="absolute top-4 right-4 opacity-20">
+            <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50 5 L75 20 L75 50 L50 65 L25 50 L25 20 Z" stroke="#8c2f0a" stroke-width="4" />
+              <path d="M25 20 L50 35 L75 20" stroke="#8c2f0a" stroke-width="4" />
+              <path d="M50 65 V 35" stroke="#8c2f0a" stroke-width="4" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-2xl text-[#ef7d00]">Integrity</h3>
+          <p class="mt-4 text-lg leading-relaxed relative">We act with honesty and adhere to the highest standards of moral and ethical values through our personal and professional behavior.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose TopGrade Section -->
+  <section class="bg-[#2c1e12] text-white pt-8 md:pt-16">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">Why Choose TopGrade?</h2>
+        <p class="text-x max-w-3xl mx-auto">Discover what makes TopGrade Innovation the perfect choice for your learning journey and career transformation.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Expert-Led Learning -->
+        <div class="bg-gradient-to-br from-orange-50 to-amber-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
+          <div class="flex flex-col items-center text-center">
+            <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Expert-Led Learning</h3>
+            <p class="text-gray-600 leading-relaxed">Learn directly from professionals who have real-world experience in their fields.</p>
+          </div>
+        </div>
+
+        <!-- Hands-On Projects -->
+        <div class="bg-gradient-to-br from-orange-50 to-amber-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
+          <div class="flex flex-col items-center text-center">
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Hands-On Projects</h3>
+            <p class="text-gray-600 leading-relaxed">Gain practical skills through assignments and projects designed for industry relevance.</p>
+          </div>
+        </div>
+
+        <!-- Internship Opportunities -->
+        <div class="bg-gradient-to-br from-orange-50 to-amber-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
+          <div class="flex flex-col items-center text-center">
+            <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Internship Opportunities</h3>
+            <p class="text-gray-600 leading-relaxed">Apply your knowledge in real work environments to build your portfolio.</p>
+          </div>
+        </div>
+
+        <!-- Career Guidance -->
+        <div class="bg-gradient-to-br from-orange-50 to-amber-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
+          <div class="flex flex-col items-center text-center">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Career Guidance</h3>
+            <p class="text-gray-600 leading-relaxed">Receive mentorship, resume building, and interview preparation to secure your dream role.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Life at TopGrade -->
+  <section class="bg-[#2c1e12] text-white py-8 md:py-24">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold">Life At Top Grade</h2>
+        <svg class="w-full max-w-2xl mx-auto mt-4" viewBox="0 0 1000 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 25 H 1000" stroke="#ef7d00" stroke-width="2" stroke-opacity="0.5" />
+          <circle cx="50" cy="25" r="15" fill="#fde68a" fill-opacity="0.5" />
+          <circle cx="150" cy="25" r="15" fill="#7dd3fc" fill-opacity="0.5" />
+          <circle cx="250" cy="25" r="15" fill="#fca5a5" fill-opacity="0.5" />
+          <circle cx="350" cy="25" r="15" fill="#d8b4fe" fill-opacity="0.5" />
+          <circle cx="450" cy="25" r="15" fill="#fde68a" fill-opacity="0.5" />
+          <circle cx="550" cy="25" r="15" fill="#7dd3fc" fill-opacity="0.5" />
+          <circle cx="650" cy="25" r="15" fill="#fca5a5" fill-opacity="0.5" />
+          <circle cx="750" cy="25" r="15" fill="#d8b4fe" fill-opacity="0.5" />
+          <circle cx="850" cy="25" r="15" fill="#fde68a" fill-opacity="0.5" />
+          <circle cx="950" cy="25" r="15" fill="#7dd3fc" fill-opacity="0.5" />
+        </svg>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {% for image in gallery_images %}
+          <div class="overflow-hidden aspect-square">
+            {% if image.image %}
+              <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:'Life at TopGrade' }}" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300" />
+            {% else %}
+              <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                <i class="ri-image-line text-gray-400 text-4xl"></i>
+              </div>
+            {% endif %}
+          </div>
+        {% empty %}
+          <!-- Fallback images if no gallery images are available -->
+          <div class="overflow-hidden aspect-square">
+            <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1332&q=80" alt="Gallery image 1" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300" />
+          </div>
+          <div class="overflow-hidden aspect-square">
+            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Gallery image 2" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300" />
+          </div>
+          <div class="overflow-hidden aspect-square">
+            <img src="https://images.unsplash.com/photo-1554224155-1696413565d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Gallery image 3" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300" />
+          </div>
+          <div class="overflow-hidden aspect-square">
+            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Gallery image 4" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300" />
+          </div>
+          <div class="overflow-hidden aspect-square">
+            <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Gallery image 5" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300" />
+          </div>
+          <div class="overflow-hidden aspect-square">
+            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Gallery image 6" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300" />
+          </div>
+          <div class="overflow-hidden aspect-square">
+            <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1332&q=80" alt="Gallery image 7" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300" />
+          </div>
+          <div class="overflow-hidden aspect-square">
+            <img src="https://images.unsplash.com/photo-1572021335469-31706a17aaef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Gallery image 8" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300" />
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Join the TopGrade Community -->
+  <div class="bg-[#2c1e12] flex flex-col items-center justify-center text-white py-3 px-8">
+    <div class="container bg-gradient-to-br from-orange-50 to-amber-100 rounded-xl max-w-2xl flex flex-col items-center px-8 py-6">
+      <div class="text-center mb-8 space-y-3">
+        <h1 class="text-xl md:text-3xl text-[#ef7d00] font-bold mb-4">Join the TopGrade Community</h1>
+        <p class="text-center text-base text-gray-800 mb-8">Be part of a vibrant ecosystem of learners, mentors, and industry experts. Collaborate, innovate, and grow in an environment designed to help you achieve your goals faster and smarter.</p>
+        <div class="flex flex-col md:flex-row justify-center gap-4">
+          <a href="{% url 'contact' %}" class="inline-block bg-gradient-to-r from-[#ef7d00] to-orange-500 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">Connect with us</a>
+          <a href="{% url 'program_list' %}" class="bg-transparent border border-orange-500 text-orange-500 font-bold py-3 px-8 rounded-lg hover:bg-orange-500 hover:text-white transition-colors">Explore Programs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

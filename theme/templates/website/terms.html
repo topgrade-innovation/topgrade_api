@@ -1,0 +1,190 @@
+{% extends 'website/base.html' %}
+{% block title %}
+  Terms and Conditions | TopGrade Innovation
+{% endblock %}
+
+{% block content %}
+  <style>
+    @keyframes scroll-text {
+      0% {
+        transform: translateX(0);
+      }
+    
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    
+    .animate-scroll-text {
+      animation: scroll-text 30s linear infinite;
+    }
+    
+    /* Faster on mobile */
+    @media (max-width: 768px) {
+      .animate-scroll-text {
+        animation: scroll-text 15s linear infinite;
+        /* increase speed */
+      }
+    }
+    
+    .hero-background-enhanced {
+      background-color: #2c1e12;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,5 A95,95 0 1,1 99.9,5 Z'/%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,25 A75,75 0 1,1 99.9,25 Z'/%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,45 A55,55 0 1,1 99.9,45 Z'/%3e%3c/svg%3e"), linear-gradient(160deg, #4d2c0d 0%, #3a220c 100%);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 600px, 100% 100%;
+    }
+  </style>
+  <main class="bg-gray-50 min-h-screen">
+    <!-- HERO SECTION -->
+    <section class="hero-background-enhanced py-20 md:py-24">
+      <div class="container mx-auto px-4 text-center text-white">
+        <h1 class="text-5xl md:text-6xl font-extrabold">Terms and Conditions</h1>
+        <p class="mt-4 text-lg text-white/80 max-w-2xl mx-auto">Please read these terms carefully before using our platform</p>
+        <div class="flex items-center justify-center gap-2 text-blue-200">
+          <span>TopGrade Innovation</span>
+          <span>•</span>
+          <span>Last updated: January 2025</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Terms Content -->
+    <section class="py-16">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+          <!-- Main Title -->
+          <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">TERMS AND CONDITIONS</h2>
+            <p class="text-xl text-[#ef7d00] font-semibold">TopGrade Learn Today, Lead Tomorrow</p>
+            <p class="text-gray-600 mt-4">Welcome to TopGrade Innovation, your trusted learning partner. These Terms and Conditions describe the rules for using our website at www.topgradeinnovation.com. By visiting or using our website, you acknowledge that you have read, understood, and agree to be bound by these Terms.</p>
+          </div>
+
+          <!-- Terms Sections -->
+          <div class="space-y-8">
+            <!-- Section 1 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">1. Acceptance of Terms</h3>
+              <p class="text-gray-700 leading-relaxed">By accessing or using Top Grade Innovation's website (www.topgradeinnovation.com), mobile application, or enrolling in any course, internship, or program ("Services"), you agree to be bound by these Terms and Conditions. If you do not agree, please do not access or use our platform.</p>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">2. Definitions</h3>
+              <p class="text-gray-700 leading-relaxed">In these Terms, "Company", "we", "us", or "our" refers to Top Grade Innovation Private Limited. "User" or "you" refers to any person accessing or registering on our website, application, or Services. "Programs" or "Courses" refer to the online learning programs, internships, or training modules offered by the Company. "Platform" refers to all digital assets owned or operated by Top Grade Innovation, including the website, mobile app, dashboards, and communication systems.</p>
+            </div>
+
+            <!-- Section 3 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">3. Eligibility</h3>
+              <p class="text-gray-700 leading-relaxed">You must be at least eighteen (18) years old to use our platform. If you are under 18, you may access our Services only under parental or guardian supervision. By registering, you confirm that the information provided is accurate, current, and complete.</p>
+            </div>
+
+            <!-- Section 4 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">4. Intellectual Property</h3>
+              <p class="text-gray-700 leading-relaxed">All content on the Platform, including but not limited to text, graphics, videos, logos, trademarks, course materials, and software, are the exclusive intellectual property of Top Grade Innovation Private Limited or its licensors. You are granted a limited license to access and use this content solely for your personal educational purposes. You may not copy, modify, distribute, reproduce, or commercially exploit any content without our prior written permission.</p>
+            </div>
+
+            <!-- Section 5 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">5. Restrictions on Use</h3>
+              <p class="text-gray-700 leading-relaxed">You are strictly prohibited from using, copying, or distributing our content for commercial purposes; modifying or transmitting any materials from our Platform without consent; using automated systems or bots to access or scrape data; or interfering with the proper functioning of our website. Violation of these restrictions may result in immediate suspension of access and potential legal action.</p>
+            </div>
+
+            <!-- Section 6 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">6. User Account and Responsibilities</h3>
+              <p class="text-gray-700 leading-relaxed mb-3">To access certain features, you may be required to create an account. You are responsible for maintaining the confidentiality of your credentials and for all activities under your account. Sharing login details or unauthorized use of another person's account is strictly prohibited. In case of unauthorized activity, you must promptly notify us at support@topgradeinnovations.com.</p>
+              <ul class="list-disc list-inside text-gray-700 space-y-1">
+                <li>Report any unauthorized use immediately to support@topgradeinnovations.com</li>
+                <li>Top Grade Innovation will not be liable for losses resulting from unauthorized account use</li>
+              </ul>
+            </div>
+
+            <!-- Section 7 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">7. User Content</h3>
+              <p class="text-gray-700 leading-relaxed">Some parts of our Platform may allow you to submit feedback, reviews, or other user-generated content. You represent that you have full rights to submit such content and that it does not infringe any intellectual property rights or contain offensive, defamatory, or unlawful material. By submitting content, you grant us a non-exclusive, royalty-free license to use it for promotional or operational purposes.</p>
+            </div>
+
+            <!-- Section 8 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">8. Programs and Course Access</h3>
+              <p class="text-gray-700 leading-relaxed">Top Grade Innovation provides recorded sessions accessible anytime through your dashboard, along with live doubt-clearing sessions for personalized guidance. You can learn at your convenience without fixed timings. Placement guidance is included in select packages such as the Gold Pack, which provides resume support, interview training, and access to hiring networks. While we aim to assist with employment readiness, we do not guarantee job placement.</p>
+            </div>
+
+            <!-- Section 9 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">9. Payments and Fees</h3>
+              <p class="text-gray-700 leading-relaxed">All payments for our programs must be made in full or as per the agreed installment schedule before course access is granted. Fees once paid are non-refundable. Prices, inclusions, and program details may be updated at any time without notice. Payment implies acknowledgment and acceptance of these Terms.</p>
+            </div>
+
+            <!-- Section 10 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">10. Disclaimer</h3>
+              <p class="text-gray-700 leading-relaxed">All materials, courses, and information provided through our Platform are made available on an "as is" and "as available" basis. Top Grade Innovation does not warrant that the website or Services will be uninterrupted, secure, or error-free. We make no representations regarding the accuracy, reliability, or completeness of any content. You acknowledge that participation in online learning involves inherent risks, and you agree that the Company shall not be held liable for any loss resulting from the use of our Services.</p>
+            </div>
+
+            <!-- Section 11 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">11. Limitation of Liability</h3>
+              <p class="text-gray-700 leading-relaxed">To the maximum extent permitted by applicable law, Top Grade Innovation Private Limited shall not be liable for any indirect, incidental, consequential, or punitive damages arising out of or related to your use of the website or Services. In any case, our total liability shall not exceed the total amount paid by you for the specific course or program in question.</p>
+            </div>
+
+            <!-- Section 12 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">12. Termination</h3>
+              <p class="text-gray-700 leading-relaxed">We reserve the right to suspend or terminate your access to our Platform or Services at any time, without prior notice, if you violate these Terms, misuse the content, or engage in fraudulent or abusive conduct. Upon termination, your right to access the Platform and any associated content will cease immediately.</p>
+            </div>
+
+            <!-- Section 13 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">13. Third-Party Links</h3>
+              <p class="text-gray-700 leading-relaxed">Our Platform may contain links to third-party websites or resources for convenience. We do not endorse or assume responsibility for the content, policies, or practices of any third-party sites. Accessing external links is done at your own risk.</p>
+            </div>
+
+            <!-- Section 14 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">14. Amendments</h3>
+              <p class="text-gray-700 leading-relaxed">We may revise these Terms and Conditions at any time without prior notice. Updates will be effective upon posting on the Website. You are encouraged to periodically review this page to stay informed of any changes.</p>
+            </div>
+
+            <!-- Section 15 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">15. Governing Law and Jurisdiction</h3>
+              <p class="text-gray-700 leading-relaxed">These Terms shall be governed by and construed in accordance with the laws of India. Any disputes arising under or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts in Bengaluru, Karnataka.</p>
+            </div>
+
+            <!-- Section 16 -->
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">16. Contact Information</h3>
+              <p class="text-gray-700 leading-relaxed">
+                If you have any questions or concerns regarding these Terms and Conditions, please contact us at
+                <a href="mailto:support@topgradeinnovations.com" class="text-[#ef7d00] hover:underline">support@topgradeinnovations.com</a>
+                or call <a href="tel:+918904465305" class="text-[#ef7d00] hover:underline">+91 89044 65305</a>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="mt-12 pt-8 border-t border-gray-200 text-center">
+            <p class="text-gray-600">© 2025 Top Grade Innovation Private Limited | All Rights Reserved</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="bg-gradient-to-r from-[#d27306] to-[#4f2c0e] py-16">
+      <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h3 class="text-3xl font-bold text-white mb-4">Ready to Start Your Learning Journey?</h3>
+        <p class="text-xl text-orange-100 mb-8">Join thousands of students who have transformed their careers with TopGrade Innovation</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="{% url 'program_list' %}" class="bg-white text-[#ef7d00] font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors">Browse Programs</a>
+          <a href="{% url 'contact' %}" class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-[#ef7d00] transition-colors">Contact Us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+{% endblock %}

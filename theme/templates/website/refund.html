@@ -1,0 +1,115 @@
+{% extends 'website/base.html' %}
+{% block title %}
+  Refund Policy | TopGrade Innovation
+{% endblock %}
+
+{% block content %}
+  <style>
+    @keyframes scroll-text {
+      0% {
+        transform: translateX(0);
+      }
+    
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    
+    .animate-scroll-text {
+      animation: scroll-text 30s linear infinite;
+    }
+    
+    /* Faster on mobile */
+    @media (max-width: 768px) {
+      .animate-scroll-text {
+        animation: scroll-text 15s linear infinite;
+        /* increase speed */
+      }
+    }
+    
+    .hero-background-enhanced {
+      background-color: #2c1e12;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,5 A95,95 0 1,1 99.9,5 Z'/%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,25 A75,75 0 1,1 99.9,25 Z'/%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,45 A55,55 0 1,1 99.9,45 Z'/%3e%3c/svg%3e"), linear-gradient(160deg, #4d2c15 0%, #2c1e12 100%);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 600px, 100% 100%;
+    }
+  </style>
+  <main class="bg-gray-50 min-h-screen">
+    <!-- HERO SECTION -->
+    <section class="hero-background-enhanced py-20 md:py-24">
+      <div class="container mx-auto px-4 text-center text-white">
+        <h1 class="text-5xl md:text-6xl font-extrabold">Refund Policy</h1>
+        <p class="mt-4 text-lg text-white/80 max-w-2xl mx-auto">Choose the right course for you - all sales are final</p>
+        <div class="flex items-center justify-center gap-2 text-blue-200">
+          <span>TopGrade Innovation</span>
+          <span>•</span>
+          <span>Last updated: January 2025</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Refund Policy Content -->
+    <section class="py-16">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+          <!-- Main Title -->
+          <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">REFUND POLICY</h2>
+            <p class="text-xl text-[#ef7d00] font-semibold">TopGrade Learn Today, Lead Tomorrow</p>
+          </div>
+
+          <div class="mb-12">
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <p class="text-gray-700 leading-relaxed mb-4">We strive to deliver the highest quality learning experience through our programs, workshops, and internships. Before enrolling, please read our refund terms carefully, as they define our official policy.</p>
+            </div>
+          </div>
+
+          <!-- What We Do Section -->
+          <div class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">What We Do</h2>
+            <div class="border-l-4 border-[#ef7d00] pl-6">
+              <p class="text-gray-700 leading-relaxed mb-4">Top Grade Innovation is a leading ed-tech platform dedicated to empowering students and professionals with in-demand skills for career success. We bridge the gap between academic learning and real-world industry requirements through hands-on training, live interactive sessions, and placement-driven programs.</p>
+              <p class="text-gray-700 leading-relaxed">Our personalized learning experiences help learners gain practical exposure and build confidence in fields like technology, management, design, and healthcare, preparing them to excel in today's competitive job market.</p>
+            </div>
+          </div>
+
+          <!-- Refund Policy Section -->
+          <div class="mb-12">
+            <div class="space-y-6">
+              <!-- Workshop Policy -->
+              <div class="border-l-4 border-[#ef7d00] pl-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Workshop</h3>
+                <p class="text-gray-700 leading-relaxed">All payments made toward workshops are non-refundable and non-transferable. Once enrolled, no refunds or credits will be issued for cancellations, absences, or non-participation.</p>
+              </div>
+
+              <!-- Courses and Internship Policy -->
+              <div class="border-l-4 border-[#ef7d00] pl-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Courses and Internship Programs</h3>
+                <p class="text-gray-700 leading-relaxed mb-3">All Payments made for online courses, training programs, or internships are non-refundable once completed. Learners should thoroughly review course information, schedules, and prerequisites before confirming their enrollment.</p>
+                <p class="text-gray-700 leading-relaxed">If you are unable to continue due to valid reasons such as health or scheduling conflicts, you may transfer your enrollment to a future batch upon payment of a nominal administrative fee. All transfer requests are subject to management approval and program availability.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="mt-12 pt-8 border-t border-gray-200 text-center">
+            <p class="text-gray-600">© 2025 Top Grade Innovation Private Limited | All Rights Reserved</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="bg-gradient-to-r from-[#d27306] to-[#4f2c0e] py-16">
+      <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h3 class="text-3xl font-bold text-white mb-4">Choose the right course for you - all sales are final</h3>
+        <p class="text-xl text-orange-100 mb-8">Join thousands of students who trust TopGrade Innovation with their learning journey</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="{% url 'program_list' %}" class="bg-white text-[#ef7d00] font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors">Browse Programs</a>
+          <a href="{% url 'contact' %}" class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-[#ef7d00] transition-colors">Contact Us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+{% endblock %}

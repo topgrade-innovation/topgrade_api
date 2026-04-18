@@ -1,0 +1,324 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Notification Details - Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Notification Details</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard:notifications' %}">Notifications</a></li>
+                    <li class="breadcrumb-item active">Details</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-8">
+        <!-- Notification Info -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Notification Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                            <tr>
+                                <th class="ps-0" style="width: 200px;">Title:</th>
+                                <td class="text-muted">{{ notification.title }}</td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0">Message:</th>
+                                <td class="text-muted">{{ notification.message }}</td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0">Type:</th>
+                                <td>
+                                    <span class="badge bg-primary">{{ notification.get_notification_type_display }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0">Status:</th>
+                                <td>
+                                    {% if notification.status == 'sent' %}
+                                        <span class="badge bg-success">Sent</span>
+                                    {% elif notification.status == 'pending' %}
+                                        <span class="badge bg-warning">Pending</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Failed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% if notification.program %}
+                            <tr>
+                                <th class="ps-0">Related Program:</th>
+                                <td class="text-muted">{{ notification.program.title }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if notification.image_url %}
+                            <tr>
+                                <th class="ps-0">Image:</th>
+                                <td>
+                                    <a href="{{ notification.image_url }}" target="_blank">
+                                        <img src="{{ notification.image_url }}" alt="Notification image" 
+                                             style="max-width: 200px; height: auto;">
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <th class="ps-0">Created By:</th>
+                                <td class="text-muted">
+                                    {{ notification.created_by.fullname|default:notification.created_by.email }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0">Created At:</th>
+                                <td class="text-muted">{{ notification.created_at|date:"M d, Y H:i:s" }}</td>
+                            </tr>
+                            {% if notification.sent_at %}
+                            <tr>
+                                <th class="ps-0">Sent At:</th>
+                                <td class="text-muted">{{ notification.sent_at|date:"M d, Y H:i:s" }}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delivery Logs -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Delivery Logs</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-nowrap align-middle table-hover mb-0" id="logsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Student</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Read</th>
+                                <th>Device</th>
+                                <th>Sent At</th>
+                                <th>Error</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in logs %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-xs me-2">
+                                            <span class="avatar-title rounded-circle bg-primary-subtle text-primary">
+                                                {{ log.user.fullname|default:log.user.email|slice:":1"|upper }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">{{ log.user.fullname|default:"N/A" }}</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ log.user.email }}</td>
+                                <td>
+                                    {% if log.status == 'success' %}
+                                        <span class="badge bg-success">Success</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Failed</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if log.is_read %}
+                                        <span class="badge bg-info">
+                                            <i class="ri-check-double-line"></i> Read
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Unread</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if log.fcm_token %}
+                                        <span class="badge bg-light text-dark">
+                                            {{ log.fcm_token.get_device_type_display }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small>{{ log.sent_at|date:"M d, Y H:i" }}</small>
+                                </td>
+                                <td>
+                                    {% if log.error_message %}
+                                        <span class="text-danger" data-bs-toggle="tooltip" 
+                                              title="{{ log.error_message }}">
+                                            <i class="ri-error-warning-line"></i>
+                                        </span>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    <div class="text-muted">No delivery logs available</div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4">
+        <!-- Statistics -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Delivery Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted">Total Recipients</span>
+                        <span class="fw-semibold">{{ notification.total_recipients }}</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-primary" role="progressbar" 
+                             style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted">Successfully Sent</span>
+                        <span class="fw-semibold text-success">{{ notification.sent_count }}</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-success" role="progressbar" 
+                             style="width: {% widthratio notification.sent_count notification.total_recipients 100 %}%"></div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted">Failed</span>
+                        <span class="fw-semibold text-danger">{{ notification.failed_count }}</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-danger" role="progressbar" 
+                             style="width: {% widthratio notification.failed_count notification.total_recipients 100 %}%"></div>
+                    </div>
+                </div>
+
+                <div class="mb-0">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted">Read</span>
+                        <span class="fw-semibold text-info">{{ read_logs }}</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-info" role="progressbar" 
+                             style="width: {% widthratio read_logs success_logs 100 %}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Rate -->
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="ri-bar-chart-fill fs-1 text-primary"></i>
+                </div>
+                <h5 class="card-title">Success Rate</h5>
+                <h2 class="mb-0">
+                    {% if notification.total_recipients > 0 %}
+                        {% widthratio notification.sent_count notification.total_recipients 100 %}%
+                    {% else %}
+                        0%
+                    {% endif %}
+                </h2>
+                <p class="text-muted mb-0">
+                    {{ notification.sent_count }} out of {{ notification.total_recipients }} delivered successfully
+                </p>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'dashboard:notifications' %}" class="btn btn-soft-primary">
+                        <i class="ri-arrow-left-line me-1"></i> Back to Notifications
+                    </a>
+                    <button class="btn btn-soft-danger" onclick="deleteNotification({{ notification.id }})">
+                        <i class="ri-delete-bin-line me-1"></i> Delete Notification
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Initialize tooltips
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+});
+
+function deleteNotification(notificationId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This will delete the notification and all its logs!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/dashboard/api/delete-notification/${notificationId}/`,
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            window.location.href = '{% url "dashboard:notifications" %}';
+                        });
+                    } else {
+                        Swal.fire('Error', response.message, 'error');
+                    }
+                }
+            });
+        }
+    });
+}
+</script>
+{% endblock %}

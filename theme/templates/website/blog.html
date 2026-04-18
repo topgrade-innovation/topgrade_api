@@ -1,0 +1,445 @@
+{% extends 'website/base.html' %}
+{% load static %}
+{% block title %}
+  TopGrade
+{% endblock %}
+
+{% block content %}
+  <style>
+    @keyframes scroll-text {
+      0% {
+        transform: translateX(0);
+      }
+    
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    
+    .animate-scroll-text {
+      animation: scroll-text 30s linear infinite;
+    }
+    
+    /* Faster on mobile */
+    @media (max-width: 768px) {
+      .animate-scroll-text {
+        animation: scroll-text 15s linear infinite;
+        /* increase speed */
+      }
+    }
+    
+    .hero-grid-background {
+      background-color: #1c120a;
+      background-image: linear-gradient(rgba(239, 125, 0, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(239, 125, 0, 0.15) 1px, transparent 1px), linear-gradient(180deg, #2c1e12 0%, #1c120a 100%);
+      background-size: 50px 50px, 50px 50px, 100% 100%;
+      background-position: -1px -1px, -1px -1px, 0 0;
+    }
+    
+    .hero-background-enhanced {
+      background-color: #2c1e12;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,5 A95,95 0 1,1 99.9,5 Z'/%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,25 A75,75 0 1,1 99.9,25 Z'/%3e%3cpath fill='none' stroke='%23ef7d00' stroke-opacity='0.1' stroke-width='2' d='M100,45 A55,55 0 1,1 99.9,45 Z'/%3e%3c/svg%3e"), linear-gradient(160deg, #4d2c0d 0%, #3a220c 100%);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 600px, 100% 100%;
+    }
+  </style>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero-background-enhanced py-20 md:py-24">
+      <div class="container mx-auto px-4 text-center text-white">
+        <h1 class="text-5xl md:text-6xl font-extrabold">From the <span class="text-[#ef7d00]">Blog</span></h1>
+        <p class="mt-4 text-lg text-white/80 max-w-2xl mx-auto">Insights, tutorials, and stories from the world of tech and education. Stay ahead of the curve with Top Grade.</p>
+      </div>
+    </section>
+
+    <!-- CATEGORIES MARQUEE -->
+    <section class="py-4 border-y border-orange-300/50">
+      <div class="bg-[#e47f00] overflow-hidden">
+        <div class="flex animate-scroll-text whitespace-nowrap py-3 text-white">
+          <div class="flex items-center">
+            <span class="font-semibold mx-6">WEB DEVELOPMENT</span><span class="text-white/70 text-xl mx-6 animate-spin [animation-duration:10s]">&#10022;</span><span class="font-semibold mx-6">CAREER ADVICE</span><span class="text-white/70 text-xl mx-6 animate-spin [animation-duration:10s]">&#10022;</span><span class="font-semibold mx-6">CYBERSECURITY</span><span class="text-white/70 text-xl mx-6 animate-spin [animation-duration:10s]">&#10022;</span><span class="font-semibold mx-6">PYTHON</span><span class="text-white/70 text-xl mx-6 animate-spin [animation-duration:10s]">&#10022;</span><span class="font-semibold mx-6">DATA SCIENCE</span><span class="text-white/70 text-xl mx-6 animate-spin [animation-duration:10s]">&#10022;</span>
+          </div>
+          <div class="flex items-center" aria-hidden="true">
+            <span class="font-semibold mx-6">WEB DEVELOPMENT</span><span class="text-white/70 text-xl mx-6 animate-spin [animation-duration:10s]">&#10022;</span><span class="font-semibold mx-6">CAREER ADVICE</span><span class="text-white/70 text-xl mx-6 animate-spin [animation-duration:10s]">&#10022;</span><span class="font-semibold mx-6">CYBERSECURITY</span><span class="text-white/70 text-xl mx-6 animate-spin [animation-duration:10s]">&#10022;</span><span class="font-semibold mx-6">PYTHON</span><span class="text-white/70 text-xl mx-6 animate-spin [animation-duration:10s]">&#10022;</span><span class="font-semibold mx-6">DATA SCIENCE</span><span class="text-white/70 text-xl mx-6 animate-spin [animation-duration:10s]">&#10022;</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED POST & BLOG GRID -->
+    <section class="bg-[#f7f6f2] py-16 md:py-24 text-slate-800">
+      <div class="container mx-auto px-4">
+        <article class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16 md:mb-24">
+          <a href="#" class="block rounded-2xl overflow-hidden group"><img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Featured blog post" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+          <div>
+            <span class="text-sm font-semibold text-[#ef7d00]">WEB DEVELOPMENT</span>
+            <h2 class="text-3xl md:text-4xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">10 Essential VS Code Extensions for Modern Web Developers</a></h2>
+            <p class="mt-4 text-slate-600 leading-relaxed">Boost your productivity and streamline your workflow with these must-have extensions for Visual Studio Code, covering everything from code formatting to live collaboration.</p>
+            <div class="flex items-center gap-4 mt-6">
+              <img src="{% static 'assets/website/images/blog/blog_01.jpg' %}" alt="Author" class="w-12 h-12 rounded-full object-cover" />
+              <div>
+                <p class="font-semibold">Krishnan</p>
+                <p class="text-sm text-slate-500">Lead Instructor • 12 Aug 2024</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Initial 3 blogs (visible by default) -->
+          <article class="blog-post bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">PYTHON</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Getting Started with Django</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">A step-by-step tutorial on setting up your first Django project, creating models, and building a simple web application.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_02.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Reshma</p>
+                  <p class="text-xs text-slate-500">10 Aug 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">CYBERSECURITY</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">5 Common Security Threats</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Learn to protect yourself and your projects from phishing, malware, and other common cybersecurity threats with these practical tips.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_03.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Rakesh</p>
+                  <p class="text-xs text-slate-500">08 Aug 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">CAREER ADVICE</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">How to Build a Tech Portfolio</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Your portfolio is your most important asset. Discover the key elements that hiring managers look for and how to showcase your skills.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_04.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Priya Nandakumar</p>
+                  <p class="text-xs text-slate-500">05 Aug 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">QUANTUM COMPUTING</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Quantum Computing Basics</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Introduction to quantum computing principles, qubits, superposition, and entanglement with practical applications in cryptography and optimization.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/students/student_1.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Suresh Kumar</p>
+                  <p class="text-xs text-slate-500">14 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">STARTUP</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Building MVP in 30 Days</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Step-by-step guide to building and launching your Minimum Viable Product quickly using lean startup methodologies and modern development tools.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/students/student_2.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Rakesh Yadav</p>
+                  <p class="text-xs text-slate-500">12 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">FREELANCING</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Freelancer Success Guide</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Essential tips for starting and growing a successful freelancing career, from client acquisition to project management and pricing strategies.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/students/student_3.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Nisha Nandakumar</p>
+                  <p class="text-xs text-slate-500">10 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">AUTOMATION</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Python Automation Scripts</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Automate repetitive tasks with Python scripts for file management, web scraping, email automation, and data processing to boost productivity.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/students/student_4.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Kavitha</p>
+                  <p class="text-xs text-slate-500">08 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">TESTING</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Test-Driven Development</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Learn TDD principles and practices to write better, more reliable code with comprehensive test coverage using popular testing frameworks.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/students/student_5.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Dhivya Bharathi</p>
+                  <p class="text-xs text-slate-500">06 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Additional 3 blogs (hidden initially) -->
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1172&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">WEB DEVELOPMENT</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Mastering React Hooks</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Deep dive into React Hooks and learn how to write cleaner, more efficient functional components with useState, useEffect, and custom hooks.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_05.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Pavan Thomas</p>
+                  <p class="text-xs text-slate-500">03 Aug 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1174&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">DATA SCIENCE</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Machine Learning with Python</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Introduction to machine learning concepts and practical implementation using Python libraries like scikit-learn, pandas, and numpy.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_06.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Nirmal Sharma</p>
+                  <p class="text-xs text-slate-500">01 Aug 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">CLOUD COMPUTING</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">AWS Deployment Guide</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Complete guide to deploying your web applications on Amazon Web Services, covering EC2, S3, RDS, and best practices for scalable architecture.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_07.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Sneha</p>
+                  <p class="text-xs text-slate-500">30 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Additional 15 blogs (hidden initially) -->
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">MOBILE DEVELOPMENT</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Flutter vs React Native</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Comprehensive comparison of Flutter and React Native for cross-platform mobile development, including performance, learning curve, and community support.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_08.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Aditya</p>
+                  <p class="text-xs text-slate-500">28 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1015&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">ANALYTICS</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Data Visualization Best Practices</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Learn how to create compelling data visualizations that tell a story and drive business decisions using tools like Tableau and Power BI.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_09.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Kavya Nair</p>
+                  <p class="text-xs text-slate-500">26 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">ARTIFICIAL INTELLIGENCE</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Introduction to Neural Networks</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Understanding the fundamentals of neural networks, from perceptrons to deep learning architectures and their real-world applications.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_10.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Vikram Reddy</p>
+                  <p class="text-xs text-slate-500">24 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">BLOCKCHAIN</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Blockchain for Beginners</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Demystifying blockchain technology, cryptocurrencies, and smart contracts with practical examples and use cases across different industries.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_11.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Nisha Patel</p>
+                  <p class="text-xs text-slate-500">22 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">BACKEND DEVELOPMENT</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Node.js vs Python for APIs</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Comparing Node.js and Python for building RESTful APIs, including performance benchmarks, ecosystem support, and development speed.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_12.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Rohit Kumar</p>
+                  <p class="text-xs text-slate-500">20 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">UI/UX DESIGN</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Design Thinking Process</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Master the five stages of design thinking: empathize, define, ideate, prototype, and test to create user-centered digital experiences.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_13.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Shruti Iyer</p>
+                  <p class="text-xs text-slate-500">18 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="blog-post hidden bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md hover:shadow-xl hover:shadow-orange-200">
+            <a href="#" class="block"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Blog post" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300" /></a>
+            <div class="p-6">
+              <span class="text-sm font-semibold text-[#ef7d00]">DEVOPS</span>
+              <h3 class="text-xl font-bold mt-2 hover:text-[#ef7d00] transition-colors"><a href="#">Docker Container Orchestration</a></h3>
+              <p class="mt-3 text-slate-600 text-sm leading-relaxed">Learn containerization with Docker and Kubernetes for scalable application deployment and infrastructure management in modern DevOps workflows.</p>
+              <div class="flex items-center gap-3 mt-4 pt-4 border-t border-orange-200/60">
+                <img src="{% static 'assets/website/images/blog/blog_14.jpg' %}" alt="Author" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-sm">Krishnan</p>
+                  <p class="text-xs text-slate-500">16 Jul 2024</p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div id="load-more-section" class="text-center mt-16">
+          <button id="load-more-btn" class="bg-transparent border border-orange-500 text-orange-500 font-bold py-3 px-8 rounded-lg hover:bg-orange-500 hover:text-white transition-colors">Load More Posts</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Share Your Insights -->
+    <div class="hero-grid-background py-16 flex flex-col items-center justify-center text-white p-4">
+      <div class="container max-w-2xl flex flex-col items-center">
+        <div class="text-center mb-8">
+          <h1 class="text-xl md:text-4xl font-bold mb-4">Share your insights on emerging skill trends!</h1>
+        </div>
+
+        <div class="w-full max-w-lg flex flex-col md:flex-row items-center bg-white rounded-lg p-2 mb-8">
+          <input type="text" placeholder="Write Blog" class="flex-grow bg-transparent border-none outline-none text-black text-lg p-3 md:mr-2 w-full md:w-auto mb-2 md:mb-0" />
+          <button class="bg-gradient-to-r from-[#ef7d00] to-orange-500 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">Send</button>
+        </div>
+
+        <p class="text-center text-lg mt-8">We’ll review your blog, and if it stands out, we’d love to showcase it on our site.</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const loadMoreBtn = document.getElementById('load-more-btn')
+      const loadMoreSection = document.getElementById('load-more-section')
+      let loadedCount = 0
+      const postsPerLoad = 3 // Show 3 posts at a time
+    
+      loadMoreBtn.addEventListener('click', function () {
+        const hiddenPosts = document.querySelectorAll('.blog-post.hidden')
+        const postsToShow = Array.from(hiddenPosts).slice(0, postsPerLoad)
+    
+        if (postsToShow.length === 0) {
+          // No more posts to show, hide the button
+          loadMoreSection.style.transition = 'opacity 0.5s ease'
+          loadMoreSection.style.opacity = '0'
+          setTimeout(() => {
+            loadMoreSection.style.display = 'none'
+          }, 500)
+          return
+        }
+    
+        // Show the next batch of blog posts with smooth animation
+        postsToShow.forEach((post, index) => {
+          setTimeout(() => {
+            post.classList.remove('hidden')
+            post.style.opacity = '0'
+            post.style.transform = 'translateY(20px)'
+    
+            // Trigger animation
+            setTimeout(() => {
+              post.style.transition = 'opacity 0.5s ease, transform 0.5s ease'
+              post.style.opacity = '1'
+              post.style.transform = 'translateY(0)'
+            }, 50)
+          }, index * 150) // Stagger the animation for each post
+        })
+    
+        loadedCount += postsToShow.length
+    
+        // Check if there are more posts to load
+        setTimeout(() => {
+          const remainingHiddenPosts = document.querySelectorAll('.blog-post.hidden')
+          if (remainingHiddenPosts.length === 0) {
+            // All posts loaded, hide the button
+            loadMoreSection.style.transition = 'opacity 0.5s ease'
+            loadMoreSection.style.opacity = '0'
+            setTimeout(() => {
+              loadMoreSection.style.display = 'none'
+            }, 500)
+          }
+        }, postsToShow.length * 150 + 300)
+      })
+    })
+  </script>
+{% endblock %}

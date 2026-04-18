@@ -1,0 +1,818 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}
+  Dashboard - Analytics
+{% endblock %}
+
+{% block css %}
+  <!-- ApexCharts CSS -->
+  <link href="{% static 'assets/dashboard/libs/apexcharts/apexcharts.min.css' %}" rel="stylesheet" type="text/css" />
+  <style>
+    .card-hover:hover {
+      transform: translateY(-2px);
+      transition: all 0.3s ease;
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+    .metric-card {
+      border-left: 4px solid;
+    }
+    .metric-card.primary {
+      border-left-color: #405189;
+    }
+    .metric-card.success {
+      border-left-color: #0ab39c;
+    }
+    .metric-card.warning {
+      border-left-color: #f7b84b;
+    }
+    .metric-card.info {
+      border-left-color: #299cdb;
+    }
+    .metric-card.danger {
+      border-left-color: #f06548;
+    }
+    .growth-positive {
+      color: #0ab39c;
+    }
+    .growth-negative {
+      color: #f06548;
+    }
+    .avatar-title {
+      align-items: center;
+      background-color: #405189;
+      color: #fff;
+      display: flex;
+      font-weight: 500;
+      height: 100%;
+      justify-content: center;
+      width: 100%;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- start page title -->
+  <div class="row">
+    <div class="col-12">
+      <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+        <h4 class="mb-sm-0">Dashboard</h4>
+        <div class="page-title-right">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item">
+              <a href="{% url 'dashboard:dashboard' %}">Dashboard</a>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end page title -->
+
+  <!-- Analytics Cards Row 1 -->
+  <div class="row">
+    <div class="col-xl-3 col-md-6">
+      <div class="card card-hover metric-card primary">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <div class="avatar-sm rounded bg-primary-subtle">
+                <div class="avatar-title rounded bg-primary">
+                  <i class="ri-user-line fs-16"></i>
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <p class="text-uppercase fw-semibold fs-12 text-muted mb-1">Total Students</p>
+              <h4 class="mb-0">{{ total_students|default:0 }}</h4>
+              <p class="mb-0 text-muted">
+                <span class="{% if student_growth >= 0 %}
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    growth-positive
+
+
+
+
+
+
+
+
+                  {% else %}
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    growth-negative
+
+
+
+
+
+
+
+
+                  {% endif %}">
+                  <i class="ri-arrow-{% if student_growth >= 0 %}
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      up
+
+
+
+
+
+
+
+
+                    {% else %}
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      down
+
+
+
+
+
+
+
+
+                    {% endif %}-line align-middle">
+
+                  </i>
+                  {{ student_growth|default:0 }}%
+                </span>
+                <span class="text-muted fs-11">this month</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+      <div class="card card-hover metric-card success">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <div class="avatar-sm rounded bg-success-subtle">
+                <div class="avatar-title rounded bg-success">
+                  <i class="ri-book-open-line fs-16"></i>
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <p class="text-uppercase fw-semibold fs-12 text-muted mb-1">Total Programs</p>
+              <h4 class="mb-0">{{ total_programs|default:0 }}</h4>
+              <p class="mb-0 text-muted">
+                <span class="text-success">
+                  <i class="ri-checkbox-circle-line align-middle"></i>
+                  {{ total_categories|default:0 }}
+                </span>
+                <span class="text-muted fs-11">categories</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+      <div class="card card-hover metric-card warning">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <div class="avatar-sm rounded bg-warning-subtle">
+                <div class="avatar-title rounded bg-warning">
+                  <i class="ri-shopping-cart-line fs-16"></i>
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <p class="text-uppercase fw-semibold fs-12 text-muted mb-1">Total Enrollments</p>
+              <h4 class="mb-0">{{ total_enrollments|default:0 }}</h4>
+              <p class="mb-0 text-muted">
+                <span class="{% if enrollment_growth >= 0 %}
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    growth-positive
+
+
+
+
+
+
+
+
+                  {% else %}
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    growth-negative
+
+
+
+
+
+
+
+
+                  {% endif %}">
+                  <i class="ri-arrow-{% if enrollment_growth >= 0 %}
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      up
+
+
+
+
+
+
+
+
+                    {% else %}
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      down
+
+
+
+
+
+
+
+
+                    {% endif %}-line align-middle">
+
+                  </i>
+                  {{ enrollment_growth|default:0 }}%
+                </span>
+                <span class="text-muted fs-11">this month</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+      <div class="card card-hover metric-card info">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <div class="avatar-sm rounded bg-info-subtle">
+                <div class="avatar-title rounded bg-info">
+                  <i class="ri-money-dollar-circle-line fs-16"></i>
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <p class="text-uppercase fw-semibold fs-12 text-muted mb-1">Total Revenue</p>
+              <h4 class="mb-0">₹{{ total_revenue|floatformat:0|default:0 }}</h4>
+              <p class="mb-0 text-muted">
+                <span class="text-info">
+                  <i class="ri-calendar-line align-middle"></i>
+                  ₹{{ revenue_this_month|floatformat:0|default:0 }}
+                </span>
+                <span class="text-muted fs-11">this month</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics Cards Row 2 -->
+  <div class="row">
+    <div class="col-xl-3 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <div class="avatar-sm rounded bg-primary-subtle">
+                <div class="avatar-title rounded bg-primary">
+                  <i class="ri-user-add-line fs-16"></i>
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <p class="text-uppercase fw-semibold fs-12 text-muted mb-1">New Students</p>
+              <h4 class="mb-0 text-primary">{{ new_students_today|default:0 }}</h4>
+              <p class="mb-0 text-muted fs-11">Today</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <div class="avatar-sm rounded bg-success-subtle">
+                <div class="avatar-title rounded bg-success">
+                  <i class="ri-user-star-line fs-16"></i>
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <p class="text-uppercase fw-semibold fs-12 text-muted mb-1">Active Students</p>
+              <h4 class="mb-0 text-success">{{ active_students|default:0 }}</h4>
+              <p class="mb-0 text-muted fs-11">With Enrollments</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <div class="avatar-sm rounded bg-warning-subtle">
+                <div class="avatar-title rounded bg-warning">
+                  <i class="ri-crown-line fs-16"></i>
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <p class="text-uppercase fw-semibold fs-12 text-muted mb-1">Best Sellers</p>
+              <h4 class="mb-0 text-warning">{{ best_seller_programs|default:0 }}</h4>
+              <p class="mb-0 text-muted fs-11">Programs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <div class="avatar-sm rounded bg-info-subtle">
+                <div class="avatar-title rounded bg-info">
+                  <i class="ri-calculator-line fs-16"></i>
+                </div>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <p class="text-uppercase fw-semibold fs-12 text-muted mb-1">Avg Revenue</p>
+              <h4 class="mb-0 text-info">₹{{ avg_revenue_per_enrollment|floatformat:0|default:0 }}</h4>
+              <p class="mb-0 text-muted fs-11">Per Enrollment</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="row">
+    <div class="col-xl-8">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex align-items-center">
+            <h5 class="card-title mb-0 flex-grow-1">Enrollment Trends</h5>
+            <div class="flex-shrink-0">
+              <div class="dropdown">
+                <a class="dropdown-toggle text-reset" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="fw-semibold text-uppercase fs-12">Sort By:</span>
+                  <span class="text-muted">Monthly<i class="mdi mdi-chevron-down ms-1"></i></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="#">Monthly</a>
+                  <a class="dropdown-item" href="#">Weekly</a>
+                  <a class="dropdown-item" href="#">Daily</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="enrollmentTrendsChart" style="height: 350px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Program Categories</h5>
+        </div>
+        <div class="card-body">
+          <div id="categoryDistributionChart" style="min-height: 350px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue and Interest Charts -->
+  <div class="row">
+    <div class="col-xl-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Revenue by Program</h5>
+        </div>
+        <div class="card-body">
+          <div id="revenueChart" style="min-height: 300px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Student Interest Areas</h5>
+        </div>
+        <div class="card-body">
+          <div id="interestChart" style="height: 300px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tables Row -->
+  <div class="row">
+    <div class="col-xl-8">
+      <div class="card" style="height: 500px; overflow-y: auto;">
+        <div class="card-header d-flex align-items-center">
+          <h5 class="card-title mb-0 flex-grow-1">Top Performing Programs</h5>
+          <div class="flex-shrink-0">
+            <a href="{% url 'dashboard:programs' %}" class="btn btn-soft-primary btn-sm"><i class="ri-eye-line align-middle me-1"></i>View All</a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-nowrap align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">Program</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Enrollments</th>
+                  <th scope="col">Rating</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for program in top_programs %}
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                          {% if program.image %}
+                            <img src="{{ program.image.url }}" alt="" class="avatar-xs rounded" />
+                          {% else %}
+                            <div class="avatar-xs">
+                              <div class="avatar-title rounded bg-primary">{{ program.title|first|upper }}</div>
+                            </div>
+                          {% endif %}
+                        </div>
+                        <div class="flex-grow-1 ms-2">
+                          <h6 class="mb-1"><a href="{% url 'dashboard:program_details' program.id %}" class="text-reset">{{ program.title|truncatechars:30 }}</a></h6>
+                          {% if program.subtitle %}
+                            <p class="text-muted mb-0 fs-12">{{ program.subtitle|truncatechars:40 }}</p>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge bg-primary-subtle text-primary">{{ program.category.name }}</span>
+                    </td>
+                    <td>
+                      <span class="fw-semibold">{{ program.enrollment_count|default:0 }}</span>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <span class="text-warning">
+                          {# prettier-ignore #}
+                          {% for i in "12345" %}
+                            {% if forloop.counter <= program.program_rating %}
+                              <i class="ri-star-fill"></i>
+                            {% else %}
+                              <i class="ri-star-line"></i>
+                            {% endif %}
+                          {% endfor %}
+                        </span>
+                        <span class="ms-1 text-muted fs-12">({{ program.program_rating|floatformat:1 }})</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="fw-semibold text-primary">₹{{ program.discounted_price|floatformat:0 }}</span>
+                      {% if program.discount_percentage > 0 %}
+                        <span class="text-decoration-line-through text-muted fs-12 ms-1">₹{{ program.price|floatformat:0 }}</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if program.is_best_seller %}
+                        <span class="badge bg-success">Best Seller</span>
+                      {% else %}
+                        <span class="badge bg-secondary">Active</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                      <i class="ri-folder-open-line fs-20 d-block mb-2"></i>
+                      No programs found
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-4">
+      <div class="card" style="height: 500px; overflow-y: auto;">
+        <div class="card-header d-flex align-items-center">
+          <h5 class="card-title mb-0 flex-grow-1">Recent Enrollments</h5>
+          <div class="flex-shrink-0">
+            <a href="{% url 'dashboard:students' %}" class="btn btn-soft-info btn-sm"><i class="ri-eye-line align-middle me-1"></i>View All</a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="d-flex flex-column gap-3">
+            {% for enrollment in recent_enrollments %}
+              <div class="d-flex align-items-center">
+                <div class="flex-shrink-0">
+                  <img src="{% static 'assets/dashboard/img/users/avatar-1.jpg' %}" alt="" class="avatar-sm rounded-circle" />
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-1">{{ enrollment.user.fullname|default:enrollment.user.email|truncatechars:20 }}</h6>
+                  <p class="text-muted mb-0 fs-12">{{ enrollment.program.title|truncatechars:25 }}</p>
+                  <p class="text-muted mb-0 fs-11">{{ enrollment.purchase_date|timesince }} ago</p>
+                </div>
+                <div class="flex-shrink-0">
+                  <span class="badge bg-{% if enrollment.status == 'completed' %}
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      success
+
+
+
+
+
+
+
+
+                    {% elif enrollment.status == 'pending' %}
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      warning
+
+
+
+
+
+
+
+
+                    {% else %}
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      danger
+
+
+
+
+
+
+
+
+                    {% endif %}">
+                    {{ enrollment.get_status_display }}
+                  </span>
+                </div>
+              </div>
+            {% empty %}
+              <div class="text-center text-muted py-4">
+                <i class="ri-user-add-line fs-20 d-block mb-2"></i>
+                <p class="mb-0">No recent enrollments</p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script>
+// Dashboard Analytics Charts
+document.addEventListener('DOMContentLoaded', function() {
+    // Enrollment Trends Chart
+    if (document.getElementById('enrollmentTrendsChart')) {
+        var enrollmentData = {{ enrollment_trends|safe }};
+        var categories = enrollmentData.map(item => item.month);
+        var data = enrollmentData.map(item => item.count);
+        
+        var enrollmentOptions = {
+            series: [{
+                name: 'Enrollments',
+                data: data
+            }],
+            chart: {
+                type: 'area',
+                height: 350,
+                toolbar: { show: false }
+            },
+            colors: ['#405189'],
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.3
+                }
+            },
+            xaxis: {
+                categories: categories
+            },
+            grid: {
+                borderColor: '#f1f1f1'
+            }
+        };
+        
+        var enrollmentChart = new ApexCharts(document.querySelector("#enrollmentTrendsChart"), enrollmentOptions);
+        enrollmentChart.render();
+    }
+    
+    // Category Distribution Chart
+    if (document.getElementById('categoryDistributionChart')) {
+        var categoryData = {{ category_distribution|safe }};
+        var categoryLabels = categoryData.map(item => item.name);
+        var categoryCounts = categoryData.map(item => item.program_count);
+        
+        var categoryOptions = {
+            series: categoryCounts,
+            chart: {
+                type: 'donut',
+                height: 350
+            },
+            labels: categoryLabels,
+            colors: ['#405189', '#0ab39c', '#f7b84b', '#f06548', '#299cdb'],
+            legend: {
+                position: 'bottom'
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '65%'
+                    }
+                }
+            }
+        };
+        
+        var categoryChart = new ApexCharts(document.querySelector("#categoryDistributionChart"), categoryOptions);
+        categoryChart.render();
+    }
+    
+    // Revenue Chart
+    if (document.getElementById('revenueChart')) {
+        var programNames = [];
+        var revenueAmounts = [];
+        
+        {% for program in revenue_by_program %}
+            programNames.push('{{ program.title|truncatechars:15 }}');
+            revenueAmounts.push({{ program.revenue|default:0 }});
+        {% endfor %}
+        
+        var revenueOptions = {
+            series: [{
+                name: 'Revenue',
+                data: revenueAmounts
+            }],
+            chart: {
+                type: 'bar',
+                height: 300,
+                toolbar: { show: false }
+            },
+            colors: ['#0ab39c'],
+            xaxis: {
+                categories: programNames
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%'
+                }
+            }
+        };
+        
+        var revenueChart = new ApexCharts(document.querySelector("#revenueChart"), revenueOptions);
+        revenueChart.render();
+    }
+    
+    // Interest Areas Chart
+    if (document.getElementById('interestChart')) {
+        var interests = [];
+        var counts = [];
+        
+        {% for item in interest_distribution %}
+            interests.push('{{ item.area_of_intrest|truncatechars:15 }}');
+            counts.push({{ item.count }});
+        {% endfor %}
+        
+        var interestOptions = {
+            series: [{
+                name: 'Students',
+                data: counts
+            }],
+            chart: {
+                type: 'bar',
+                height: 300,
+                toolbar: { show: false }
+            },
+            colors: ['#f7b84b'],
+            xaxis: {
+                categories: interests
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true
+                }
+            }
+        };
+        
+        var interestChart = new ApexCharts(document.querySelector("#interestChart"), interestOptions);
+        interestChart.render();
+    }
+});
+</script>
+{% endblock %}

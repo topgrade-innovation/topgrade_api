@@ -1,0 +1,638 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block title %}
+  Student Certificates
+{% endblock %}
+{% block breadcrumb %}
+  Student Certificates
+{% endblock %}
+{% block content %}
+  <!-- start page title -->
+  <div class="row">
+    <div class="col-12">
+      <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+        <h4 class="mb-sm-0">Student Certificates</h4>
+        <div class="page-title-right">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item">
+              <a href="{% url 'dashboard:dashboard' %}">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Student Certificates</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end page title -->
+  
+  <div class="row">
+    <!-- Statistics Cards -->
+    <div class="col-xl-4 col-md-6">
+      <div class="card card-animate">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-grow-1 overflow-hidden">
+              <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Completed</p>
+            </div>
+            <div class="flex-shrink-0">
+              <h5 class="text-success fs-14 mb-0"><i class="ri-arrow-right-up-line fs-13 align-middle"></i></h5>
+            </div>
+          </div>
+          <div class="d-flex align-items-end justify-content-between mt-4">
+            <div>
+              <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="{{ total_completed }}">{{ total_completed }}</span></h4>
+              <a href="?status=all" class="text-decoration-underline">View all completed</a>
+            </div>
+            <div class="avatar-sm flex-shrink-0">
+              <span class="avatar-title bg-success-subtle rounded fs-3"><i class="bx bx-check-circle text-success"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-4 col-md-6">
+      <div class="card card-animate">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-grow-1 overflow-hidden">
+              <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Certificates Sent</p>
+            </div>
+            <div class="flex-shrink-0">
+              <h5 class="text-info fs-14 mb-0"><i class="ri-arrow-right-up-line fs-13 align-middle"></i></h5>
+            </div>
+          </div>
+          <div class="d-flex align-items-end justify-content-between mt-4">
+            <div>
+              <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="{{ total_certificates_sent }}">{{ total_certificates_sent }}</span></h4>
+              <a href="?status=sent" class="text-decoration-underline">View sent certificates</a>
+            </div>
+            <div class="avatar-sm flex-shrink-0">
+              <span class="avatar-title bg-info-subtle rounded fs-3"><i class="bx bx-paper-plane text-info"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-4 col-md-6">
+      <div class="card card-animate">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-grow-1 overflow-hidden">
+              <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Pending Certificates</p>
+            </div>
+            <div class="flex-shrink-0">
+              <h5 class="text-warning fs-14 mb-0"><i class="ri-arrow-right-up-line fs-13 align-middle"></i></h5>
+            </div>
+          </div>
+          <div class="d-flex align-items-end justify-content-between mt-4">
+            <div>
+              <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="{{ total_certificates_pending }}">{{ total_certificates_pending }}</span></h4>
+              <a href="?status=pending" class="text-decoration-underline">View pending</a>
+            </div>
+            <div class="avatar-sm flex-shrink-0">
+              <span class="avatar-title bg-warning-subtle rounded fs-3"><i class="bx bx-time text-warning"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <h5 class="card-title mb-0">Completed Courses - Certificate Management</h5>
+            </div>
+            <div class="col-auto">
+              <div class="d-flex gap-2">
+                <!-- Search -->
+                <form method="GET" class="d-flex gap-2">
+                  <input type="search" name="search" class="form-control" placeholder="Search student or program..." value="{{ search_query }}" />
+                  <button type="submit" class="btn btn-primary"><i class="ri-search-line"></i></button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive table-card mt-3 mb-1">
+            <table class="table align-middle table-nowrap" id="certificateTable">
+              <thead class="table-light">
+                <tr>
+                  <th>S No.</th>
+                  <th data-sort="student_name">Student</th>
+                  <th data-sort="program">Program</th>
+                  <th data-sort="completion_date">Completed Date</th>
+                  <th data-sort="certificate_status">Certificate Status</th>
+                  <th data-sort="certificate_number">Certificate Number</th>
+                  <th data-sort="internship">Internship</th>
+                  <th data-sort="training">Training</th>
+                  <th data-sort="credit">Credit</th>
+                  <th data-sort="recommendation">Recommendation</th>
+                  <th data-sort="placement">Placement</th>
+                  <th data-sort="action">Action</th>
+                </tr>
+              </thead>
+              <tbody class="list form-check-all">
+                {% for item in completed_courses %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td class="student_name">
+                      <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-2">
+                          <img src="{% static 'assets/dashboard/img/users/avatar-1.jpg' %}" alt="" class="avatar-xs rounded-circle" />
+                        </div>
+                        <div class="flex-grow-1">
+                          <h5 class="fs-13 mb-0">
+                            <a href="{% url 'dashboard:student_details' item.course_progress.user.id %}" class="text-dark">
+                              {{ item.course_progress.user.fullname|default:item.course_progress.user.email }}
+                            </a>
+                          </h5>
+                          <p class="text-muted mb-0 fs-11">{{ item.course_progress.user.email }}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="program">
+                      <div>
+                        <h5 class="fs-13 mb-0">{{ item.course_progress.purchase.program.subtitle }}</h5>
+                        <p class="text-muted mb-0 fs-11">{{ item.course_progress.purchase.program.category.name }}</p>
+                      </div>
+                    </td>
+                    <td class="completion_date">
+                      {% if item.course_progress.completed_at %}
+                        {{ item.course_progress.completed_at|date:'d/m/Y' }}
+                      {% else %}
+                        N/A
+                      {% endif %}
+                    </td>
+                    <td class="certificate_status">
+                      {% if item.certificate_status == 'sent' %}
+                        <span class="badge bg-success-subtle text-success">
+                          <i class="ri-checkbox-circle-line align-middle"></i> Sent
+                        </span>
+                      {% elif item.certificate_status == 'pending' %}
+                        <span class="badge bg-warning-subtle text-warning">
+                          <i class="ri-time-line align-middle"></i> Pending
+                        </span>
+                      {% else %}
+                        <span class="badge bg-secondary-subtle text-secondary">
+                          <i class="ri-file-list-line align-middle"></i> Not Issued
+                        </span>
+                      {% endif %}
+                    </td>
+                    <td class="certificate_number">
+                      {% if item.certificate_number %}
+                        <span class="badge bg-primary">{{ item.certificate_number }}</span>
+                      {% else %}
+                        <span class="text-muted">-</span>
+                      {% endif %}
+                    </td>
+                    <!-- Internship Certificate -->
+                    <td class="internship-cert text-center">
+                      {% for certificate in item.certificates_list %}
+                        {% if certificate.certificate_type == 'internship' %}
+                          <a href="{{ certificate.certificate_file.url }}" target="_blank" class="btn btn-sm btn-outline-success" title="View Internship Certificate">
+                            <i class="ri-briefcase-line me-1"></i>View/Download
+                          </a>
+                        {% endif %}
+                      {% empty %}
+                        {% if not item.has_certificate %}
+                          <span class="text-muted">-</span>
+                        {% endif %}
+                      {% endfor %}
+                      {% if item.has_certificate and not item.certificates_list %}
+                        <span class="text-muted">-</span>
+                      {% endif %}
+                    </td>
+                    
+                    <!-- Training Certificate -->
+                    <td class="training-cert text-center">
+                      {% for certificate in item.certificates_list %}
+                        {% if certificate.certificate_type == 'training' %}
+                          <a href="{{ certificate.certificate_file.url }}" target="_blank" class="btn btn-sm btn-outline-info" title="View Training Certificate">
+                            <i class="ri-graduation-cap-line me-1"></i>View/Download
+                          </a>
+                        {% endif %}
+                      {% empty %}
+                        {% if not item.has_certificate %}
+                          <span class="text-muted">-</span>
+                        {% endif %}
+                      {% endfor %}
+                      {% if item.has_certificate and not item.certificates_list %}
+                        <span class="text-muted">-</span>
+                      {% endif %}
+                    </td>
+                    
+                    <!-- Credit Certificate -->
+                    <td class="credit-cert text-center">
+                      {% for certificate in item.certificates_list %}
+                        {% if certificate.certificate_type == 'credit' %}
+                          <a href="{{ certificate.certificate_file.url }}" target="_blank" class="btn btn-sm btn-outline-warning" title="View Credit Certificate">
+                            <i class="ri-medal-line me-1"></i>View/Download
+                          </a>
+                        {% endif %}
+                      {% empty %}
+                        {% if not item.has_certificate %}
+                          <span class="text-muted">-</span>
+                        {% endif %}
+                      {% endfor %}
+                      {% if item.has_certificate and not item.certificates_list %}
+                        <span class="text-muted">-</span>
+                      {% endif %}
+                    </td>
+                    
+                    <!-- Recommendation Certificate -->
+                    <td class="recommendation-cert text-center">
+                      {% for certificate in item.certificates_list %}
+                        {% if certificate.certificate_type == 'recommendation' %}
+                          <a href="{{ certificate.certificate_file.url }}" target="_blank" class="btn btn-sm btn-outline-primary" title="View Letter of Recommendation">
+                            <i class="ri-thumb-up-line me-1"></i>View/Download
+                          </a>
+                        {% endif %}
+                      {% empty %}
+                        {% if not item.has_certificate %}
+                          <span class="text-muted">-</span>
+                        {% endif %}
+                      {% endfor %}
+                      {% if item.has_certificate and not item.certificates_list %}
+                        <span class="text-muted">-</span>
+                      {% endif %}
+                    </td>
+                    
+                    <!-- Placement Certificate -->
+                    <td class="placement-cert text-center">
+                      {% if item.require_goldpass %}
+                        {% for certificate in item.certificates_list %}
+                          {% if certificate.certificate_type == 'placement' %}
+                            <a href="{{ certificate.certificate_file.url }}" target="_blank" class="btn btn-sm btn-outline-danger" title="View Placement Certificate">
+                              <i class="ri-building-line me-1"></i>View/Download
+                            </a>
+                          {% endif %}
+                        {% empty %}
+                          {% if not item.has_certificate %}
+                            <span class="text-muted">-</span>
+                          {% endif %}
+                        {% endfor %}
+                        {% if item.has_certificate and not item.certificates_list %}
+                          <span class="text-muted">-</span>
+                        {% endif %}
+                      {% else %}
+                        <span class="badge bg-secondary-subtle text-secondary" title="Not included in Standard purchase">
+                          <i class="ri-close-line"></i> N/A
+                        </span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <div class="d-flex gap-2">
+                        {% if item.certificates_list %}
+                          <!-- Certificates already generated, show send option if not sent -->
+                          {% if item.certificate_status != 'sent' %}
+                            <button type="button" class="btn btn-sm btn-primary send-certificate-btn" 
+                                    data-progress-id="{{ item.course_progress.id }}" 
+                                    title="Send All Certificates">
+                              <span class="btn-text">
+                                <i class="ri-mail-send-line align-bottom"></i> Send All
+                              </span>
+                              <span class="btn-loading d-none">
+                                <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                Sending...
+                              </span>
+                            </button>
+                          {% else %}
+                            <span class="badge bg-success sent-badge">
+                              <i class="ri-check-line"></i> Sent on {{ item.certificate_sent_date|date:'d/m/Y' }}
+                            </span>
+                          {% endif %}
+                        {% else %}
+                          <!-- No certificates generated yet, show generate button -->
+                          <button type="button" class="btn btn-sm btn-info generate-certificate-btn" 
+                                  data-progress-id="{{ item.course_progress.id }}"
+                                  data-require-goldpass="{{ item.require_goldpass|lower }}"
+                                  title="Generate All Certificates">
+                            <span class="btn-text">
+                              <i class="ri-file-text-line align-bottom"></i> Generate All
+                              {% if item.require_goldpass %}
+                                (5 certs)
+                              {% else %}
+                                (4 certs)
+                              {% endif %}
+                            </span>
+                            <span class="btn-loading d-none">
+                              <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                              Generating...
+                            </span>
+                          </button>
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="12" class="text-center">
+                      <div class="noresult">
+                        <div class="text-center">
+                          <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
+                          <h5 class="mt-2">Sorry! No Completed Courses Found</h5>
+                          <p class="text-muted mb-0">No students have completed any courses yet.</p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          {% if completed_courses.has_other_pages %}
+            <div class="d-flex justify-content-end">
+              <div class="pagination-wrap hstack gap-2">
+                {% if completed_courses.has_previous %}
+                  <a class="page-item pagination-prev" href="?page={{ completed_courses.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter != 'all' %}&status={{ status_filter }}{% endif %}">Previous</a>
+                {% else %}
+                  <a class="page-item pagination-prev disabled">Previous</a>
+                {% endif %}
+
+                <ul class="pagination listjs-pagination mb-0">
+                  {% for page_num in page_range %}
+                    {% if page_num == current_page %}
+                      <li class="active">
+                        <a class="page" href="#" data-i="{{ page_num }}" data-page="{{ page_num }}">{{ page_num }}</a>
+                      </li>
+                    {% else %}
+                      <li>
+                        <a class="page" href="?page={{ page_num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter != 'all' %}&status={{ status_filter }}{% endif %}" data-i="{{ page_num }}" data-page="{{ page_num }}">{{ page_num }}</a>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+
+                {% if completed_courses.has_next %}
+                  <a class="page-item pagination-next" href="?page={{ completed_courses.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter != 'all' %}&status={{ status_filter }}{% endif %}">Next</a>
+                {% else %}
+                  <a class="page-item pagination-next disabled">Next</a>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    // Show toast notification
+    function showToast(message, type = 'success') {
+        // Create toast container if it doesn't exist
+        let toastContainer = document.querySelector('.toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+            toastContainer.style.zIndex = '9999';
+            document.body.appendChild(toastContainer);
+        }
+
+        const toastId = 'toast-' + Date.now();
+        const bgClass = type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : 'bg-info';
+        const icon = type === 'success' ? 'ri-check-line' : type === 'error' ? 'ri-error-warning-line' : 'ri-information-line';
+
+        const toastHTML = `
+            <div id="${toastId}" class="toast align-items-center text-white ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="${icon} me-2"></i>${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        `;
+
+        toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+        const toastElement = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastElement, { delay: 5000 });
+        toast.show();
+
+        toastElement.addEventListener('hidden.bs.toast', function() {
+            toastElement.remove();
+        });
+    }
+
+    // Handle Generate Certificate button click
+    document.querySelectorAll('.generate-certificate-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const progressId = this.getAttribute('data-progress-id');
+            const requireGoldpass = this.getAttribute('data-require-goldpass') === 'true';
+            const btnText = this.querySelector('.btn-text');
+            const btnLoading = this.querySelector('.btn-loading');
+            const row = this.closest('tr');
+
+            // Disable button and show loading
+            this.disabled = true;
+            btnText.classList.add('d-none');
+            btnLoading.classList.remove('d-none');
+
+            // Make AJAX request
+            fetch('{% url "dashboard:generate_certificate_ajax" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrftoken
+                },
+                body: 'course_progress_id=' + progressId
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+
+                    // Update the row with new certificate information
+                    updateRowWithCertificates(row, data);
+
+                    // Replace generate button with send button
+                    const actionCell = this.closest('td');
+                    const sendButtonHTML = `
+                        <button type="button" class="btn btn-sm btn-primary send-certificate-btn" 
+                                data-progress-id="${progressId}" 
+                                title="Send All Certificates">
+                            <span class="btn-text">
+                                <i class="ri-mail-send-line align-bottom"></i> Send All
+                            </span>
+                            <span class="btn-loading d-none">
+                                <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                Sending...
+                            </span>
+                        </button>
+                    `;
+                    actionCell.innerHTML = sendButtonHTML;
+
+                    // Attach event listener to new send button
+                    attachSendButtonListener(actionCell.querySelector('.send-certificate-btn'));
+                } else {
+                    showToast(data.message, 'error');
+                    // Re-enable button
+                    this.disabled = false;
+                    btnText.classList.remove('d-none');
+                    btnLoading.classList.add('d-none');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while generating certificates', 'error');
+                // Re-enable button
+                this.disabled = false;
+                btnText.classList.remove('d-none');
+                btnLoading.classList.add('d-none');
+            });
+        });
+    });
+
+    // Function to update row with certificate data
+    function updateRowWithCertificates(row, data) {
+        // Update certificate status
+        const statusCell = row.querySelector('.certificate_status');
+        statusCell.innerHTML = `
+            <span class="badge bg-warning-subtle text-warning">
+                <i class="ri-time-line align-middle"></i> Pending
+            </span>
+        `;
+
+        // Update certificate number
+        const certNumberCell = row.querySelector('.certificate_number');
+        certNumberCell.innerHTML = `<span class="badge bg-primary">${data.certificate_number}</span>`;
+
+        // Update certificate columns with download links
+        data.certificates.forEach(function(cert) {
+            let cellClass, btnClass, icon;
+            
+            switch(cert.type) {
+                case 'internship':
+                    cellClass = '.internship-cert';
+                    btnClass = 'btn-outline-success';
+                    icon = 'ri-briefcase-line';
+                    break;
+                case 'training':
+                    cellClass = '.training-cert';
+                    btnClass = 'btn-outline-info';
+                    icon = 'ri-graduation-cap-line';
+                    break;
+                case 'credit':
+                    cellClass = '.credit-cert';
+                    btnClass = 'btn-outline-warning';
+                    icon = 'ri-medal-line';
+                    break;
+                case 'recommendation':
+                    cellClass = '.recommendation-cert';
+                    btnClass = 'btn-outline-primary';
+                    icon = 'ri-thumb-up-line';
+                    break;
+                case 'placement':
+                    cellClass = '.placement-cert';
+                    btnClass = 'btn-outline-danger';
+                    icon = 'ri-building-line';
+                    break;
+            }
+
+            const cell = row.querySelector(cellClass);
+            if (cell) {
+                cell.innerHTML = `
+                    <a href="${cert.url}" target="_blank" class="btn btn-sm ${btnClass}" title="View ${cert.display_name}">
+                        <i class="${icon} me-1"></i>View/Download
+                    </a>
+                `;
+            }
+        });
+    }
+
+    // Function to attach send button listener
+    function attachSendButtonListener(button) {
+        button.addEventListener('click', function() {
+            const progressId = this.getAttribute('data-progress-id');
+            const btnText = this.querySelector('.btn-text');
+            const btnLoading = this.querySelector('.btn-loading');
+            const row = this.closest('tr');
+
+            // Disable button and show loading
+            this.disabled = true;
+            btnText.classList.add('d-none');
+            btnLoading.classList.remove('d-none');
+
+            // Make AJAX request
+            fetch('{% url "dashboard:send_certificate_ajax" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrftoken
+                },
+                body: 'course_progress_id=' + progressId
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+
+                    // Update certificate status to sent
+                    const statusCell = row.querySelector('.certificate_status');
+                    statusCell.innerHTML = `
+                        <span class="badge bg-success-subtle text-success">
+                            <i class="ri-checkbox-circle-line align-middle"></i> Sent
+                        </span>
+                    `;
+
+                    // Replace send button with sent badge
+                    const actionCell = this.closest('td');
+                    actionCell.innerHTML = `
+                        <span class="badge bg-success sent-badge">
+                            <i class="ri-check-line"></i> Sent on ${data.sent_date}
+                        </span>
+                    `;
+                } else {
+                    showToast(data.message, 'error');
+                    // Re-enable button
+                    this.disabled = false;
+                    btnText.classList.remove('d-none');
+                    btnLoading.classList.add('d-none');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while sending certificates', 'error');
+                // Re-enable button
+                this.disabled = false;
+                btnText.classList.remove('d-none');
+                btnLoading.classList.add('d-none');
+            });
+        });
+    }
+
+    // Handle Send Certificate button click
+    document.querySelectorAll('.send-certificate-btn').forEach(function(button) {
+        attachSendButtonListener(button);
+    });
+});
+</script>
+{% endblock %}

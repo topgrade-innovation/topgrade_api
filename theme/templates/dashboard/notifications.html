@@ -1,0 +1,567 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Notifications - Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Push Notifications</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Notifications</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row">
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Notifications</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ total_notifications }}</h4>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-success-subtle rounded fs-3">
+                            <i class="bx bx-bell text-success"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Sent</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ sent_notifications }}</h4>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-info-subtle rounded fs-3">
+                            <i class="bx bx-check-circle text-info"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Active Devices</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ total_active_tokens }}</h4>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-warning-subtle rounded fs-3">
+                            <i class="bx bx-mobile text-warning"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Failed</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ failed_notifications }}</h4>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-danger-subtle rounded fs-3">
+                            <i class="bx bx-error text-danger"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Send Notification Form -->
+    <div class="col-xl-5">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="ri-send-plane-fill align-middle me-1"></i> Send New Notification
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="sendNotificationForm">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="notificationTitle" class="form-label">Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="notificationTitle" name="title" 
+                               placeholder="Enter notification title" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notificationMessage" class="form-label">Message <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="notificationMessage" name="message" rows="5" 
+                                  placeholder="Enter notification message" required></textarea>
+                        <div class="form-text">
+                            <span id="charCount">0</span> characters
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notificationImage" class="form-label">Notification Image (Optional)</label>
+                        <input type="file" class="form-control" id="notificationImage" name="notification_image" 
+                               accept="image/*">
+                        <div class="form-text">Upload an image to display in notification (JPG, PNG, max 2MB)</div>
+                        <div id="imagePreview" class="mt-2" style="display: none;">
+                            <img id="previewImg" src="" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+                            <button type="button" class="btn btn-sm btn-danger ms-2" id="removeImageBtn">
+                                <i class="ri-close-line"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Send To <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="radio" name="send_type" id="sendToAll" value="all" checked>
+                            <label class="form-check-label" for="sendToAll">
+                                <strong>All Students ({{ students.count }})</strong> with FCM tokens
+                            </label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="radio" name="send_type" id="sendToSelected" value="selected">
+                            <label class="form-check-label" for="sendToSelected">
+                                <strong>Select Specific Students</strong>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" id="studentCheckboxDiv" style="display: none;">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span><strong>Select Students</strong> ({{ students.count }} available)</span>
+                                    <div>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" id="checkAllBtn">
+                                            <i class="ri-checkbox-line"></i> Check All
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" id="uncheckAllBtn">
+                                            <i class="ri-checkbox-blank-line"></i> Uncheck All
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="badge bg-primary" id="selectedCountBadge">0 selected</span>
+                                </div>
+                            </div>
+                            <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                                {% for student in students %}
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input student-checkbox" type="checkbox" 
+                                           name="selected_students[]" value="{{ student.id }}" 
+                                           id="student_{{ student.id }}">
+                                    <label class="form-check-label" for="student_{{ student.id }}">
+                                        <strong>{{ student.fullname|default:student.email }}</strong>
+                                        {% if student.phone_number %}
+                                            <small class="text-muted">({{ student.phone_number }})</small>
+                                        {% endif %}
+                                        <span class="badge bg-success-subtle text-success ms-2">FCM</span>
+                                    </label>
+                                </div>
+                                {% empty %}
+                                <p class="text-muted text-center mb-0">No students with FCM tokens</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg" id="sendBtn">
+                            <i class="ri-send-plane-fill me-1"></i> <span id="sendBtnText">Send to All Students ({{ students.count }})</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Notifications -->
+    <div class="col-xl-7">
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title mb-0">
+                    <i class="ri-history-line align-middle me-1"></i> Recent Notifications
+                </h5>
+                <a href="{% url 'dashboard:fcm_tokens' %}" class="btn btn-sm btn-soft-primary">
+                    <i class="ri-device-line me-1"></i> View Devices
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-nowrap align-middle table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Recipients</th>
+                                <th>Status</th>
+                                <th>Sent</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for notification in notifications %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-0">{{ notification.title }}</h6>
+                                            <small class="text-muted">{{ notification.message|truncatewords:8 }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark">{{ notification.get_notification_type_display }}</span>
+                                </td>
+                                <td>{{ notification.total_recipients }}</td>
+                                <td>
+                                    {% if notification.status == 'sent' %}
+                                        <span class="badge bg-success">Sent</span>
+                                    {% elif notification.status == 'pending' %}
+                                        <span class="badge bg-warning">Pending</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Failed</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="text-success">{{ notification.sent_count }}</span> / 
+                                    <span class="text-danger">{{ notification.failed_count }}</span>
+                                </td>
+                                <td>
+                                    <small>{{ notification.created_at|date:"M d, Y H:i" }}</small>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-soft-secondary dropdown-toggle" type="button" 
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="ri-more-fill"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item" href="{% url 'dashboard:notification_details' notification.id %}">
+                                                    <i class="ri-eye-line me-1"></i> View Details
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item text-danger delete-notification" 
+                                                   href="#" data-id="{{ notification.id }}">
+                                                    <i class="ri-delete-bin-line me-1"></i> Delete
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    <div class="text-muted">
+                                        <i class="ri-notification-off-line fs-2 d-block mb-2"></i>
+                                        No notifications sent yet
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Character counter
+    $('#notificationMessage').on('input', function() {
+        $('#charCount').text($(this).val().length);
+    });
+
+    // Image preview
+    $('#notificationImage').change(function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file size (max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Too Large',
+                    text: 'Image must be less than 2MB'
+                });
+                $(this).val('');
+                return;
+            }
+            
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid File',
+                    text: 'Please select an image file'
+                });
+                $(this).val('');
+                return;
+            }
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#previewImg').attr('src', e.target.result);
+                $('#imagePreview').show();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Remove image
+    $('#removeImageBtn').click(function() {
+        $('#notificationImage').val('');
+        $('#imagePreview').hide();
+        $('#previewImg').attr('src', '');
+    });
+
+    // Show/hide student selection
+    $('input[name="send_type"]').change(function() {
+        if ($(this).val() === 'selected') {
+            $('#studentCheckboxDiv').show();
+            updateSelectedCount();
+        } else {
+            $('#studentCheckboxDiv').hide();
+            $('#sendBtnText').text('Send to All Students ({{ students.count }})');
+        }
+    });
+
+    // Update selected count
+    function updateSelectedCount() {
+        const count = $('.student-checkbox:checked').length;
+        $('#selectedCountBadge').text(count + ' selected');
+        if ($('#sendToSelected').is(':checked')) {
+            if (count > 0) {
+                $('#sendBtnText').text('Send to ' + count + ' Selected Student' + (count > 1 ? 's' : ''));
+            } else {
+                $('#sendBtnText').text('Select Students to Send');
+            }
+        }
+    }
+
+    // Check all students
+    $('#checkAllBtn').click(function() {
+        $('.student-checkbox').prop('checked', true);
+        updateSelectedCount();
+    });
+
+    // Uncheck all students
+    $('#uncheckAllBtn').click(function() {
+        $('.student-checkbox').prop('checked', false);
+        updateSelectedCount();
+    });
+
+    // Update count when checkboxes change
+    $('.student-checkbox').change(function() {
+        updateSelectedCount();
+    });
+
+    // Send notification form
+    $('#sendNotificationForm').submit(function(e) {
+        e.preventDefault();
+        
+        const btn = $('#sendBtn');
+        const originalText = btn.html();
+        const title = $('#notificationTitle').val();
+        const message = $('#notificationMessage').val();
+        const sendType = $('input[name="send_type"]:checked').val();
+        const imageFile = $('#notificationImage')[0].files[0];
+        
+        // Validation
+        if (!title || !message) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields',
+                text: 'Please enter both title and message'
+            });
+            return;
+        }
+
+        // Get selected students
+        let selectedStudents = [];
+        let recipientType = 'all';
+        
+        if (sendType === 'selected') {
+            selectedStudents = $('.student-checkbox:checked').map(function() {
+                return $(this).val();
+            }).get();
+            
+            if (selectedStudents.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Students Selected',
+                    text: 'Please select at least one student'
+                });
+                return;
+            }
+            recipientType = 'selected';
+        }
+        
+        console.log('=== Sending Notification ===');
+        console.log('Title:', title);
+        console.log('Message:', message);
+        console.log('Recipient Type:', recipientType);
+        console.log('Selected Students:', selectedStudents);
+        
+        btn.prop('disabled', true).html('<i class="ri-loader-4-line me-1"></i> Sending...');
+        
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        formData.append('title', title);
+        formData.append('message', message);
+        formData.append('notification_type', 'general');
+        formData.append('recipient_type', recipientType);
+        
+        // Add image if selected
+        if (imageFile) {
+            formData.append('notification_image', imageFile);
+        }
+        
+        // Add selected students if manual selection
+        if (recipientType === 'selected') {
+            selectedStudents.forEach(function(studentId) {
+                formData.append('selected_students[]', studentId);
+            });
+        }
+        
+        $.ajax({
+            url: '{% url "dashboard:send_notification" %}',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log('Response:', response);
+                
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: response.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message
+                    });
+                }
+            },
+            error: function(xhr) {
+                console.error('AJAX Error:', xhr);
+                
+                let errorMsg = 'Failed to send notification';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
+                }
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMsg
+                });
+            },
+            complete: function() {
+                btn.prop('disabled', false).html(originalText);
+            }
+        });
+    });
+
+    // Delete notification
+    $('.delete-notification').click(function(e) {
+        e.preventDefault();
+        const notificationId = $(this).data('id');
+        
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will delete the notification and all its logs!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/dashboard/api/delete-notification/${notificationId}/`,
+                    type: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: response.message,
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire('Error', response.message, 'error');
+                        }
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,366 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}{{ student.fullname|default:student.email }} - Student Details{% endblock %}
+
+{% block css %}
+<!-- Sweet Alert -->
+<link href="{% static 'assets/dashboard/libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" type="text/css" />
+<style>
+.progress-sm {
+    height: 0.5rem;
+}
+.stats-card {
+    transition: all 0.3s ease;
+}
+.stats-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.activity-item {
+    border-left: 3px solid #e9ecef;
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+}
+.activity-item.completed {
+    border-left-color: #198754;
+}
+.activity-item.in-progress {
+    border-left-color: #0d6efd;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Student Details</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard:students' %}">Students</a></li>
+                    <li class="breadcrumb-item active">{{ student.fullname|default:student.email|truncatechars:20 }}</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<!-- Student Profile Header -->
+<div class="row">
+    <div class="col-xl-3 col-lg-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="avatar-lg mx-auto mb-3">
+                    <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-3">
+                        {{ student.fullname.0|default:student.email.0|upper }}
+                    </div>
+                </div>
+                <h6 class="mb-1">{{ student.fullname|default:"No Name" }}</h6>
+                <p class="text-muted mb-2 fs-13">{{ student.email }}</p>
+                {% if student.phone_number %}
+                <p class="text-muted mb-2 fs-13"><i class="ri-phone-line me-1"></i>{{ student.phone_number }}</p>
+                {% endif %}
+                {% if student.area_of_intrest %}
+                <span class="badge bg-primary-subtle text-primary fs-12">{{ student.area_of_intrest }}</span>
+                {% endif %}
+                <div class="mt-3">
+                    <p class="text-muted mb-1 fs-13">Member since</p>
+                    <p class="fw-medium fs-13">{{ student.date_joined|date:"M d, Y" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-9 col-lg-8">
+        <!-- Stats Cards Row 1 -->
+        <div class="row">
+            <div class="col-xl-6 col-md-6">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <p class="text-uppercase fw-medium text-muted mb-0">Total Enrollments</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-between mt-4">
+                            <div>
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ total_enrollments }}</h4>
+                                <p class="mb-0 text-muted">
+                                    <span class="text-success">{{ active_enrollments }} Active</span>
+                                </p>
+                            </div>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-success-subtle rounded fs-3">
+                                    <i class="bx bx-book text-success"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6 col-md-6">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <p class="text-uppercase fw-medium text-muted mb-0">Overall Progress</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-between mt-4">
+                            <div>
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ overall_progress }}%</h4>
+                                <p class="mb-0 text-muted">
+                                    <span class="text-info">{{ completed_courses }}/{{ total_courses }} Completed</span>
+                                </p>
+                            </div>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-info-subtle rounded fs-3">
+                                    <i class="bx bx-trending-up text-info"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards Row 2 -->
+        <div class="row">
+            <div class="col-xl-6 col-md-6">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <p class="text-uppercase fw-medium text-muted mb-0">Time Spent</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-between mt-4">
+                            <div>
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ total_watch_hours }}h {{ total_watch_minutes }}m</h4>
+                                <p class="mb-0 text-muted">
+                                    <span class="text-warning">{{ learning_days }} Active Days</span>
+                                </p>
+                            </div>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-warning-subtle rounded fs-3">
+                                    <i class="bx bx-time text-warning"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6 col-md-6">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <p class="text-uppercase fw-medium text-muted mb-0">Total Spent</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-between mt-4">
+                            <div>
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-4">&#8377;{{ total_spent }}</h4>
+                                <p class="mb-0 text-muted">
+                                    <span class="text-primary">Avg Rating: {{ avg_program_rating }}/5</span>
+                                </p>
+                            </div>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-primary-subtle rounded fs-3">
+                                    <i class="bx bx-rupee text-primary"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Content Tabs -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#enrollments" role="tab">
+                            <i class="fas fa-book me-1"></i> Enrollments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#progress" role="tab">
+                            <i class="fas fa-chart-line me-1"></i> Progress
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#activity" role="tab">
+                            <i class="fas fa-clock me-1"></i> Recent Activity
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <!-- Enrollments Tab -->
+                    <div class="tab-pane active" id="enrollments">
+                        <div class="table-responsive">
+                            <table class="table table-nowrap align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Program</th>
+                                        <th>Category</th>
+                                        <th>Enrolled Date</th>
+                                        <th>Status</th>
+                                        <th>Amount Paid</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for enrollment in recent_enrollments %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-xs me-3">
+                                                    <span class="avatar-title rounded-circle bg-primary-subtle text-primary">
+                                                        {{ enrollment.program.title.0|upper }}
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">{{ enrollment.program.title }}</h6>
+                                                    <small class="text-muted">{{ enrollment.program.duration }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ enrollment.program.category.name }}</td>
+                                        <td>{{ enrollment.purchase_date|date:"M d, Y" }}</td>
+                                        <td>
+                                            {% if enrollment.status == 'completed' %}
+                                                <span class="badge bg-success-subtle text-success">Active</span>
+                                            {% elif enrollment.status == 'pending' %}
+                                                <span class="badge bg-warning-subtle text-warning">Pending</span>
+                                            {% else %}
+                                                <span class="badge bg-danger-subtle text-danger">Cancelled</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if enrollment.amount_paid == 0 %}
+                                                <span class="text-success fw-medium">Free</span>
+                                            {% else %}
+                                                &#8377;{{ enrollment.amount_paid }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <i class="bx bx-book fs-1 text-muted mb-2"></i>
+                                                <h5 class="text-muted">No enrollments found</h5>
+                                                <p class="text-muted">This student hasn't enrolled in any programs yet.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Progress Tab -->
+                    <div class="tab-pane" id="progress">
+                        <div class="row">
+                            {% for progress in course_progress %}
+                            <div class="col-xl-6 col-lg-12">
+                                <div class="card border shadow-none">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="avatar-xs me-3">
+                                                <span class="avatar-title rounded-circle bg-primary-subtle text-primary">
+                                                    {{ progress.purchase.program.title.0|upper }}
+                                                </span>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-0">{{ progress.purchase.program.title }}</h6>
+                                                <small class="text-muted">{{ progress.purchase.program.category.name }}</small>
+                                            </div>
+                                        </div>
+                                        <div class="progress progress-sm mb-2">
+                                            <div class="progress-bar" style="width: {{ progress.completion_percentage }}%"></div>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-muted">{{ progress.completed_topics }}/{{ progress.total_topics }} Topics</small>
+                                            <small class="fw-medium">{{ progress.completion_percentage|floatformat:1 }}%</small>
+                                        </div>
+                                        {% if progress.is_completed %}
+                                        <div class="mt-2">
+                                            <span class="badge bg-success-subtle text-success">
+                                                <i class="ri-check-line me-1"></i>Completed
+                                            </span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="col-12">
+                                <div class="text-center py-4">
+                                    <i class="bx bx-chart fs-1 text-muted mb-2"></i>
+                                    <h5 class="text-muted">No progress data</h5>
+                                    <p class="text-muted">Student hasn't started any courses yet.</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Activity Tab -->
+                    <div class="tab-pane" id="activity">
+                        {% for activity in recent_activity %}
+                        <div class="activity-item {{ activity.status }}">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">{{ activity.topic.topic_title }}</h6>
+                                    <p class="text-muted mb-1">{{ activity.purchase.program.title }}</p>
+                                    <small class="text-muted">
+                                        {{ activity.last_watched_at|timesince }} ago • 
+                                        {{ activity.completion_percentage|floatformat:0 }}% completed
+                                    </small>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    {% if activity.status == 'completed' %}
+                                        <span class="badge bg-success-subtle text-success">Completed</span>
+                                    {% elif activity.status == 'in_progress' %}
+                                        <span class="badge bg-info-subtle text-info">In Progress</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary-subtle text-secondary">Started</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-4">
+                            <i class="bx bx-time fs-1 text-muted mb-2"></i>
+                            <h5 class="text-muted">No recent activity</h5>
+                            <p class="text-muted">No learning activity in the last 30 days.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<!-- Sweet Alert -->
+<script src="{% static 'assets/dashboard/libs/sweetalert2/sweetalert2.min.js' %}"></script>
+{% endblock %}

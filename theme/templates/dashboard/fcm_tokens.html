@@ -1,0 +1,278 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}FCM Tokens - Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">FCM Device Tokens</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard:notifications' %}">Notifications</a></li>
+                    <li class="breadcrumb-item active">FCM Tokens</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="row">
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Tokens</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ total_tokens }}</h4>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-primary-subtle rounded fs-3">
+                            <i class="bx bx-devices text-primary"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Active Tokens</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ active_tokens }}</h4>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-success-subtle rounded fs-3">
+                            <i class="bx bx-check-circle text-success"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Android Devices</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ android_tokens }}</h4>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-info-subtle rounded fs-3">
+                            <i class="bx bxl-android text-info"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">iOS Devices</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ ios_tokens }}</h4>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-warning-subtle rounded fs-3">
+                            <i class="bx bxl-apple text-warning"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tokens Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title mb-0">All FCM Tokens</h5>
+                <a href="{% url 'dashboard:notifications' %}" class="btn btn-sm btn-soft-primary">
+                    <i class="ri-arrow-left-line me-1"></i> Back to Notifications
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-nowrap align-middle table-hover mb-0" id="tokensTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Student</th>
+                                <th>Email</th>
+                                <th>Device Type</th>
+                                <th>Status</th>
+                                <th>Token</th>
+                                <th>Last Used</th>
+                                <th>Created</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for token in tokens %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-xs me-2">
+                                            <span class="avatar-title rounded-circle bg-primary-subtle text-primary">
+                                                {{ token.user.fullname|default:token.user.email|slice:":1"|upper }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">{{ token.user.fullname|default:"N/A" }}</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ token.user.email }}</td>
+                                <td>
+                                    {% if token.device_type == 'android' %}
+                                        <span class="badge bg-info">
+                                            <i class="bx bxl-android"></i> Android
+                                        </span>
+                                    {% elif token.device_type == 'ios' %}
+                                        <span class="badge bg-warning">
+                                            <i class="bx bxl-apple"></i> iOS
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="bx bx-globe"></i> Web
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if token.is_active %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <code class="text-muted" style="font-size: 10px;">
+                                        {{ token.token|truncatechars:30 }}
+                                    </code>
+                                </td>
+                                <td>
+                                    {% if token.last_used %}
+                                        <small>{{ token.last_used|date:"M d, Y H:i" }}</small>
+                                    {% else %}
+                                        <span class="text-muted">Never</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small>{{ token.created_at|date:"M d, Y" }}</small>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-soft-primary test-notification" 
+                                            data-user-id="{{ token.user.id }}"
+                                            data-user-name="{{ token.user.fullname|default:token.user.email }}">
+                                        <i class="ri-send-plane-fill"></i> Test
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center py-4">
+                                    <div class="text-muted">No FCM tokens registered yet</div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Initialize DataTable if available
+    if ($.fn.DataTable) {
+        $('#tokensTable').DataTable({
+            order: [[6, 'desc']],
+            pageLength: 25
+        });
+    }
+
+    // Test notification
+    $('.test-notification').click(function() {
+        const userId = $(this).data('user-id');
+        const userName = $(this).data('user-name');
+        
+        Swal.fire({
+            title: 'Send Test Notification',
+            html: `
+                <p>Send a test notification to <strong>${userName}</strong></p>
+                <input type="text" id="testTitle" class="swal2-input" placeholder="Title" value="Test Notification">
+                <textarea id="testMessage" class="swal2-textarea" placeholder="Message">This is a test notification from TopGrade Dashboard</textarea>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Send',
+            preConfirm: () => {
+                return {
+                    title: document.getElementById('testTitle').value,
+                    message: document.getElementById('testMessage').value
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '{% url "dashboard:send_test_notification" %}',
+                    type: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        user_id: userId,
+                        title: result.value.title,
+                        message: result.value.message
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,1514 @@
+{% extends 'website/base.html' %}
+{% load static %}
+{% block title %}
+  TopGrade
+{% endblock %}
+
+{% block content %}
+  <style>
+    .big-circle {
+      animation: Rotate 20s linear infinite;
+      -webkit-animation: Rotate 20s linear infinite;
+    }
+    
+    .icon-block {
+      position: absolute;
+    }
+    
+    .icon-block img {
+      animation: Rotate-reverse 20s linear infinite;
+      -webkit-animation: Rotate-reverse 20s linear infinite;
+    }
+    
+    .icon-block:first-child {
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      -webkit-transform: translate(-50%, -50%);
+    }
+    
+    .icon-block:nth-child(2) {
+      top: 50%;
+      right: 0;
+      transform: translate(50%, -50%);
+      -webkit-transform: translate(50%, -50%);
+    }
+    
+    .icon-block:nth-child(3) {
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 50%);
+      -webkit-transform: translate(-50%, 50%);
+    }
+    
+    .icon-block:nth-child(4) {
+      top: 50%;
+      left: 0;
+      transform: translate(-50%, -50%);
+      -webkit-transform: translate(-50%, -50%);
+    }
+    
+    /* circle content */
+    .circle {
+      animation: circle-rotate 20s linear infinite;
+      -webkit-animation: circle-rotate 20s linear infinite;
+      transform: translate(-50%, -50%) rotate(45deg);
+      -webkit-transform: translate(-50%, -50%) rotate(45deg);
+    }
+    
+    .circle .icon-block img {
+      animation: img-rotate 20s linear infinite;
+      -webkit-animation: img-rotate 20s linear infinite;
+    }
+    
+    /* center logo */
+    .center-logo {
+      transform: translate(-50%, -50%);
+      -webkit-transform: translate(-50%, -50%);
+    }
+    
+    /* keyframe animation */
+    @keyframes Rotate {
+      from {
+        transform: rotate(0deg);
+      }
+    
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    @-webkit-keyframes Rotate {
+      from {
+        -webkit-transform: rotate(0deg);
+      }
+    
+      to {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+    
+    @keyframes Rotate-reverse {
+      from {
+        transform: rotate(360deg);
+      }
+    
+      to {
+        transform: rotate(0deg);
+      }
+    }
+    
+    @-webkit-keyframes Rotate-reverse {
+      from {
+        -webkit-transform: rotate(360deg);
+      }
+    
+      to {
+        -webkit-transform: rotate(0deg);
+      }
+    }
+    
+    @keyframes circle-rotate {
+      from {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+    
+      to {
+        transform: translate(-50%, -50%) rotate(405deg);
+      }
+    }
+    
+    @-webkit-keyframes circle-rotate {
+      from {
+        -webkit-transform: translate(-50%, -50%) rotate(45deg);
+      }
+    
+      to {
+        -webkit-transform: translate(-50%, -50%) rotate(405deg);
+      }
+    }
+    
+    @keyframes img-rotate {
+      from {
+        transform: rotate(-45deg);
+      }
+    
+      to {
+        transform: rotate(-405deg);
+      }
+    }
+    
+    @-webkit-keyframes img-rotate {
+      from {
+        -webkit-transform: rotate(-45deg);
+      }
+    
+      to {
+        -webkit-transform: rotate(-405deg);
+      }
+    }
+    
+    /* Row scroll left */
+    @keyframes marquee-left {
+      0% {
+        transform: translateX(0);
+      }
+    
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    
+    /* Row scroll right */
+    @keyframes marquee-right {
+      0% {
+        transform: translateX(-50%);
+      }
+    
+      100% {
+        transform: translateX(0);
+      }
+    }
+    
+    .animate-marquee-left {
+      animation: marquee-left 15s linear infinite;
+      will-change: transform;
+    }
+    
+    .animate-marquee-right {
+      animation: marquee-right 15s linear infinite;
+      will-change: transform;
+    }
+    
+    /* Mobile faster animation */
+    @media (max-width: 768px) {
+      .animate-marquee-left {
+        animation-duration: 10s;
+      }
+    
+      .animate-marquee-right {
+        animation-duration: 10s;
+      }
+    }
+    
+    /* Prevent flash on load */
+    .marquee-container {
+      opacity: 0;
+      animation: fadeIn 0.5s ease-in-out 0.3s forwards;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    
+    /* Preload animation state */
+    .animate-marquee-left,
+    .animate-marquee-right {
+      animation-fill-mode: both;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+    }
+    
+    @keyframes scroll-text {
+      0% {
+        transform: translateX(0);
+      }
+    
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    
+    .animate-scroll-text {
+      animation: scroll-text 20s linear infinite;
+    }
+    
+    /* Mobile (speed up animation) */
+    @media (max-width: 768px) {
+      .animate-scroll-text {
+        animation-duration: 7s;
+        /* faster on mobile */
+      }
+    }
+    
+    .pro-pack-background {
+      background-color: #2c1e12;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    
+    .sparkle-effect {
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.6) 1px, transparent 1.5px), radial-gradient(circle, rgba(255, 255, 255, 0.4) 0.5px, transparent 1px), linear-gradient(to bottom right, #facc15, #ca8a04);
+      background-size: 100px 100px, 60px 60px, 100% 100%;
+      background-position: 0 0, 30px 30px, 0 0;
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      scrollbar-width: none;
+      /* Firefox */
+    }
+    
+    /* Default scroll animation */
+    .testimonial-scroll {
+      display: flex;
+      flex-direction: column;
+      animation: scroll-up 40s linear infinite;
+    }
+    
+    .testimonial-scroll.reverse {
+      animation: scroll-down 45s linear infinite;
+    }
+    
+    @keyframes scroll-up {
+      0% {
+        transform: translateY(0);
+      }
+    
+      100% {
+        transform: translateY(-50%);
+      }
+    }
+    
+    @keyframes scroll-down {
+      0% {
+        transform: translateY(-50%);
+      }
+    
+      100% {
+        transform: translateY(0);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .grid {
+        display: block !important;
+      }
+    
+      .testimonial-column {
+        width: 100%;
+        margin-bottom: 2rem;
+      }
+    
+      .testimonial-scroll {
+        animation: mobile-scroll-up 5s linear infinite;
+      }
+    
+      @keyframes mobile-scroll-up {
+        0% {
+          transform: translateY(0);
+        }
+    
+        100% {
+          transform: translateY(-50%);
+        }
+      }
+    }
+  </style>
+
+  <!-- HERO SECTION -->
+  <section class="relative bg-gradient-to-br from-[#d97706] to-[#4d2c0d] overflow-hidden">
+    <!-- Wavy Background -->
+    <div class="absolute inset-0 overflow-hidden z-0">
+      <svg class="absolute bottom-0 left-0 w-full h-1/2" viewBox="0 0 1200 300" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,150 C300,50 600,250 900,100 C1050,25 1150,200 1200,150 L1200,300 L0,300 Z" fill="#4d2c0d" fill-opacity="0.3" />
+        <path d="M0,200 C400,100 800,300 1200,175 L1200,300 L0,300 Z" fill="#4d2c0d" fill-opacity="0.2" />
+        <path d="M0,250 C300,175 600,225 900,190 C1050,170 1150,210 1200,200 L1200,300 L0,300 Z" fill="#4d2c0d" fill-opacity="0.4" />
+      </svg>
+    </div>
+    <div class="container mx-auto grid grid-cols-1 lg:grid-cols-2 items-center min-h-[calc(100vh-120px)] px-8 py-20 lg:py-0 relative z-10">
+      <div class="main relative mx-auto h-[300px] w-[300px] lg:h-[450px] lg:w-[450px] md:order-2">
+        <div class="big-circle z-20 h-full w-full relative border-4 border-[#d97706] rounded-full flex items-center justify-center">
+          <div class="icon-block w-[48px] h-[48px] lg:h-[56px] lg:w-[56px] rounded-full flex items-center justify-center bg-gradient-to-b from-[#d97706] to-orange-600">
+            <i class="fa-solid fa-briefcase text-xl lg:text-2xl text-white"></i>
+          </div>
+          <div class="icon-block w-[48px] h-[48px] lg:h-[56px] lg:w-[56px] rounded-full flex items-center justify-center bg-gradient-to-b from-[#d97706] to-orange-600">
+            <i class="fa-solid fa-gamepad text-xl lg:text-2xl text-white"></i>
+          </div>
+          <div class="icon-block w-[48px] h-[48px] lg:h-[56px] lg:w-[56px] rounded-full flex items-center justify-center bg-gradient-to-b from-[#d97706] to-orange-600">
+            <i class="fa-solid fa-laptop-code text-xl lg:text-2xl text-white"></i>
+          </div>
+          <div class="icon-block w-[48px] h-[48px] lg:h-[56px] lg:w-[56px] rounded-full flex items-center justify-center bg-gradient-to-b from-[#d97706] to-orange-600">
+            <i class="fa-solid fa-laptop-medical text-xl lg:text-2xl text-white"></i>
+          </div>
+        </div>
+        <div class="circle z-20 absolute top-1/2 left-1/2 w-3/4 h-3/4 border-4 border-[#d97706] rounded-full">
+          <div class="icon-block w-[48px] h-[48px] lg:h-[56px] lg:w-[56px] rounded-full flex items-center justify-center bg-gradient-to-b from-[#d97706] to-orange-600">
+            <i class="fas fa-mobile-alt text-xl lg:text-2xl text-white"></i>
+          </div>
+          <div class="icon-block w-[48px] h-[48px] lg:h-[56px] lg:w-[56px] rounded-full flex items-center justify-center bg-gradient-to-b from-[#d97706] to-orange-600">
+            <img src="https://www.yudiz.com/codepen/animated-portfolio/blockchain-icon.png" alt="blockchain icon" class="mx-auto w-5/6" />
+          </div>
+          <div class="icon-block w-[48px] h-[48px] lg:h-[56px] lg:w-[56px] rounded-full flex items-center justify-center bg-gradient-to-b from-[#d97706] to-orange-600">
+            <img src="https://www.yudiz.com/codepen/animated-portfolio/arvr-icon.png" alt="ar-vr icon" class="mx-auto w-5/6" />
+          </div>
+          <div class="icon-block w-[48px] h-[48px] lg:h-[56px] lg:w-[56px] rounded-full flex items-center justify-center bg-gradient-to-b from-[#d97706] to-orange-600">
+            <img src="https://www.yudiz.com/codepen/animated-portfolio/artificial-intelligence-icon.png" alt="artificial intelligence icon" class="mx-auto w-5/6" />
+          </div>
+        </div>
+        <div class="center-logo overflow-hidden absolute top-1/2 left-1/2 rounded-full">
+          <img src="{% static 'assets/website/images/student.webp' %}" alt="logo" width="600" height="400" />
+        </div>
+      </div>
+
+      <!-- Text Column (Mobile: below, Desktop: left) -->
+      <div class="text-white text-center lg:text-left z-20 mt-6 lg:mt-0 lg:mb-12 order-2 lg:order-1">
+        <h1 class="text-3xl lg:text-5xl font-bold leading-snug lg:max-w-xl text-white">Empowering the best learning experience <br /> with top industry mentors.</h1>
+        <p class="mt-6 text-base lg:text-xl text-white/80 max-w-lg mx-auto lg:mx-0">Transform how students and educators connect, learn and succeed - anytime, anywhere</p>
+        <div class="mt-10">
+          <!-- MOBILE BUTTON -->
+          <a href="{% url 'program_list' %}" class="inline-block bg-gradient-to-r from-[#ef7d00] to-orange-500 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 lg:hidden">Explore Program</a>
+          <!-- DESKTOP BUTTON -->
+          <a href="{% url 'program_list' %}" class="hidden lg:inline-block bg-gradient-to-r from-[#ef7d00] to-orange-500 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">Explore Program</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLACEMENTS & STATS SECTION -->
+  <section class="bg-orange-50 py-16 md:py-24 overflow-x-hidden">
+    <div class="container mx-auto px-4">
+      <!-- Section Title -->
+      <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-gray-800">Secure Placements with Top Brands</h2>
+
+      <!-- Logo Marquee Section -->
+      <div class="group relative w-full overflow-hidden mt-12 marquee-container">
+        <div class="flex flex-col space-y-4">
+          <!-- Row 1 (scrolls right) -->
+          <div class="flex animate-marquee-right">
+            <!-- Set 1 -->
+            <div class="flex flex-nowrap items-center space-x-4 md:space-x-6 mx-3">
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/google_logo.svg' %}" alt="Google" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/microsoft_logo.svg' %}" alt="Microsoft" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/amazon_logo.svg' %}" alt="Amazon" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/ibm_logo.svg' %}" alt="IBM" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/oracle_logo.svg' %}" alt="Oracle" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/tcs_logo.svg' %}" alt="TCS" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/hcl_logo.svg' %}" alt="HCL" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/wipro_logo.svg' %}" alt="Wipro" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/accenture_logo.svg' %}" alt="Accenture" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/capgemini_logo.svg' %}" alt="Capgemini" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+            </div>
+
+            <!-- Set 2 (Duplicate for seamless scrolling) -->
+            <div class="flex flex-nowrap items-center space-x-4 md:space-x-6 mx-3">
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/google_logo.svg' %}" alt="Google" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/microsoft_logo.svg' %}" alt="Microsoft" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/amazon_logo.svg' %}" alt="Amazon" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/ibm_logo.svg' %}" alt="IBM" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/oracle_logo.svg' %}" alt="Oracle" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/tcs_logo.svg' %}" alt="TCS" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/hcl_logo.svg' %}" alt="HCL" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/wipro_logo.svg' %}" alt="Wipro" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/accenture_logo.svg' %}" alt="Accenture" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/capgemini_logo.svg' %}" alt="Capgemini" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2 (scrolls left) -->
+          <div class="flex animate-marquee-left">
+            <div class="flex flex-nowrap items-center space-x-4 md:space-x-6 mx-3">
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/deloitte_logo.svg' %}" alt="Deloitte" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/tech_mahendra_logo.svg' %}" alt="Tech Mahindra" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/siemens_logo.svg' %}" alt="Siemens" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/boschz_logo.svg' %}" alt="Bosch" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/l&t_logo.svg' %}" alt="L&T" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/biocon_logo.svg' %}" alt="Biocon" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/pfizer_logo.svg' %}" alt="Pfizer" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/adobe_logo.svg' %}" alt="Adobe" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/figma_logo.svg' %}" alt="Figma" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+            </div>
+
+            <!-- Set 2 (Duplicate for seamless scrolling) -->
+            <div class="flex flex-nowrap items-center space-x-4 md:space-x-6 mx-3">
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/deloitte_logo.svg' %}" alt="Deloitte" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/tech_mahendra_logo.svg' %}" alt="Tech Mahindra" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/siemens_logo.svg' %}" alt="Siemens" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/boschz_logo.svg' %}" alt="Bosch" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/l&t_logo.svg' %}" alt="L&T" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/biocon_logo.svg' %}" alt="Biocon" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/pfizer_logo.svg' %}" alt="Pfizer" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/adobe_logo.svg' %}" alt="Adobe" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+
+              <div class="flex items-center justify-center w-20 h-12 md:w-34 md:h-19 bg-white rounded-xl p-1 md:p-3">
+                <img src="{% static 'assets/website/brands/figma_logo.svg' %}" alt="Figma" class="max-h-8 md:max-h-12 lg:max-h-16 w-auto" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-4xl mx-auto mt-8 sm:mt-12 md:mt-24 px-4 md:p-8">
+        <div class="bg-white rounded-2xl border border-orange-200 shadow-lg p-3 md:p-8">
+          <!-- Grid for Stats -->
+          <div class="grid grid-cols-1 gap-6 md:flex md:justify-center md:space-x-16">
+            <!-- Stat 1: Google Rating -->
+            <div class="flex items-center gap-4 py-4 px-2 justify-start">
+              <!-- Icon -->
+              <div class="bg-orange-100 p-4 rounded-2xl w-fit">
+                <i class="fa-solid fa-star text-2xl text-orange-500"></i>
+              </div>
+              <!-- Text -->
+              <div class="text-left md:text-start">
+                <p class="text-xl sm:text-3xl font-bold text-orange-800">4.8</p>
+                <p class="text-sm sm:text-base text-gray-600">Google Rating</p>
+              </div>
+            </div>
+
+            <!-- Stat 2: Mentees Trained -->
+            <div class="flex items-center gap-4 py-4 px-2 justify-start">
+              <!-- Icon -->
+              <div class="bg-orange-100 p-4 rounded-2xl w-fit">
+                <i class="fa-solid fa-user-graduate text-2xl text-orange-500"></i>
+              </div>
+              <!-- Text -->
+              <div class="text-left md:text-start">
+                <p class="text-xl sm:text-3xl font-bold text-orange-800">50K+</p>
+                <p class="text-sm sm:text-base text-gray-600">Mentees Trained</p>
+              </div>
+            </div>
+
+            <!-- Stat 3: Hiring Partner -->
+            <div class="flex items-center gap-4 py-4 px-2 justify-start">
+              <!-- Icon -->
+              <div class="bg-orange-100 p-4 rounded-2xl w-fit">
+                <i class="fa-solid fa-briefcase text-2xl text-orange-500"></i>
+              </div>
+              <!-- Text -->
+              <div class="text-left md:text-start">
+                <p class="text-xl sm:text-3xl font-bold text-orange-800">500+</p>
+                <p class="text-sm sm:text-base text-gray-600">Hiring Partner</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Program SECTION -->
+  <!-- MOBILE VIEW -->
+  <section id="ExploreMobile" class="overflow-hidden lg:hidden bg-[#2c1e12] py-16 md:py-24">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center text-white mb-8">Explore Programs</h2>
+
+      <!-- Scrollable Filter Buttons -->
+      <div id="mobile-filters" class="flex flex-wrap gap-2 py-2">
+        <button class="filter-btn px-4 py-2 rounded-xl bg-[#f07c00] text-white hover:bg-[#d36c00] transition active" data-category="all">All Programs</button>
+        {% for category in categories %}
+          <button class="filter-btn px-4 py-2 rounded-xl bg-white/5 text-white/70 hover:bg-[#f07c00] hover:text-white transition" data-category="{{ category.name }}">{{ category.name }}</button>
+        {% endfor %}
+      </div>
+
+      <!-- Scrollable Program Cards -->
+      <div class="flex space-x-4 overflow-x-auto pb-3 no-scrollbar touch-pan-x mt-6 h-96 items-start">
+        {% for program in programs %}
+          <div class="program-card flex-shrink-0 w-72 bg-white rounded-xl shadow-lg overflow-hidden" data-category="{{ program.category.name }}">
+            <div class="relative">
+              {% if program.image %}
+                <img src="{{ program.image.url }}" alt="{{ program.title }}" class="w-full h-48 object-cover" />
+              {% else %}
+                <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
+                  <i class="fa-solid fa-graduation-cap text-4xl text-white"></i>
+                </div>
+              {% endif %}
+              <div class="absolute inset-0 bg-black/60 flex items-end p-4">
+                <h3 class="text-white text-lg font-bold">{{ program.subtitle }}</h3>
+              </div>
+              {% if program.is_best_seller %}
+                <span class="absolute top-3 right-3 bg-[#f07c00] text-white text-xs font-semibold px-3 py-1 rounded-full">Best Seller</span>
+              {% endif %}
+            </div>
+
+            <div class="p-4 flex flex-col">
+              <!-- Rating -->
+              <div class="flex items-center text-yellow-500">
+                {# prettier-ignore #}
+                {% for i in "12345" %}
+                  {% if forloop.counter <= program.program_rating %}
+                    <i class="fa-solid fa-star"></i>
+                  {% else %}
+                    <i class="fa-regular fa-star text-gray-300"></i>
+                  {% endif %}
+                {% endfor %}
+                <span class="ml-2 text-sm text-gray-600">({{ program.program_rating }})</span>
+              </div>
+
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-2 my-4">
+                <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full flex items-center"><i class="fa-solid fa-calendar-days mr-2"></i>{{ program.duration }}</span>
+                {% if program.available_slots %}
+                  <span class="bg-blue-100 text-blue-700 text-sm px-3 py-1 rounded-full flex items-center"><i class="fa-solid fa-users mr-2"></i>{{ program.available_slots }} slots</span>
+                {% endif %}
+              </div>
+
+              {% if program.batch_starts %}
+                <div class="text-sm text-gray-500 mb-2">
+                  <i class="fa-solid fa-play mr-1"></i>Batch starts: {{ program.batch_starts }}
+                </div>
+              {% endif %}
+
+              <hr class="my-2" />
+              <a href="{% url 'program_detail' program.id %}" class="mt-2 text-[#f07c00] font-semibold flex items-center hover:text-[#d36c00] transition">
+                Know More
+                <i class="fa-solid fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DESKTOP VIEW (hidden on mobile) ================= -->
+  <section id="ExploreDesktop" class="hidden lg:block bg-[#2c1e12] py-16 md:py-24">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-12">Explore Programs</h2>
+
+      <div id="Explore" class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+        <!-- Filters (desktop) -->
+        <!-- Your aside code remains the same -->
+        <aside class="lg:col-span-1">
+          <div class="flex flex-col space-y-3">
+            <button class="filter-btn w-full flex items-center justify-between p-4 rounded-xl bg-[#f07c00] text-white hover:bg-white/10 transition" data-category="all">
+              <span class="flex items-center"><i class="fa-solid fa-th-large mr-3"></i>All Programs</span>
+              <i class="fa-solid fa-play text-white/50"></i>
+            </button>
+
+            {% for category in categories %}
+              <button class="filter-btn w-full flex items-center justify-between p-4 rounded-xl bg-white/5 text-white/70 hover:bg-white/10 transition" data-category="{{ category.id }}">
+                <span class="flex items-center">
+                  {% if category.icon %}
+                    <i class="{{ category.icon }} mr-3"></i>
+                  {% else %}
+                    <i class="fa-solid fa-folder mr-3"></i>
+                  {% endif %}
+                  {{ category.name }}
+                </span>
+                <i class="fa-solid fa-play text-white/50"></i>
+              </button>
+            {% endfor %}
+          </div>
+        </aside>
+
+        <!-- Cards (desktop grid) -->
+        <main id="Explore" class="lg:col-span-3 h-[70vh] overflow-y-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pr-2">
+            {% for program in programs %}
+              <div class="program-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col group" data-category="{{ program.category.id }}">
+                <div class="relative">
+                  {% if program.image %}
+                    <img src="{{ program.image.url }}" alt="{{ program.title }}" class="w-full h-48 object-cover" loading="lazy" />
+                  {% else %}
+                    <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
+                      <i class="fa-solid fa-graduation-cap text-4xl text-white"></i>
+                    </div>
+                  {% endif %}
+                  <div class="absolute inset-0 bg-black/60 flex items-end p-4">
+                    <h3 class="text-white text-xl font-bold">{{ program.subtitle }}</h3>
+                  </div>
+                  {% if program.is_best_seller %}
+                    <span class="absolute top-3 right-3 bg-[#f07c00] text-white text-xs font-semibold px-3 py-1 rounded-full">Best Seller</span>
+                  {% endif %}
+                </div>
+
+                <div class="p-6 flex-grow flex flex-col">
+                  <div class="flex items-center text-yellow-500">
+                    {# prettier-ignore #}
+                    {% for i in "12345" %}
+                      {% if forloop.counter <= program.program_rating %}
+                        <i class="fa-solid fa-star"></i>
+                      {% else %}
+                        <i class="fa-regular fa-star text-gray-300"></i>
+                      {% endif %}
+                    {% endfor %}
+                    <span class="ml-2 text-sm text-gray-600">({{ program.program_rating }})</span>
+                  </div>
+
+                  <div class="flex flex-wrap gap-2 my-4">
+                    <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full flex items-center"><i class="fa-solid fa-calendar-days mr-2"></i>{{ program.duration }}</span>
+                    {% if program.available_slots %}
+                      <span class="bg-blue-100 text-blue-700 text-sm px-3 py-1 rounded-full flex items-center"><i class="fa-solid fa-users mr-2"></i>{{ program.available_slots }} slots</span>
+                    {% endif %}
+                  </div>
+
+                  {% if program.batch_starts %}
+                    <div class="text-sm text-gray-500 mb-2">
+                      <i class="fa-solid fa-play mr-1"></i>Batch starts: {{ program.batch_starts }}
+                    </div>
+                  {% endif %}
+
+                  <hr class="my-2" />
+                  <a href="{% url 'program_detail' program.id %}" class="mt-2 text-[#f07c00] font-semibold flex items-center group-hover:text-[#d36c00] transition">
+                    Know More
+                    <i class="fa-solid fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+                  </a>
+                </div>
+              </div>
+            {% empty %}
+              <div class="col-span-full text-center py-12">
+                <i class="fa-solid fa-graduation-cap text-6xl text-gray-400 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">No Programs Available</h3>
+                <p class="text-gray-500">Check back later for new programs!</p>
+              </div>
+            {% endfor %}
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE BAR -->
+  <div class="bg-black border-y border-gray-700/50 overflow-hidden">
+    <div class="flex animate-scroll-text whitespace-nowrap py-4">
+      <!-- We need at least two identical sets of content for a seamless loop -->
+
+      <!-- Set 1 -->
+      <div class="flex items-center">
+        <span class="text-white text-lg font-semibold mx-6">Mockup Interviews</span>
+        <span class="text-orange-400 text-xl mx-6">&#10022;</span>
+        <span class="text-white text-lg font-semibold mx-6">Value Packs</span>
+        <span class="text-orange-400 text-xl mx-6">&#10022;</span>
+        <span class="text-white text-lg font-semibold mx-6">Placement Assistance</span>
+        <span class="text-orange-400 text-xl mx-6">&#10022;</span>
+        <span class="text-white text-lg font-semibold mx-6">Internship</span>
+        <span class="text-orange-400 text-xl mx-6">&#10022;</span>
+      </div>
+
+      <!-- Set 2 (Duplicate for seamless animation) -->
+      <div class="flex items-center" aria-hidden="true">
+        <span class="text-white text-lg font-semibold mx-6">Mockup Interviews</span>
+        <span class="text-orange-400 text-xl mx-6">&#10022;</span>
+        <span class="text-white text-lg font-semibold mx-6">Value Packs</span>
+        <span class="text-orange-400 text-xl mx-6">&#10022;</span>
+        <span class="text-white text-lg font-semibold mx-6">Placement Assistance</span>
+        <span class="text-orange-400 text-xl mx-6">&#10022;</span>
+        <span class="text-white text-lg font-semibold mx-6">Internship</span>
+        <span class="text-orange-400 text-xl mx-6">&#10022;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNIFIED PRO PACKS SECTION -->
+  <section class="pro-pack-background py-12 md:py-16 lg:py-24">
+    <div class="container mx-auto px-4 flex flex-col items-center">
+      <!-- Main Section Title -->
+      <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-white mb-8 md:mb-12">Pro Packs</h2>
+
+      <!-- The Golden Ticket Component -->
+      <div class="relative max-w-4xl w-full bg-[#1c120a] rounded-xl md:rounded-2xl flex flex-col md:flex-row shadow-2xl overflow-hidden">
+        <div class="flex-grow p-6 md:p-8 lg:p-12 text-center">
+          <h3 class="text-2xl md:text-4xl lg:text-5xl font-bold text-yellow-400">Golden Pass <span class="text-lg md:text-2xl">🪙</span></h3>
+          <p class="text-yellow-500/80 tracking-[0.1em] md:tracking-[0.2em] mt-2 font-semibold text-xs md:text-sm">AN EXCLUSIVE COURSE ACCESS</p>
+
+          <!-- Course Packs - Mobile: Stack, Desktop: Row -->
+          <div class="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 mt-6 md:mt-8">
+            <div class="p-3 md:p-4 rounded-lg md:rounded-xl bg-gradient-to-br from-blue-500 to-indigo-700 text-white text-center w-full md:w-48">
+              <h4 class="font-bold text-sm md:text-base">Internship</h4>
+              <p class="text-xs md:text-sm opacity-80">(30+ classes)</p>
+            </div>
+
+            <span class="text-xl md:text-2xl text-white/50">+</span>
+
+            <div class="p-3 md:p-4 rounded-lg md:rounded-xl bg-gradient-to-br from-[#ef7d00] to-orange-600 text-white text-center w-full md:w-48">
+              <h4 class="font-bold text-sm md:text-base">Placement Guidance</h4>
+              <p class="text-xs md:text-sm opacity-80">(15+ classes)</p>
+            </div>
+          </div>
+
+          <div class="mt-6 md:mt-8 text-white">
+            <p class="font-semibold text-sm md:text-base">Get 5 premium certificates</p>
+          </div>
+
+          <!-- Get Golden Pass Button -->
+          <div class="mt-6 md:mt-8 text-center">
+            <a href="{% url 'contact' %}" class="inline-block bg-[#ef7d00] hover:bg-orange-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-300">Get Golden Pass</a>
+          </div>
+        </div>
+
+        <!-- Vertical Side Panel -->
+        <div class="flex-shrink-0 h-20 md:h-auto md:w-32 lg:w-40 sparkle-effect md:rounded-r-xl lg:rounded-r-2xl flex items-center justify-center relative">
+          <!-- Mobile: Horizontal text -->
+          <p class="text-black/70 text-lg font-extrabold tracking-wider uppercase block md:hidden">8 Months Access</p>
+
+          <!-- Desktop: Vertical text -->
+          <p class="text-black/70 text-2xl font-extrabold tracking-widest uppercase hidden md:block text-center" style="writing-mode: vertical-rl; text-orientation: mixed;">8 Months Access</p>
+
+          <!-- Decorative circles for desktop -->
+          <div class="hidden md:block absolute -left-4 top-0 h-6 w-6 md:h-8 md:w-8 bg-[#2c1e12] rounded-full" style="transform: translateY(-50%);"></div>
+          <div class="hidden md:block absolute -left-4 bottom-0 h-6 w-6 md:h-8 md:w-8 bg-[#2c1e12] rounded-full" style="transform: translateY(50%);"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE TOP GRADE SECTION -->
+  <section class="bg-orange-50/50 py-12 md:py-16 lg:py-24">
+    <div class="container mx-auto px-4">
+      <!-- Section Title -->
+      <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-gray-800 mb-8 md:mb-12">Why Choose Top Grade ?</h2>
+
+      <!-- Connector Diagram -->
+      <div class="max-w-2xl mx-auto my-8 md:my-12 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
+        <span class="border border-gray-400 text-gray-600 font-semibold px-3 md:px-4 py-2 rounded-md text-xs md:text-sm text-center">LEARNING CHALLENGES</span>
+        <div class="flex-grow h-0.5 mx-2 md:mx-4 bg-gradient-to-r from-orange-400 to-[#ef7d00] relative hidden sm:block">
+          <i class="fa-solid fa-play text-[#ef7d00] absolute -right-2 top-1/2 -translate-y-1/2"></i>
+        </div>
+        <!-- Mobile arrow -->
+        <div class="sm:hidden">
+          <i class="fa-solid fa-arrow-down text-[#ef7d00] text-xl"></i>
+        </div>
+        <span class="bg-[#ef7d00] text-white font-semibold px-3 md:px-4 py-2 rounded-md text-xs md:text-sm text-center">HOW WE ENCOUNTER</span>
+      </div>
+
+      <!-- Main Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start lg:items-center">
+        <!-- Left Column: Challenges (Chat Simulation) -->
+        <div class="w-full max-w-md mx-auto p-3 md:p-4 bg-gray-200/70 rounded-2xl md:rounded-3xl shadow-lg">
+          <div class="bg-gray-50 rounded-xl md:rounded-2xl p-3 md:p-4 space-y-3 md:space-y-4">
+            <!-- Chat Message 1 -->
+            <div class="flex items-start gap-2 md:gap-3 chat-msg" style="--delay:0s;">
+              <img src="{% static 'assets/website/students/student_1.jpg' %}" alt="Avatar" class="w-6 h-6 md:w-8 md:h-8 rounded-full flex-shrink-0 object-cover" />
+              <div class="bg-white p-2 md:p-3 rounded-2xl rounded-tl-none shadow-sm w-fit max-w-[calc(100%-2rem)]">
+                <p class="text-xs md:text-sm text-gray-700">I'm struggling to retain what is taught.</p>
+                <p class="text-xs text-gray-400 text-right mt-1">9:30 AM</p>
+              </div>
+            </div>
+            <!-- Chat Message 2 -->
+            <div class="flex items-start gap-2 md:gap-3 chat-msg" style="--delay:1s;">
+              <img src="{% static 'assets/website/students/student_5.jpg' %}" alt="Avatar" class="w-6 h-6 md:w-8 md:h-8 rounded-full flex-shrink-0 object-cover" />
+              <div class="bg-white p-2 md:p-3 rounded-2xl rounded-tl-none shadow-sm w-fit max-w-[calc(100%-2rem)]">
+                <p class="text-xs md:text-sm text-gray-700">It's all solo study without peer support.</p>
+                <p class="text-xs text-gray-400 text-right mt-1">11:15 AM</p>
+              </div>
+            </div>
+            <!-- Chat Message 3 -->
+            <div class="flex items-start gap-2 md:gap-3 chat-msg" style="--delay:2s;">
+              <img src="{% static 'assets/website/students/student_3.jpg' %}" alt="Avatar" class="w-6 h-6 md:w-8 md:h-8 rounded-full flex-shrink-0 object-cover" />
+              <div class="bg-white p-2 md:p-3 rounded-2xl rounded-tl-none shadow-sm w-fit max-w-[calc(100%-2rem)]">
+                <p class="text-xs md:text-sm text-gray-700">I am unable to find good mentors with work experience.</p>
+                <p class="text-xs text-gray-400 text-right mt-1">3:35 PM</p>
+              </div>
+            </div>
+            <!-- Chat Message 4 -->
+            <div class="flex items-start gap-2 md:gap-3 chat-msg" style="--delay:3s;">
+              <img src="{% static 'assets/website/students/student_2.jpg' %}" alt="Avatar" class="w-6 h-6 md:w-8 md:h-8 rounded-full flex-shrink-0 object-cover" />
+              <div class="bg-white p-2 md:p-3 rounded-2xl rounded-tl-none shadow-sm w-fit max-w-[calc(100%-2rem)]">
+                <p class="text-xs md:text-sm text-gray-700">I am not able to build portfolio-worthy projects.</p>
+                <p class="text-xs text-gray-400 text-right mt-1">5:12 PM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Solutions (Features) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mt-8 lg:mt-0">
+          <!-- Features -->
+          <div class="bg-white p-3 md:p-4 rounded-lg md:rounded-xl shadow-sm border border-gray-200 flex items-center gap-3 md:gap-4 mb-3 sm:mb-0">
+            <div class="w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-orange-100 flex-shrink-0">
+              <i class="fa-solid fa-video text-lg md:text-2xl text-[#ef7d00]"></i>
+            </div>
+            <p class="font-semibold text-gray-700 text-sm md:text-base">Live & interactive session</p>
+          </div>
+          <div class="bg-white p-3 md:p-4 rounded-lg md:rounded-xl shadow-sm border border-gray-200 flex items-center gap-3 md:gap-4 mb-3 sm:mb-0">
+            <div class="w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-orange-100 flex-shrink-0">
+              <i class="fa-solid fa-graduation-cap text-lg md:text-2xl text-[#ef7d00]"></i>
+            </div>
+            <p class="font-semibold text-gray-700 text-sm md:text-base">Industry-Recognized Certifications</p>
+          </div>
+          <div class="bg-white p-3 md:p-4 rounded-lg md:rounded-xl shadow-sm border border-gray-200 flex items-center gap-3 md:gap-4 mb-3 sm:mb-0">
+            <div class="w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-orange-100 flex-shrink-0">
+              <i class="fa-solid fa-user-tie text-lg md:text-2xl text-[#ef7d00]"></i>
+            </div>
+            <p class="font-semibold text-gray-700 text-sm md:text-base">Expert industry mentors</p>
+          </div>
+          <div class="bg-white p-3 md:p-4 rounded-lg md:rounded-xl shadow-sm border border-gray-200 flex items-center gap-3 md:gap-4 mb-3 sm:mb-0">
+            <div class="w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-orange-100 flex-shrink-0">
+              <i class="fa-solid fa-briefcase text-lg md:text-2xl text-[#ef7d00]"></i>
+            </div>
+            <p class="font-semibold text-gray-700 text-sm md:text-base">Hands-on, Portfolio-Ready Projects</p>
+          </div>
+          <div class="bg-white p-3 md:p-4 rounded-lg md:rounded-xl shadow-sm border border-gray-200 flex items-center gap-3 md:gap-4 mb-3 sm:mb-0">
+            <div class="w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-orange-100 flex-shrink-0">
+              <i class="fa-solid fa-comments text-lg md:text-2xl text-[#ef7d00]"></i>
+            </div>
+            <p class="font-semibold text-gray-700 text-sm md:text-base">1:1 Executive query support</p>
+          </div>
+          <div class="bg-white p-3 md:p-4 rounded-lg md:rounded-xl shadow-sm border border-gray-200 flex items-center gap-3 md:gap-4 mb-3 sm:mb-0">
+            <div class="w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-orange-100 flex-shrink-0">
+              <i class="fa-solid fa-users text-lg md:text-2xl text-[#ef7d00]"></i>
+            </div>
+            <p class="font-semibold text-gray-700 text-sm md:text-base">Proven Career Outcomes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREATIVE SEPARATOR -->
+  <div class="relative bg-gradient-to-r from-orange-50 via-white to-orange-50 py-16">
+    <div class="container mx-auto px-4">
+      <!-- Animated Divider Line -->
+      <div class="relative flex items-center justify-center">
+        <!-- Left decorative element -->
+        <div class="flex-1 flex items-center">
+          <div class="h-0.5 flex-1 bg-gradient-to-r from-transparent via-orange-300 to-orange-500"></div>
+          <div class="mx-4 w-3 h-3 rounded-full bg-orange-400 animate-pulse"></div>
+          <div class="mx-2 w-2 h-2 rounded-full bg-orange-300"></div>
+        </div>
+
+        <!-- Center element -->
+        <div class="relative mx-8">
+          <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-300">
+            <i class="fas fa-star text-white text-2xl animate-spin-slow"></i>
+          </div>
+          <!-- Floating particles -->
+          <div class="absolute -top-2 -right-2 w-4 h-4 bg-orange-300 rounded-full opacity-60 animate-bounce" style="animation-delay: 0.2s;"></div>
+          <div class="absolute -bottom-2 -left-2 w-3 h-3 bg-orange-400 rounded-full opacity-70 animate-bounce" style="animation-delay: 0.4s;"></div>
+          <div class="absolute top-1 -right-4 w-2 h-2 bg-orange-500 rounded-full opacity-50 animate-bounce" style="animation-delay: 0.6s;"></div>
+        </div>
+
+        <!-- Right decorative element -->
+        <div class="flex-1 flex items-center">
+          <div class="mx-2 w-2 h-2 rounded-full bg-orange-300"></div>
+          <div class="mx-4 w-3 h-3 rounded-full bg-orange-400 animate-pulse"></div>
+          <div class="h-0.5 flex-1 bg-gradient-to-r from-orange-500 via-orange-300 to-transparent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add custom animation for slow spin -->
+  <style>
+    @keyframes spin-slow {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    .animate-spin-slow {
+      animation: spin-slow 8s linear infinite;
+    }
+  </style>
+
+  <!-- TESTIMONIALS SECTION -->
+  <section class="bg-orange-50/50 py-12 md:py-16 lg:py-24 overflow-hidden">
+    <div class="container mx-auto px-4">
+      <!-- Section Title (fixed) -->
+      <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">What Our Learners Say</h2>
+
+      {% if testimonials %}
+        <!-- Testimonial Grid Container -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 h-[70vh] max-h-[800px] overflow-hidden">
+          <!-- Column 1 -->
+          <div class="testimonial-column space-y-8 overflow-hidden">
+            <div class="testimonial-scroll" style="animation-duration:40s;">
+              <div class="space-y-8">
+                {% for testimonial in testimonials|slice:':3' %}
+                  <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center gap-4">
+                      {% if testimonial.avatar_image %}
+                        <img src="{{ testimonial.avatar_image.url }}" alt="{{ testimonial.name }}" class="w-14 h-14 rounded-full border-2 border-[#ef7d00] object-cover" />
+                      {% else %}
+                        <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="10" font-weight="bold">
+                              {{ testimonial.name|first|upper }}{% if testimonial.name|wordcount > 1 %}{{ testimonial.name|last|first|upper }}{% endif %}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <h3 class="font-bold text-lg">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500">
+                          <span class="text-[#ef7d00] font-medium">{{ testimonial.field_of_study }}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mt-4">{{ testimonial.title }}</h4>
+                    <p class="text-gray-600 text-sm mt-2">{{ testimonial.content }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+              <br />
+              <!-- Duplicate for infinite scroll -->
+              <div class="space-y-8" aria-hidden="true">
+                {% for testimonial in testimonials|slice:':3' %}
+                  <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center gap-4">
+                      {% if testimonial.avatar_image %}
+                        <img src="{{ testimonial.avatar_image.url }}" alt="{{ testimonial.name }}" class="w-14 h-14 rounded-full border-2 border-[#ef7d00] object-cover" />
+                      {% else %}
+                        <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="10" font-weight="bold">
+                              {{ testimonial.name|first|upper }}{% if testimonial.name|wordcount > 1 %}{{ testimonial.name|last|first|upper }}{% endif %}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <h3 class="font-bold text-lg">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500">
+                          <span class="text-[#ef7d00] font-medium">{{ testimonial.field_of_study }}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mt-4">{{ testimonial.title }}</h4>
+                    <p class="text-gray-600 text-sm mt-2">{{ testimonial.content }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2 -->
+          <div class="testimonial-column space-y-8 overflow-hidden">
+            <div class="testimonial-scroll reverse" style="animation-duration:45s;">
+              <div class="space-y-8">
+                {% for testimonial in testimonials|slice:'3:6' %}
+                  <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center gap-4">
+                      {% if testimonial.avatar_image %}
+                        <img src="{{ testimonial.avatar_image.url }}" alt="{{ testimonial.name }}" class="w-14 h-14 rounded-full border-2 border-[#ef7d00] object-cover" />
+                      {% else %}
+                        <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="10" font-weight="bold">
+                              {{ testimonial.name|first|upper }}{% if testimonial.name|wordcount > 1 %}{{ testimonial.name|last|first|upper }}{% endif %}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <h3 class="font-bold text-lg">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500">
+                          <span class="text-[#ef7d00] font-medium">{{ testimonial.field_of_study }}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mt-4">{{ testimonial.title }}</h4>
+                    <p class="text-gray-600 text-sm mt-2">{{ testimonial.content }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+              <br />
+              <!-- Duplicate for infinite scroll -->
+              <div class="space-y-8" aria-hidden="true">
+                {% for testimonial in testimonials|slice:'3:6' %}
+                  <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center gap-4">
+                      {% if testimonial.avatar_image %}
+                        <img src="{{ testimonial.avatar_image.url }}" alt="{{ testimonial.name }}" class="w-14 h-14 rounded-full border-2 border-[#ef7d00] object-cover" />
+                      {% else %}
+                        <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="10" font-weight="bold">
+                              {{ testimonial.name|first|upper }}{% if testimonial.name|wordcount > 1 %}{{ testimonial.name|last|first|upper }}{% endif %}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <h3 class="font-bold text-lg">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500">
+                          <span class="text-[#ef7d00] font-medium">{{ testimonial.field_of_study }}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mt-4">{{ testimonial.title }}</h4>
+                    <p class="text-gray-600 text-sm mt-2">{{ testimonial.content }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 3 -->
+          <div class="testimonial-column space-y-8 hidden lg:block overflow-hidden">
+            <div class="testimonial-scroll" style="animation-duration:50s;">
+              <div class="space-y-8">
+                {% for testimonial in testimonials|slice:'6:' %}
+                  <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center gap-4">
+                      {% if testimonial.avatar_image %}
+                        <img src="{{ testimonial.avatar_image.url }}" alt="{{ testimonial.name }}" class="w-14 h-14 rounded-full border-2 border-[#ef7d00] object-cover" />
+                      {% else %}
+                        <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="10" font-weight="bold">
+                              {{ testimonial.name|first|upper }}{% if testimonial.name|wordcount > 1 %}{{ testimonial.name|last|first|upper }}{% endif %}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <h3 class="font-bold text-lg">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500">
+                          <span class="text-[#ef7d00] font-medium">{{ testimonial.field_of_study }}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mt-4">{{ testimonial.title }}</h4>
+                    <p class="text-gray-600 text-sm mt-2">{{ testimonial.content }}</p>
+                  </div>
+                {% empty %}
+                  <!-- Fallback if no testimonials in third column -->
+                  <div class="bg-white p-6 rounded-xl shadow-lg opacity-50">
+                    <div class="flex items-center gap-4">
+                      <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gray-100 flex items-center justify-center">
+                        <i class="text-gray-400 text-xl">👤</i>
+                      </div>
+                      <div>
+                        <h3 class="font-bold text-lg text-gray-400">More testimonials coming soon...</h3>
+                        <p class="text-sm text-gray-400">Share your experience with us!</p>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+              <br />
+              <!-- Duplicate for infinite scroll -->
+              <div class="space-y-8" aria-hidden="true">
+                {% for testimonial in testimonials|slice:'6:' %}
+                  <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center gap-4">
+                      {% if testimonial.avatar_image %}
+                        <img src="{{ testimonial.avatar_image.url }}" alt="{{ testimonial.name }}" class="w-14 h-14 rounded-full border-2 border-[#ef7d00] object-cover" />
+                      {% else %}
+                        <div class="w-14 h-14 rounded-full border-2 border-[#ef7d00] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial, sans-serif" font-size="10" font-weight="bold">
+                              {{ testimonial.name|first|upper }}{% if testimonial.name|wordcount > 1 %}{{ testimonial.name|last|first|upper }}{% endif %}
+                            </text>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <h3 class="font-bold text-lg">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500">
+                          <span class="text-[#ef7d00] font-medium">{{ testimonial.field_of_study }}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mt-4">{{ testimonial.title }}</h4>
+                    <p class="text-gray-600 text-sm mt-2">{{ testimonial.content }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <!-- No testimonials fallback -->
+        <div class="text-center py-16">
+          <div class="max-w-md mx-auto">
+            <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg class="w-10 h-10 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">No testimonials yet</h3>
+            <p class="text-gray-600">We're collecting amazing stories from our learners. Check back soon!</p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Script for Filtering -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const filterButtons = document.querySelectorAll('.filter-btn')
+      const programCards = document.querySelectorAll('.program-card')
+    
+      filterButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const category = button.getAttribute('data-category')
+    
+          // Remove active styles from all buttons
+          filterButtons.forEach((btn) => btn.classList.remove('bg-[#f07c00]', 'text-white'))
+          filterButtons.forEach((btn) => btn.classList.add('bg-white/5', 'text-white/70'))
+    
+          // Highlight the clicked button
+          button.classList.add('bg-[#f07c00]', 'text-white')
+          button.classList.remove('bg-white/5', 'text-white/70')
+    
+          // Show/Hide programs
+          programCards.forEach((card) => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+              card.style.display = 'block'
+            } else {
+              card.style.display = 'none'
+            }
+          })
+        })
+      })
+    })
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const buttons = document.querySelectorAll('#mobile-filters .filter-btn')
+      const cards = document.querySelectorAll('#program-list .program-card')
+    
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          // Remove active state from all buttons
+          buttons.forEach((b) => b.classList.remove('bg-[#f07c00]', 'text-white', 'active'))
+          buttons.forEach((b) => b.classList.add('bg-white/5', 'text-white/70'))
+    
+          // Add active state to clicked button
+          btn.classList.remove('bg-white/5', 'text-white/70')
+          btn.classList.add('bg-[#f07c00]', 'text-white', 'active')
+    
+          const category = btn.getAttribute('data-category')
+    
+          // Show/Hide cards
+          cards.forEach((card) => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+              card.style.display = 'block'
+            } else {
+              card.style.display = 'none'
+            }
+          })
+        })
+      })
+    })
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      console.log('DOM loaded, initializing program filters...')
+    
+      // Program filtering functionality with AJAX
+      const filterButtons = document.querySelectorAll('.filter-btn')
+      const programsContainer = document.getElementById('programs-container')
+      let isLoading = false
+    
+      console.log('Found filter buttons:', filterButtons.length)
+      console.log('Found programs container:', programsContainer ? 'Yes' : 'No')
+    
+      // Function to show loading state
+      function showLoading() {
+        {# prettier-ignore #}
+        programsContainer.innerHTML = `
+          <div class="col-span-full text-center py-12">
+              <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mb-4"></div>
+              <h3 class="text-xl font-semibold text-gray-600 mb-2">Loading Programs...</h3>
+              <p class="text-gray-500">Please wait while we fetch the programs.</p>
+          </div>
+      `
+      }
+    
+      // Function to show error state
+      function showError(message = 'Failed to load programs') {
+        {# prettier-ignore #}
+        programsContainer.innerHTML = `
+          <div class="col-span-full text-center py-12">
+              <i class="fa-solid fa-exclamation-triangle text-6xl text-red-400 mb-4"></i>
+              <h3 class="text-xl font-semibold text-gray-600 mb-2">Error Loading Programs</h3>
+              <p class="text-gray-500">${message}. Please try again.</p>
+              <button onclick="location.reload()" class="mt-4 bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition">
+                  Retry
+              </button>
+          </div>
+      `
+      }
+    
+      // Function to filter programs via AJAX
+      function filterPrograms(categoryId) {
+        console.log('Filtering programs for category:', categoryId)
+    
+        if (isLoading) {
+          console.log('Already loading, skipping request')
+          return
+        }
+    
+        isLoading = true
+        showLoading()
+    
+        // Make AJAX request
+        const url = `/ajax/filter-programs/?category_id=${categoryId}`
+        console.log('Making AJAX request to:', url)
+    
+        fetch(url, {
+          method: 'GET',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+          }
+        })
+          .then((response) => {
+            console.log('Response status:', response.status)
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`)
+            }
+            return response.json()
+          })
+          .then((data) => {
+            console.log('Response data:', data)
+            isLoading = false
+    
+            if (data.success) {
+              // Update the programs container with new HTML
+              programsContainer.innerHTML = data.html
+    
+              // Add fade-in animation to new cards
+              const newCards = programsContainer.querySelectorAll('.program-card')
+              newCards.forEach((card) => {
+                card.classList.add('animate-fade-in')
+              })
+    
+              console.log(`Loaded ${data.count} programs for category ${categoryId}`)
+            } else {
+              console.error('Server returned error:', data.error)
+              showError(data.error || 'Unknown error occurred')
+            }
+          })
+          .catch((error) => {
+            isLoading = false
+            console.error('Error filtering programs:', error)
+            showError('Network error occurred')
+          })
+      }
+    
+      // Function to update active filter button
+      function updateActiveFilter(activeButton) {
+        console.log('Updating active filter button')
+    
+        filterButtons.forEach((btn) => {
+          // Reset all buttons to inactive state
+          btn.classList.remove('bg-orange-100', 'text-orange-800', 'font-semibold')
+          btn.classList.add('bg-white/5', 'text-white/70')
+    
+          // Update icon color
+          const icon = btn.querySelector('i:last-child')
+          if (icon) {
+            icon.classList.remove('text-orange-600')
+            icon.classList.add('text-white/50')
+          }
+        })
+    
+        // Set active button
+        activeButton.classList.remove('bg-white/5', 'text-white/70')
+        activeButton.classList.add('bg-[#f07c00]', 'text-white')
+    
+        // Update active icon color
+        const activeIcon = activeButton.querySelector('i:last-child')
+        if (activeIcon) {
+          activeIcon.classList.remove('text-white/50')
+          activeIcon.classList.add('text-white')
+        }
+      }
+    
+      // Add click event listeners to filter buttons
+      filterButtons.forEach((button, index) => {
+        button.addEventListener('click', function (e) {
+          e.preventDefault()
+    
+          if (isLoading) {
+            return
+          }
+    
+          const categoryId = this.getAttribute('data-category')
+    
+          // Update active filter appearance
+          updateActiveFilter(this)
+    
+          // Filter programs via AJAX
+          filterPrograms(categoryId)
+        })
+      })
+    
+      // Add CSS for animations and loading states
+      const style = document.createElement('style')
+      {# prettier-ignore #}
+      style.textContent = `
+            .animate-fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .program-card {
+                transition: all 0.3s ease;
+            }
+            
+            .program-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            
+            .filter-btn {
+                transition: all 0.3s ease;
+            }
+            
+            .filter-btn:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+            
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            
+            .animate-spin {
+                animation: spin 1s linear infinite;
+            }
+            
+        `
+      document.head.appendChild(style)
+    
+      // Test AJAX endpoint immediately
+      fetch('/ajax/filter-programs/?category_id=all', {
+        method: 'GET',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json'
+        }
+      })
+        .then((response) => {
+          console.log('Test AJAX response status:', response.status)
+          return response.json()
+        })
+        .then((data) => {
+          console.log('Test AJAX response data:', data)
+        })
+        .catch((error) => {
+          console.error('Test AJAX error:', error)
+        })
+    })
+  </script>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}
+  Coming Soon - Dashboard
+{% endblock %}
+
+{% block content %}
+  <!-- Page Title -->
+  <div class="row">
+    <div class="col-12">
+      <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+        <h4 class="mb-sm-0">Coming Soon</h4>
+        <div class="page-title-right">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item">
+              <a href="{% url 'dashboard:dashboard' %}">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Coming Soon</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Coming Soon Content -->
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body text-center p-5">
+          <div class="mb-4">
+            <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#405189,secondary:#0ab39c" style="width:120px;height:120px"></lord-icon>
+          </div>
+
+          <h1 class="display-4 mb-4">Coming Soon</h1>
+
+          <p class="text-muted fs-15 mb-4">We're working hard to bring you something amazing! This feature is currently under development and will be available soon.</p>
+
+          <div class="row justify-content-center">
+            <div class="col-lg-8">
+              <div class="mb-4">
+                <div class="avatar-lg mx-auto mb-3">
+                  <div class="avatar-title bg-primary-subtle text-primary rounded-circle">
+                    <i class="ri-tools-line fs-2"></i>
+                  </div>
+                </div>
+                <h5>Under Development</h5>
+                <p class="text-muted">Our team is actively working on this feature to provide you with the best experience.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <a href="{% url 'dashboard:dashboard' %}" class="btn btn-primary"><i class="ri-arrow-left-line me-1"></i> Back to Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
