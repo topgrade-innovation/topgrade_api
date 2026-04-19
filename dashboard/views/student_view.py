@@ -420,12 +420,22 @@ def assign_programs_view(request):
     programs = Program.objects.all().order_by('title')
     categories = Category.objects.all().order_by('name')
     
+    current_page = assignments.number
+    num_pages = paginator.num_pages
+    page_window = []
+    for p in paginator.page_range:
+        if p == 1 or p == num_pages or (current_page - 2 <= p <= current_page + 2):
+            page_window.append(('page', p))
+        elif p == current_page - 3 or p == current_page + 3:
+            page_window.append(('ellipsis', p))
+
     context = {
         'user': request.user,
         'students': students,
         'programs': programs,
         'categories': categories,
         'assignments': assignments,
+        'page_window': page_window,
         'search_query': search_query,
         'total_assignments': total_assignments,
         'active_assignments': active_assignments,

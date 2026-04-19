@@ -77,6 +77,15 @@ def program_enquiries(request):
     User = get_user_model()
     staff_members = User.objects.filter(role__in=['admin', 'operations_staff'])
     
+    current_page = enquiries_page.number
+    num_pages = paginator.num_pages
+    page_window = []
+    for p in paginator.page_range:
+        if p == 1 or p == num_pages or (current_page - 2 <= p <= current_page + 2):
+            page_window.append(('page', p))
+        elif p == current_page - 3 or p == current_page + 3:
+            page_window.append(('ellipsis', p))
+
     context = {
         'user': request.user,
         'page_obj': enquiries_page,  # Template expects 'page_obj'
@@ -95,6 +104,7 @@ def program_enquiries(request):
         'programs': programs,
         'staff_members': staff_members,
         'status_choices': ProgramEnquiry.FOLLOW_UP_STATUS_CHOICES,
+        'page_window': page_window,
     }
     return render(request, 'dashboard/program_enquiries.html', context)
 

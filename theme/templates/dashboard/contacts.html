@@ -154,42 +154,33 @@
 
                 <!-- Pagination -->
                 {% if page_obj.has_other_pages %}
-                <div class="row mt-4">
+                <div class="row g-0 align-items-center pb-4 pt-3">
                     <div class="col-sm-6">
-                        <div class="dataTables_info">
-                            Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} entries
-                        </div>
+                        <p class="mb-sm-0 text-muted">
+                            Showing <span class="fw-semibold">{{ page_obj.start_index }}</span> to
+                            <span class="fw-semibold">{{ page_obj.end_index }}</span> of
+                            <span class="fw-semibold text-decoration-underline">{{ page_obj.paginator.count }}</span> results
+                        </p>
                     </div>
                     <div class="col-sm-6">
-                        <div class="dataTables_paginate paging_simple_numbers float-end">
-                            <ul class="pagination pagination-rounded justify-content-end mb-0">
-                                {% if page_obj.has_previous %}
-                                <li class="paginate_button page-item previous">
-                                    <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" 
-                                        class="page-link">Previous</a>
-                                </li>
-                                {% endif %}
-
-                                {% for num in page_obj.paginator.page_range %}
-                                {% if page_obj.number == num %}
-                                <li class="paginate_button page-item active">
-                                    <span class="page-link">{{ num }}</span>
-                                </li>
-                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                                <li class="paginate_button page-item">
-                                    <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}" 
-                                        class="page-link">{{ num }}</a>
-                                </li>
-                                {% endif %}
+                        <div class="pagination-wrap hstack gap-2 justify-content-end">
+                            {% if page_obj.has_previous %}
+                                <a class="page-item pagination-prev" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">Previous</a>
+                            {% endif %}
+                            <ul class="pagination listjs-pagination mb-0">
+                                {% for type, num in page_window %}
+                                    {% if type == 'ellipsis' %}
+                                        <li class="disabled"><span class="page">…</span></li>
+                                    {% elif num == page_obj.number %}
+                                        <li class="active"><a class="page" href="#">{{ num }}</a></li>
+                                    {% else %}
+                                        <li><a class="page" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}">{{ num }}</a></li>
+                                    {% endif %}
                                 {% endfor %}
-
-                                {% if page_obj.has_next %}
-                                <li class="paginate_button page-item next">
-                                    <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" 
-                                        class="page-link">Next</a>
-                                </li>
-                                {% endif %}
                             </ul>
+                            {% if page_obj.has_next %}
+                                <a class="page-item pagination-next" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}">Next</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -263,7 +263,7 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 AWS_QUERYSTRING_AUTH = False
-AWS_S3_FILE_OVERWRITE = False
+AWS_S3_FILE_OVERWRITE = True
 
 # CRITICAL: Multipart upload configuration for large files (500MB+)
 AWS_S3_MULTIPART_CHUNKSIZE = 100 * 1024 * 1024  # 100MB chunks
