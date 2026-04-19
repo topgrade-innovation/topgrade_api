@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-+_q9s&%ws-35^#a@k8fkwc)u3mt&uc+mrxf_ns!(eans)d^w3g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','https://200e56e345e5.ngrok-free.app', 'www.topgradeinnovation.com', 'topgradeinnovation.com', '13.127.233.16', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*','https://200e56e345e5.ngrok-free.app', 'www.topgradeinnovation.com', 'topgradeinnovation.com', '65.2.30.180', 'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
