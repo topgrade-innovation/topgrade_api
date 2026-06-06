@@ -21,7 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('raise/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('dashboard/', include('dashboard.urls')),
     path('', include('website.urls')),
     path('api/', include('topgrade_api.urls')),
