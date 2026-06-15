@@ -2,9 +2,9 @@ from ninja import NinjaAPI
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import JsonResponse
-from topgrade_api.schemas import LoginSchema, SignupSchema, RequestOtpSchema, VerifyOtpSchema, ResetPasswordSchema, PhoneSigninSchema, RefreshTokenSchema, CompleteProfileSchema
-from topgrade_api.models import CustomUser, OTPVerification
-from topgrade_api.utils.firebase_helper import validate_firebase_phone_auth
+from topgrade_api.schemas import LoginSchema, SignupSchema, RequestOtpSchema, VerifyOtpSchema, ResetPasswordSchema, RequestPhoneOtpSchema, VerifyPhoneOtpSchema, RefreshTokenSchema, CompleteProfileSchema
+from topgrade_api.models import CustomUser, OTPVerification, PhoneOTPVerification
+from topgrade_api.utils.sms_helper import send_otp_sms
 from topgrade_api.views.common import AuthBearer
 from django.utils import timezone
 from dashboard.tasks import send_otp_email_task, generate_otp
@@ -213,43 +213,81 @@ def reset_password(request, reset_data: ResetPasswordSchema):
     except Exception as e:
         return JsonResponse({"message": "Error resetting password"}, status=500)
 
-@auth_api.post("/phone-signin")
-def phone_signin(request, phone_data: PhoneSigninSchema):
-    """
-    Firebase Phone Authentication - Minimal phone + token only
-    
-    Request format:
-    {
-        "phoneNumber": "+911234567890",
-        "firebaseToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlMDNkN..."
-    }
-    """
-    # Validate Firebase token
-    success, result = validate_firebase_phone_auth(phone_data.firebaseToken)
-    
-    if not success:
-        return JsonResponse({"message": result}, status=401)
-    
-    phone_number = result['phone_number']
-    
-    # Ensure phone number has +91 prefix if not already present
+def _normalize_phone(phone_number):
+    """Normalize a phone number to the +91XXXXXXXXXX format used in the DB."""
+    phone_number = phone_number.strip()
     if not phone_number.startswith('+'):
         phone_number = f"+91{phone_number}"
-    
-    user = None
-    
-    # Try to find existing user by phone number
+    return phone_number
+
+@auth_api.post("/request-phone-otp")
+def request_phone_otp(request, otp_data: RequestPhoneOtpSchema):
+    """
+    Request OTP for phone sign-in - generates an OTP and delivers it via the
+    apitxt.com SMS gateway.
+    """
+    try:
+        phone_number = _normalize_phone(otp_data.phone_number)
+
+        # Generate 6-digit OTP
+        otp_code = generate_otp()
+
+        # Create or update the OTP verification record for this phone number
+        PhoneOTPVerification.objects.update_or_create(
+            phone_number=phone_number,
+            defaults={
+                'otp_code': otp_code,
+                'is_verified': False,
+                'verified_at': None,
+                'expires_at': timezone.now() + timezone.timedelta(minutes=10),
+            }
+        )
+
+        # Send the OTP synchronously via SMS gateway
+        success, message = send_otp_sms(phone_number, otp_code)
+        if not success:
+            return JsonResponse({"message": message}, status=500)
+
+        return {
+            "success": True,
+            "message": "OTP sent to your phone. Please check your messages.",
+        }
+
+    except Exception as e:
+        return JsonResponse({"message": f"Error sending OTP: {str(e)}"}, status=500)
+
+@auth_api.post("/verify-phone-otp")
+def verify_phone_otp(request, verify_data: VerifyPhoneOtpSchema):
+    """
+    Verify the phone OTP and sign the user in. Finds or creates a user by phone
+    number and returns JWT tokens on success.
+    """
+    phone_number = _normalize_phone(verify_data.phone_number)
+
+    # Check if an OTP request exists for this phone number
+    try:
+        otp_verification = PhoneOTPVerification.objects.get(phone_number=phone_number)
+    except PhoneOTPVerification.DoesNotExist:
+        return JsonResponse({"message": "No OTP request found. Please request OTP first."}, status=400)
+
+    # Check expiry
+    if otp_verification.is_expired():
+        return JsonResponse({"message": "OTP has expired. Please request a new OTP."}, status=400)
+
+    # Check OTP value
+    if verify_data.otp != otp_verification.otp_code:
+        return JsonResponse({"message": "Invalid OTP. Please try again."}, status=400)
+
+    # Find or create the user by phone number
     try:
         user = CustomUser.objects.get(phone_number=phone_number)
     except CustomUser.DoesNotExist:
-        # Create new user with phone number only
         try:
             # Generate temporary email for new user
             temp_email = f"{phone_number.replace('+', '')}@temp.phone.com"
-            
             # Use phone number without prefix as password
             password_for_user = phone_number.replace('+91', '') if phone_number.startswith('+91') else phone_number
-            
+
             user = CustomUser.objects.create_user(
                 email=temp_email,  # Temporary email
                 phone_number=phone_number,
@@ -258,18 +296,27 @@ def phone_signin(request, phone_data: PhoneSigninSchema):
             )
         except Exception as e:
             return JsonResponse({"message": f"Error creating user: {str(e)}"}, status=500)
-    
+
     try:
+        # Mark OTP verified, then clean it up after a successful sign-in
+        otp_verification.delete()
+
         # Generate JWT tokens for login
         refresh = RefreshToken.for_user(user)
-        
+
         return {
             "success": True,
+            "message": "Signin successful",
             "access_token": str(refresh.access_token),
             "refresh_token": str(refresh),
+            "user": {
+                "fullname": user.fullname if user.fullname else "",
+                "email": user.email,
+                "phone_number": user.phone_number if user.phone_number else "",
+            },
             "has_area_of_intrest": bool(user.area_of_intrest and user.area_of_intrest.strip())
         }
-        
+
     except Exception as e:
         return JsonResponse({"message": f"Error during phone signin: {str(e)}"}, status=500)
 

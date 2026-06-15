@@ -337,3 +337,9 @@ CELERY_TASK_TIME_LIMIT = 30 * 60      # Hard kill after 30 min to prevent runawa
 # FIREBASE CONFIGURATION
 # ============================================
 FIREBASE_CREDENTIALS_PATH = os.getenv('FIREBASE_CREDENTIALS_PATH', 'firebase-credentials.json')
+
+# ============================================
+# SMS / OTP CONFIGURATION (apitxt.com)
+# ============================================
+APITXT_AUTHKEY = os.getenv('APITXT_AUTHKEY', '')
+APITXT_SENDOTP_URL = os.getenv('APITXT_SENDOTP_URL', 'https://apitxt.com/api/sendOTP')
