@@ -23,9 +23,12 @@ class ResetPasswordSchema(Schema):
     new_password: str
     confirm_password: str
 
-class PhoneSigninSchema(Schema):
-    phoneNumber: str  # Phone number with country code
-    firebaseToken: str  # Firebase ID token from Flutter
+class RequestPhoneOtpSchema(Schema):
+    phone_number: str  # 10-digit or +91-prefixed phone number
+
+class VerifyPhoneOtpSchema(Schema):
+    phone_number: str
+    otp: str
 
 class CompleteProfileSchema(Schema):
     email: str
