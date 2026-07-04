@@ -203,7 +203,17 @@ def update_learning_progress(request, data: UpdateProgressSchema):
                     video_duration = int(duration_parts[0]) * 3600 + int(duration_parts[1]) * 60 + int(duration_parts[2])
             except (ValueError, IndexError):
                 video_duration = None
-        
+
+        # A blank or "00:00" DB value gives no usable duration — prefer the
+        # player-reported duration (the only reliable source for HLS streams)
+        if not video_duration and data.total_duration_seconds and data.total_duration_seconds > 0:
+            video_duration = data.total_duration_seconds
+            # Persist it so my-learnings math self-heals for this topic
+            hours, remainder = divmod(video_duration, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            topic.video_duration = f"{hours:02d}:{minutes:02d}:{seconds:02d}" if hours else f"{minutes:02d}:{seconds:02d}"
+            topic.save(update_fields=['video_duration'])
+
         total_duration = video_duration or 1800  # Default to 30 minutes if no duration found
         
         # Get or create topic progress
@@ -259,18 +269,21 @@ def update_learning_progress(request, data: UpdateProgressSchema):
         total_topics = Topic.objects.filter(syllabus__program=purchase.program).count()
         completed_topics = UserTopicProgress.objects.filter(
             user=user,
+            purchase=purchase,
             topic__syllabus__program=purchase.program,
             status='completed'
         ).count()
         in_progress_topics = UserTopicProgress.objects.filter(
             user=user,
+            purchase=purchase,
             topic__syllabus__program=purchase.program,
             status='in_progress'
         ).count()
-        
+
         # Calculate total watch time for this course
         total_watch_time = UserTopicProgress.objects.filter(
             user=user,
+            purchase=purchase,
             topic__syllabus__program=purchase.program
         ).aggregate(
             total_time=models.Sum('watch_time_seconds')
@@ -281,6 +294,7 @@ def update_learning_progress(request, data: UpdateProgressSchema):
             # Get all topic progress for this program
             topic_progress_data = UserTopicProgress.objects.filter(
                 user=user,
+                purchase=purchase,
                 topic__syllabus__program=purchase.program
             ).aggregate(
                 total_completion=models.Sum('completion_percentage')
@@ -296,7 +310,7 @@ def update_learning_progress(request, data: UpdateProgressSchema):
         course_progress.completed_topics = completed_topics
         course_progress.in_progress_topics = in_progress_topics
         course_progress.total_topics = total_topics
-        course_progress.is_completed = course_completion >= 100
+        course_progress.is_completed = total_topics > 0 and completed_topics >= total_topics
         course_progress.total_watch_time_seconds = total_watch_time
         course_progress.last_activity_at = timezone.now()
         course_progress.save()

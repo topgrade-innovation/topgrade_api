@@ -51,6 +51,7 @@ class UpdateProgressSchema(Schema):
     topic_id: int
     purchase_id: int  # Specific purchase to ensure correct program/topic mapping
     watch_time_seconds: int
+    total_duration_seconds: int = None  # Real video duration reported by the player (needed for HLS)
 
 class UpdateProfileSchema(Schema):
     fullname: str = None

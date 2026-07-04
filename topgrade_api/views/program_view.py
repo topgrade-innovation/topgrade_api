@@ -332,17 +332,32 @@ def get_program_details(request, program_id: int):
         purchase_id = None
         is_bookmarked = False
         has_program_requested = False
-        
+        completed_topic_ids = set()
+        last_watched_topic_id = None
+
         if user:
             purchase = UserPurchase.objects.filter(
                 user=user,
                 program=program,
                 status='completed'
             ).first()
-            
+
             if purchase:
                 has_purchased = True
                 purchase_id = purchase.id
+                completed_topic_ids = set(
+                    UserTopicProgress.objects.filter(
+                        user=user,
+                        purchase=purchase,
+                        status='completed'
+                    ).values_list('topic_id', flat=True)
+                )
+                last_progress = UserTopicProgress.objects.filter(
+                    user=user,
+                    purchase=purchase
+                ).order_by('-last_watched_at').first()
+                if last_progress:
+                    last_watched_topic_id = last_progress.topic_id
             
             # Check if user has bookmarked this program
             is_bookmarked = UserBookmark.objects.filter(
@@ -387,7 +402,8 @@ def get_program_details(request, program_id: int):
                     "video_duration": topic.video_duration,
                     "is_intro": topic.is_intro,
                     "is_free_trial": topic.is_free_trial,
-                    "is_accessible": is_accessible
+                    "is_accessible": is_accessible,
+                    "is_completed": topic.id in completed_topic_ids
                 }
                 
                 topics_list.append(topic_data)
@@ -430,6 +446,7 @@ def get_program_details(request, program_id: int):
             "has_purchased": has_purchased,
             "has_program_requested": has_program_requested,
             "purchase_id": purchase_id,
+            "last_watched_topic_id": last_watched_topic_id,
             "enrolled_students": enrolled_students,
             "skills": program.skills if program.skills else [],
             "pricing": {

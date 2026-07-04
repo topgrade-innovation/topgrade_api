@@ -156,12 +156,16 @@
                 </div>
               </div>
               <div class="col-sm">
-                <div class="d-flex justify-content-sm-end">
+                <form method="get" action="{% url 'dashboard:students' %}" class="d-flex justify-content-sm-end gap-2">
                   <div class="search-box ms-2">
-                    <input type="text" class="form-control search" placeholder="Search students..." />
+                    <input type="text" name="search" value="{{ search_query }}" class="form-control" placeholder="Search students..." />
                     <i class="ri-search-line search-icon"></i>
                   </div>
-                </div>
+                  <button type="submit" class="btn btn-primary">Search</button>
+                  {% if search_query %}
+                    <a href="{% url 'dashboard:students' %}" class="btn btn-light">Clear</a>
+                  {% endif %}
+                </form>
               </div>
             </div>
 
@@ -252,7 +256,7 @@
               <div class="d-flex justify-content-end">
                 <div class="pagination-wrap hstack gap-2">
                   {% if students.has_previous %}
-                    <a class="page-item pagination-prev" href="?page={{ students.previous_page_number }}">Previous</a>
+                    <a class="page-item pagination-prev" href="?page={{ students.previous_page_number }}{% if search_query %}&search={{ search_query|urlencode }}{% endif %}">Previous</a>
                   {% else %}
                     <a class="page-item pagination-prev disabled">Previous</a>
                   {% endif %}
@@ -265,14 +269,14 @@
                         </li>
                       {% else %}
                         <li>
-                          <a class="page" href="?page={{ page_num }}" data-i="{{ page_num }}" data-page="{{ page_num }}">{{ page_num }}</a>
+                          <a class="page" href="?page={{ page_num }}{% if search_query %}&search={{ search_query|urlencode }}{% endif %}" data-i="{{ page_num }}" data-page="{{ page_num }}">{{ page_num }}</a>
                         </li>
                       {% endif %}
                     {% endfor %}
                   </ul>
 
                   {% if students.has_next %}
-                    <a class="page-item pagination-next" href="?page={{ students.next_page_number }}">Next</a>
+                    <a class="page-item pagination-next" href="?page={{ students.next_page_number }}{% if search_query %}&search={{ search_query|urlencode }}{% endif %}">Next</a>
                   {% else %}
                     <a class="page-item pagination-next disabled">Next</a>
                   {% endif %}

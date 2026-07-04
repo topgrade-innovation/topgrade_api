@@ -138,7 +138,16 @@ def students_view(request):
     
     # Get students list with pagination
     students_list = all_students.select_related().order_by('-date_joined')
-    
+
+    # Search by name, email or phone
+    search_query = request.GET.get('search', '').strip()
+    if search_query:
+        students_list = students_list.filter(
+            Q(fullname__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(phone_number__icontains=search_query)
+        )
+
     # Pagination
     paginator = Paginator(students_list, 10)  # Show 10 students per page
     page = request.GET.get('page')
@@ -176,6 +185,7 @@ def students_view(request):
         'page_range': page_range,
         'total_pages': total_pages,
         'current_page': current_page,
+        'search_query': search_query,
     }
     return render(request, 'dashboard/students.html', context)
 
@@ -199,14 +209,29 @@ def student_details_view(request, student_id):
         total=models.Sum('amount_paid')
     )['total'] or 0
     
-    # Calculate overall progress (based on completed vs total)
+    # Per-program learning progress
+    course_progress = UserCourseProgress.objects.filter(
+        user=student
+    ).select_related('purchase__program__category').order_by('-last_activity_at')
+
+    # Overall progress = average completion across started courses;
+    # completed = courses actually finished, not just purchased
     total_courses = total_enrollments
-    completed_courses = completed_enrollments
-    overall_progress = int((completed_courses / total_courses * 100)) if total_courses > 0 else 0
-    
-    # Calculate time spent (placeholder values - can be enhanced with actual tracking)
-    total_watch_hours = 0
-    total_watch_minutes = 0
+    completed_courses = course_progress.filter(is_completed=True).count()
+    if course_progress.exists():
+        avg_completion = course_progress.aggregate(
+            avg=models.Avg('completion_percentage')
+        )['avg'] or 0
+        overall_progress = int(avg_completion)
+    else:
+        overall_progress = 0
+
+    # Time spent across all courses
+    total_watch_seconds = course_progress.aggregate(
+        total=models.Sum('total_watch_time_seconds')
+    )['total'] or 0
+    total_watch_hours = total_watch_seconds // 3600
+    total_watch_minutes = (total_watch_seconds % 3600) // 60
     learning_days = 0
     
     # Count days student has been active (days since first enrollment)
@@ -234,12 +259,6 @@ def student_details_view(request, student_id):
         )
         avg_program_rating = round(ratings['avg_rating'], 1) if ratings['avg_rating'] else 0
     
-    # Progress data (placeholder - for future implementation with actual progress tracking)
-    progress_data = []
-    
-    # Activity data (placeholder - for future implementation with actual activity tracking)
-    activity_data = []
-    
     context = {
         'user': request.user,
         'student': student,
@@ -259,8 +278,7 @@ def student_details_view(request, student_id):
         'active_enrollments': active_enrollments,
         'total_spent': total_spent,
         'avg_program_rating': avg_program_rating,
-        'progress_data': progress_data,
-        'activity_data': activity_data,
+        'course_progress': course_progress,
     }
     return render(request, 'dashboard/student_details.html', context)
 
