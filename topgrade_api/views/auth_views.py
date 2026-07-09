@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from topgrade_api.schemas import LoginSchema, SignupSchema, RequestOtpSchema, VerifyOtpSchema, ResetPasswordSchema, RequestPhoneOtpSchema, VerifyPhoneOtpSchema, RefreshTokenSchema, CompleteProfileSchema
 from topgrade_api.models import CustomUser, OTPVerification, PhoneOTPVerification
 from topgrade_api.utils.sms_helper import send_otp_sms
-from topgrade_api.views.common import AuthBearer
+from topgrade_api.views.common import AuthBearer, is_token_valid_for_user
 from django.utils import timezone
 from dashboard.tasks import send_otp_email_task, generate_otp
 import time
@@ -399,15 +399,25 @@ def refresh_token(request, token_data: RefreshTokenSchema):
     try:
         # Create RefreshToken object from the provided refresh token
         refresh = RefreshToken(token_data.refresh_token)
-        
+
+        # Reject refresh tokens issued before the user's password was last
+        # changed, otherwise a stale refresh token could mint fresh access
+        # tokens and bypass the forced re-login.
+        try:
+            user = CustomUser.objects.get(id=refresh['user_id'])
+        except CustomUser.DoesNotExist:
+            return JsonResponse({"message": "Invalid or expired refresh token"}, status=401)
+        if not is_token_valid_for_user(user, refresh):
+            return JsonResponse({"message": "Session expired. Please login again."}, status=401)
+
         # Generate new access token
         new_access_token = str(refresh.access_token)
-        
+
         return {
             "success": True,
             "message": "Token refreshed successfully",
             "access_token": new_access_token
         }
-        
+
     except Exception as e:
         return JsonResponse({"message": "Invalid or expired refresh token"}, status=401)

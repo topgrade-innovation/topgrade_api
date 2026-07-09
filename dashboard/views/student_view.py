@@ -92,6 +92,31 @@ def students_view(request):
             else:
                 messages.error(request, 'All fields are required for updating student.')
         
+        elif form_type == 'change_password':
+            student_id = request.POST.get('student_id')
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+
+            if not (student_id and new_password and confirm_password):
+                messages.error(request, 'All fields are required to change the password.')
+            elif new_password != confirm_password:
+                messages.error(request, 'Passwords do not match.')
+            elif len(new_password) < 6:
+                messages.error(request, 'Password must be at least 6 characters long.')
+            else:
+                try:
+                    student = CustomUser.objects.get(id=student_id, role='student')
+                    student.set_password(new_password)
+                    # Invalidate all existing access/refresh tokens so the
+                    # student is forced to log in again with the new password.
+                    student.password_changed_at = timezone.now()
+                    student.save()
+                    messages.success(request, f'Password for "{student.fullname or student.email}" changed successfully. The student must log in again.')
+                except CustomUser.DoesNotExist:
+                    messages.error(request, 'Student not found.')
+                except Exception as e:
+                    messages.error(request, f'Error changing password: {str(e)}')
+
         elif form_type == 'delete_student':
             student_id = request.POST.get('student_id')
             if student_id:

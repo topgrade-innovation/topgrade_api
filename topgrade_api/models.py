@@ -40,8 +40,11 @@ class CustomUser(AbstractUser):
     fullname = models.CharField(max_length=255, blank=True, null=True)
     area_of_intrest = models.CharField(max_length=255, blank=True, null=True)
     role = models.CharField(max_length=20, choices=USER_ROLES, default='student')
+    # Tokens issued before this time are rejected — set when an admin changes
+    # the user's password, forcing the user to re-login.
+    password_changed_at = models.DateTimeField(null=True, blank=True)
     objects = CustomUserManager()
-    
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     

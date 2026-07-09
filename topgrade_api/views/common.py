@@ -22,9 +22,28 @@ class AuthBearer(HttpBearer):
             access_token = AccessToken(token)
             user_id = access_token['user_id']
             user = User.objects.get(id=user_id)
+            # Reject tokens issued before the user's password was last changed
+            # (e.g. an admin reset it) so the user is forced to re-login.
+            if not is_token_valid_for_user(user, access_token):
+                return None
             return user
         except (InvalidToken, TokenError, User.DoesNotExist):
             return None
+
+
+def is_token_valid_for_user(user, token):
+    """
+    Return False if the token was issued before the user's password was last
+    changed. Used to invalidate all existing access/refresh tokens on an
+    admin-initiated password change.
+    """
+    password_changed_at = getattr(user, 'password_changed_at', None)
+    if not password_changed_at:
+        return True
+    issued_at = token.payload.get('iat')
+    if issued_at is None:
+        return True
+    return issued_at >= int(password_changed_at.timestamp())
 
 # Common API instance for general endpoints
 api = NinjaAPI(version="1.0.0", title="General API")
