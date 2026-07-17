@@ -58,6 +58,15 @@ class UpdateProfileSchema(Schema):
     phone_number: str = None
     email: str = None
 
+class RequestProfileChangeOtpSchema(Schema):
+    field: str  # "phone" or "email"
+    new_value: str
+
+class VerifyProfileChangeOtpSchema(Schema):
+    field: str  # "phone" or "email"
+    new_value: str
+    otp: str
+
 # Notification Schemas
 class RegisterFCMTokenSchema(Schema):
     token: str
