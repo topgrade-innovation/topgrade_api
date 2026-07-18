@@ -215,7 +215,7 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "https://topgradeinnovation.com",
     "https://www.topgradeinnovation.com",
-    "https://200e56e345e5.ngrok-free.app"
+    "https://learning.topgradeinnovation.com",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -226,7 +226,7 @@ CORS_ALLOW_ALL_ORIGINS = False
 CSRF_TRUSTED_ORIGINS = [
     "https://topgradeinnovation.com",
     "https://www.topgradeinnovation.com",
-    "https://200e56e345e5.ngrok-free.app"
+    "https://learning.topgradeinnovation.com",
 ]
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800
