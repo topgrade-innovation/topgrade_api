@@ -164,7 +164,7 @@
 
           <div class="hidden md:flex items-center space-x-4">
             <button onclick="window.location.href = '{% url 'contact' %}';" class="bg-transparent border border-gray-300 hover:border-[#f07c00] text-gray-800 hover:text-[#f07c00] font-bold py-2 px-6 rounded-lg transition duration-300">Contact Us</button>
-            <a href="https://learning.topgradeinnovation.com" class="bg-[#ef7d00] hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg transition duration-300">Start Learning</a>
+            {% comment %} <a href="https://learning.topgradeinnovation.com" class="bg-[#ef7d00] hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg transition duration-300">Start Learning</a> {% endcomment %}
           </div>
 
           <div class="md:hidden">
@@ -244,9 +244,9 @@
             </li>
 
             <!-- start learning -->
-            <li class="flex justify-center">
+            {% comment %} <li class="flex justify-center">
               <a href="https://learning.topgradeinnovation.com" class="bg-[#ef7d00] hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg transition duration-300 w-full text-center">Start Learning</a>
-            </li>
+            </li> {% endcomment %}
           </ul>
           {% block secondary_nav %}
 
