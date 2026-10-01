@@ -470,8 +470,17 @@ class UserCourseProgress(models.Model):
         self.total_watch_time_seconds = sum(
             progress.watch_time_seconds for progress in topic_progress
         )
-        
+
         self.save()
+
+    def save(self, *args, **kwargs):
+        # Ensure completed courses always have a completion date (e.g. when marked complete via admin)
+        if self.is_completed and not self.completed_at:
+            self.completed_at = timezone.now()
+            update_fields = kwargs.get('update_fields')
+            if update_fields is not None and 'completed_at' not in update_fields:
+                kwargs['update_fields'] = list(update_fields) + ['completed_at']
+        super().save(*args, **kwargs)
 
 class Carousel(models.Model):
     image = models.ImageField(upload_to='carousel_images/', help_text="Carousel image")

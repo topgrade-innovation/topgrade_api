@@ -3,6 +3,14 @@
 
 {% block title %}Contact Submissions - TopGrade Dashboard{% endblock %}
 
+{% block css %}
+<style>
+    .table-min-h {
+        min-height: 300px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <!-- start page title -->
 <div class="row">
@@ -28,13 +36,13 @@
         <div class="card">
             <div class="card-body">
                 <form method="GET" class="row g-3">
-                    <div class="col-md-4">
+                    <div class="col-md-6 col-lg-4">
                         <label for="search" class="form-label">Search</label>
                         <input type="text" class="form-control" id="search" name="search" 
                                 value="{{ current_filters.search }}" 
                                 placeholder="Search by name, email, contact number, subject, or message...">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6 col-lg-3">
                         <label for="date" class="form-label">Date Filter</label>
                         <select class="form-select" id="date" name="date">
                             {% for value, label in date_choices %}
@@ -44,7 +52,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-3 d-flex align-items-end">
+                    <div class="col-12 col-lg-3 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary me-2">
                             <i class="ri-search-line align-bottom me-1"></i> Filter
                         </button>
@@ -66,15 +74,15 @@
                 <h4 class="card-title mb-0">Contact Submissions</h4>
             </div><!-- end card header -->
            
-                <div class="table-responsive">
+                <div class="table-responsive table-min-h">
                     <table class="table table-nowrap table-striped-columns mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th scope="col" style="width: 180px;">Contact Info</th>
                                 <th scope="col" style="width: 130px;">Contact Number</th>
-                                <th scope="col" style="width: 150px;">Subject</th>
-                                <th scope="col" style="width: 250px;">Message</th>
-                                <th scope="col" style="width: 120px;">Submitted</th>
+                                <th scope="col" class="d-none d-lg-table-cell" style="width: 150px;">Subject</th>
+                                <th scope="col" class="d-none d-md-table-cell" style="width: 250px;">Message</th>
+                                <th scope="col" class="d-none d-xl-table-cell" style="width: 120px;">Submitted</th>
                                 <th scope="col" style="width: 100px;">Actions</th>
                             </tr>
                         </thead>
@@ -102,12 +110,12 @@
                                     </span>
                                     {% endif %}
                                 </td>
-                                <td style="width: 150px; max-width: 150px; word-wrap: break-word; white-space: normal;">
+                                <td class="d-none d-lg-table-cell" style="width: 150px; max-width: 150px; word-wrap: break-word; white-space: normal;">
                                     <span class="fw-medium" style="word-break: break-word;">
                                         {{ contact.subject }}
                                     </span>
                                 </td>
-                                <td style="width: 250px; max-width: 250px; word-wrap: break-word; white-space: normal;">
+                                <td class="d-none d-md-table-cell" style="width: 250px; max-width: 250px; word-wrap: break-word; white-space: normal;">
                                     <div class="message-preview" style="word-break: break-word;">
                                         {% if contact.message|length > 100 %}
                                             <span class="message-short">{{ contact.message|slice:":100" }}...</span>
@@ -120,7 +128,7 @@
                                         {% endif %}
                                     </div>
                                 </td>
-                                <td style="width: 120px; max-width: 120px; word-wrap: break-word; white-space: normal;">
+                                <td class="d-none d-xl-table-cell" style="width: 120px; max-width: 120px; word-wrap: break-word; white-space: normal;">
                                     <div class="d-flex flex-column">
                                         <span class="fw-medium" style="word-break: break-word;">{{ contact.created_at|date:"M d, Y" }}</span>
                                         <span class="text-muted small">{{ contact.created_at|date:"g:i A" }}</span>
@@ -128,7 +136,17 @@
                                 </td>
                                 <td style="width: 100px;">
                                     <div class="d-flex gap-2">
-                                        <button type="button" class="btn btn-sm btn-soft-danger delete-contact" 
+                                        <button type="button" class="btn btn-sm btn-soft-info view-details"
+                                                data-name="{{ contact.full_name }}"
+                                                data-email="{{ contact.email }}"
+                                                data-contact-no="{{ contact.contact_no|default:'' }}"
+                                                data-subject="{{ contact.subject }}"
+                                                data-message="{{ contact.message }}"
+                                                data-created="{{ contact.created_at|date:'M d, Y g:i A' }}"
+                                                title="View Details">
+                                            <i class="ri-eye-line"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-soft-danger delete-contact"
                                                 data-contact-id="{{ contact.id }}"
                                                 data-name="{{ contact.full_name }}"
                                                 title="Delete Contact">
@@ -156,14 +174,14 @@
                 {% if page_obj.has_other_pages %}
                 <div class="row g-0 align-items-center pb-4 pt-3">
                     <div class="col-sm-6">
-                        <p class="mb-sm-0 text-muted">
+                        <p class="mb-2 mb-sm-0 text-muted text-center text-sm-start">
                             Showing <span class="fw-semibold">{{ page_obj.start_index }}</span> to
                             <span class="fw-semibold">{{ page_obj.end_index }}</span> of
                             <span class="fw-semibold text-decoration-underline">{{ page_obj.paginator.count }}</span> results
                         </p>
                     </div>
                     <div class="col-sm-6">
-                        <div class="pagination-wrap hstack gap-2 justify-content-end">
+                        <div class="pagination-wrap hstack gap-2 justify-content-center justify-content-sm-end">
                             {% if page_obj.has_previous %}
                                 <a class="page-item pagination-prev" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">Previous</a>
                             {% endif %}

@@ -12,6 +12,9 @@
   <link href="{% static 'assets/dashboard/libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" type="text/css" />
   <!-- Choices CSS -->
   <style>
+    .table-min-h {
+      min-height: 300px;
+    }
     .choices {
       margin-bottom: 0;
     }
@@ -188,7 +191,7 @@
             {% csrf_token %}
             <input type="hidden" name="form_type" value="assign_program" />
             <div class="row">
-              <div class="col-lg-4">
+              <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label for="student_select" class="form-label">Select Student <span class="text-danger">*</span></label>
                   <select class="form-select" id="student_select" name="student_id" data-choices required>
@@ -199,7 +202,7 @@
                   </select>
                 </div>
               </div>
-              <div class="col-lg-4">
+              <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label for="program_select" class="form-label">Select Program <span class="text-danger">*</span></label>
                   <select class="form-select" id="program_select" name="program_id" data-choices required>
@@ -213,8 +216,8 @@
                 </div>
               </div>
               <div class="col-lg-4">
-                <label for="program_select" class="form-label mb-4"></label>
-                <div class="d-flex align-items-center justify-content-between">
+                <label class="form-label mb-4 d-none d-lg-block"></label>
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="is_goldpass" id="is_goldpass">
                     <label class="form-check-label" for="is_goldpass">
@@ -235,26 +238,27 @@
   <div class="row" id="assignmentsList">
     <div class="col-lg-12">
       <div class="card">
-        <div class="card-header d-flex align-items-center justify-content-between">
+        <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
           <h4 class="card-title mb-0">Current Program Assignments</h4>
-          <div class="d-flex gap-2">
-            <form method="GET" class="d-flex gap-2">
+          <div class="d-flex gap-2 flex-grow-1 flex-sm-grow-0">
+            <form method="GET" class="d-flex gap-2 flex-grow-1">
               <input type="search" class="form-control" placeholder="Search students..." name="search" value="{{ search_query }}" />
               <button type="submit" class="btn btn-primary"><i class="bx bx-search"></i></button>
             </form>
           </div>
         </div>
         <div class="card-body">
-          <div class="table-responsive">
+          <div class="table-responsive table-min-h">
             <table class="table table-nowrap table-striped-columns mb-0">
               <thead class="table-light">
                 <tr>
                   <th scope="col">Student</th>
                   <th scope="col">Program</th>
-                  <th scope="col">Assigned Date</th>
+                  <th scope="col" class="d-none d-lg-table-cell">Assigned Date</th>
                   <th scope="col">Status</th>
-                  <th scope="col">Amount Paid</th>
-                  <th scope="col">Type</th>
+                  <th scope="col">Completion</th>
+                  <th scope="col" class="d-none d-xl-table-cell">Amount Paid</th>
+                  <th scope="col" class="d-none d-md-table-cell">Type</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
@@ -278,7 +282,7 @@
                         <small class="text-muted">{{ assignment.program.category.name }}</small>
                       </div>
                     </td>
-                    <td>{{ assignment.purchase_date|date:'M d, Y' }}</td>
+                    <td class="d-none d-lg-table-cell">{{ assignment.purchase_date|date:'M d, Y' }}</td>
                     <td>
                       {% if assignment.status == 'completed' %}
                         <span class="badge bg-success-subtle text-success">Active</span>
@@ -289,13 +293,23 @@
                       {% endif %}
                     </td>
                     <td>
+                      {% if assignment.is_course_completed %}
+                        <span class="badge bg-success"><i class="ri-checkbox-circle-line align-middle"></i> Completed</span>
+                        {% if assignment.course_completed_at %}
+                          <small class="d-block text-muted mt-1">{{ assignment.course_completed_at|date:'M d, Y' }}</small>
+                        {% endif %}
+                      {% else %}
+                        <span class="badge bg-info-subtle text-info"><i class="ri-loader-2-line align-middle"></i> In Progress</span>
+                      {% endif %}
+                    </td>
+                    <td class="d-none d-xl-table-cell">
                       {% if assignment.amount_paid == 0 %}
                         <span class="text-success fw-medium">Admin Assigned</span>
                       {% else %}
                         &#8377;{{ assignment.amount_paid }}
                       {% endif %}
                     </td>
-                    <td>
+                    <td class="d-none d-md-table-cell">
                       {% if assignment.require_goldpass %}
                         <span class="badge bg-warning-subtle text-warning"><i class="bx bx-star"></i> GoldPass</span>
                       {% else %}
@@ -309,9 +323,11 @@
                           <li>
                             <button class="dropdown-item edit-assignment" data-id="{{ assignment.id }}" data-goldpass="{{ assignment.require_goldpass }}"><i class="ri-pencil-fill align-bottom me-2 text-primary"></i> Toggle GoldPass</button>
                           </li>
+                          {% if not assignment.is_course_completed %}
                           <li>
                             <button class="dropdown-item mark-completed" data-id="{{ assignment.id }}" data-student="{{ assignment.user.fullname|default:assignment.user.email }}" data-program="{{ assignment.program.title }}"><i class="ri-checkbox-circle-fill align-bottom me-2 text-success"></i> Mark as Completed</button>
                           </li>
+                          {% endif %}
                           <li>
                             <button class="dropdown-item remove-assignment" data-id="{{ assignment.id }}" data-student="{{ assignment.user.fullname|default:assignment.user.email }}" data-program="{{ assignment.program.title }}"><i class="ri-delete-bin-fill align-bottom me-2 text-danger"></i> Remove</button>
                           </li>
@@ -321,7 +337,7 @@
                   </tr>
                 {% empty %}
                   <tr>
-                    <td colspan="7" class="text-center py-4">
+                    <td colspan="8" class="text-center py-4">
                       <div class="d-flex flex-column align-items-center">
                         <i class="bx bx-search fs-1 text-muted mb-2"></i>
                         <h5 class="text-muted">No assignments found</h5>
@@ -339,7 +355,7 @@
             <div class="row g-0 align-items-center pb-4 pt-3">
               <div class="col-sm-6">
                 <div>
-                  <p class="mb-sm-0 text-muted">
+                  <p class="mb-2 mb-sm-0 text-muted text-center text-sm-start">
                     Showing <span class="fw-semibold">{{ assignments.start_index }}</span> to
                     <span class="fw-semibold">{{ assignments.end_index }}</span> of
                     <span class="fw-semibold text-decoration-underline">{{ assignments.paginator.count }}</span> results
@@ -347,7 +363,7 @@
                 </div>
               </div>
               <div class="col-sm-6">
-                <div class="pagination-wrap hstack gap-2 justify-content-end">
+                <div class="pagination-wrap hstack gap-2 justify-content-center justify-content-sm-end">
                   {% if assignments.has_previous %}
                     <a class="page-item pagination-prev" href="?page={{ assignments.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
                   {% endif %}

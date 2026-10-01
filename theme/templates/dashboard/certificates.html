@@ -5,6 +5,14 @@
   Certificates Management
 {% endblock %}
 
+{% block css %}
+  <style>
+    .table-min-h {
+      min-height: 300px;
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
   <!-- start page title -->
   <div class="row">
@@ -28,7 +36,7 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-header">
-          <div class="d-flex align-items-center">
+          <div class="d-flex flex-wrap align-items-center gap-2">
             <h5 class="card-title mb-0 flex-grow-1">Manage Program Certificates</h5>
             <div class="flex-shrink-0">
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCertificateModal"><i class="ri-add-line align-bottom me-1"></i> Add Certificate</button>
@@ -45,13 +53,13 @@
             {% endfor %}
           {% endif %}
 
-          <div class="table-responsive">
+          <div class="table-responsive table-min-h">
             <table class="table table-bordered table-striped align-middle table-nowrap mb-0">
               <thead class="table-light">
                 <tr>
                   <th scope="col">Preview</th>
                   <th scope="col">Program</th>
-                  <th scope="col">Uploaded</th>
+                  <th scope="col" class="d-none d-md-table-cell">Uploaded</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
@@ -71,7 +79,7 @@
                         {% endif %}
                       </div>
                     </td>
-                    <td>{{ certificate.created_at|date:'M d, Y' }}</td>
+                    <td class="d-none d-md-table-cell">{{ certificate.created_at|date:'M d, Y' }}</td>
                     <td>
                       <div class="d-flex gap-2">
                         <button type="button" class="btn btn-sm btn-soft-info" data-bs-toggle="modal" data-bs-target="#viewCertificateModal" data-image-url="{{ certificate.certificate_image.url }}" data-program-title="{{ certificate.program.title }}"><i class="ri-eye-line"></i></button>

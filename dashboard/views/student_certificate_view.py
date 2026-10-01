@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db import models
@@ -25,26 +27,61 @@ def generate_certificate_ajax(request):
             'message': 'Course progress ID is required'
         }, status=400)
     
+    # Completion date chosen by admin (YYYY-MM-DD)
+    completion_date_str = request.POST.get('completion_date', '').strip()
+    completion_date = None
+    if completion_date_str:
+        try:
+            completion_date = datetime.strptime(completion_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            return JsonResponse({
+                'success': False,
+                'message': 'Invalid completion date'
+            }, status=400)
+        if completion_date > timezone.localdate():
+            return JsonResponse({
+                'success': False,
+                'message': 'Completion date cannot be in the future'
+            }, status=400)
+
     try:
         course_progress = UserCourseProgress.objects.get(id=course_progress_id, is_completed=True)
-        
+
+        # Save chosen completion date (keep existing time of day if any)
+        if completion_date:
+            current = timezone.localtime(course_progress.completed_at) if course_progress.completed_at else timezone.localtime()
+            course_progress.completed_at = current.replace(
+                year=completion_date.year, month=completion_date.month, day=completion_date.day
+            )
+            UserCourseProgress.objects.filter(pk=course_progress.pk).update(completed_at=course_progress.completed_at)
+
         # Check if user purchase requires goldpass to determine certificate types
         require_goldpass = course_progress.purchase.require_goldpass
-        
-        # Generate a single certificate number for all certificates
-        import uuid
-        base_certificate_number = f"CERT-{uuid.uuid4().hex[:8].upper()}"
-        
+
+        # Reuse certificate number when regenerating, else create a new one
+        existing_certificates = UserCertificate.objects.filter(course_progress=course_progress)
+        base_certificate_number = existing_certificates.values_list('certificate_number', flat=True).first()
+        is_regenerate = bool(base_certificate_number)
+        if not base_certificate_number:
+            import uuid
+            base_certificate_number = f"CERT-{uuid.uuid4().hex[:8].upper()}"
+
         # Generate bulk certificates
         certificates = generate_bulk_certificates(
             user=course_progress.user,
             program=course_progress.purchase.program,
             base_certificate_number=base_certificate_number,
-            completion_date=course_progress.completed_at,
+            completion_date=timezone.localtime(course_progress.completed_at) if course_progress.completed_at else None,
             purchase_date=course_progress.purchase.purchase_date,
             include_placement=require_goldpass
         )
-        
+
+        if not certificates:
+            return JsonResponse({
+                'success': False,
+                'message': 'Certificate PDF generation failed. Check server logs.'
+            }, status=500)
+
         # Save each certificate to the database
         certificates_created = []
         certificates_data = []
@@ -59,7 +96,14 @@ def generate_certificate_ajax(request):
                     'certificate_number': base_certificate_number,
                 }
             )
-            
+
+            if not created:
+                # Regenerated: replace old PDF and mark pending so updated certificates can be re-sent
+                if certificate.certificate_file:
+                    certificate.certificate_file.delete(save=False)
+                certificate.status = 'pending'
+                certificate.sent_date = None
+
             # Save the PDF file
             certificate.certificate_file.save(
                 f"{cert_type}_certificate_{base_certificate_number}.pdf",
@@ -79,7 +123,7 @@ def generate_certificate_ajax(request):
         
         return JsonResponse({
             'success': True,
-            'message': f'Successfully generated {cert_count} certificates for {student_name}: {cert_list}',
+            'message': f'Successfully {"regenerated" if is_regenerate else "generated"} {cert_count} certificates for {student_name}: {cert_list}',
             'certificates': certificates_data,
             'certificate_number': base_certificate_number,
             'require_goldpass': require_goldpass
@@ -234,7 +278,8 @@ def student_certificates_view(request):
     
     # Calculate statistics
     total_completed = completed_courses.count()
-    total_certificates_sent = UserCertificate.objects.filter(status='sent').count()
+    # Count completed courses (students) whose certificates were sent, not individual certificate files
+    total_certificates_sent = completed_courses.filter(certificates__status='sent').distinct().count()
     total_certificates_pending = total_completed - total_certificates_sent
     
     # Pagination

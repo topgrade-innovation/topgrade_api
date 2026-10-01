@@ -3,6 +3,14 @@
 
 {% block title %}Program Enquiries{% endblock %}
 
+{% block css %}
+<style>
+    .table-min-h {
+        min-height: 300px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 
     <!-- Start page title -->
@@ -189,7 +197,7 @@
                     </form>
 
                     <!-- Enquiries Table -->
-                    <div class="table-responsive table-card">
+                    <div class="table-responsive table-card table-min-h">
                         <table class="table table-nowrap table-striped-columns mb-0">
                             <thead class="table-light">
                                 <tr>
@@ -198,11 +206,11 @@
                                     </th>
                                     <th scope="col">Student</th>
                                     <th scope="col">Contact</th>
-                                    <th scope="col">Program</th>
+                                    <th scope="col" class="d-none d-lg-table-cell">Program</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">Assigned To</th>
-                                    <th scope="col">Days Since</th>
-                                    <th scope="col">Follow-up</th>
+                                    <th scope="col" class="d-none d-md-table-cell">Assigned To</th>
+                                    <th scope="col" class="d-none d-xl-table-cell">Days Since</th>
+                                    <th scope="col" class="d-none d-xl-table-cell">Follow-up</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -230,7 +238,7 @@
                                             <small class="text-muted">{{ enquiry.phone_number }}</small>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="d-none d-lg-table-cell">
                                         <span class="fw-medium">{{ enquiry.program.title }}</span>
                                         <br>
                                         <small class="text-muted">{{ enquiry.program.subtitle }}</small>
@@ -246,7 +254,7 @@
                                             {% endfor %}
                                         </select>
                                     </td>
-                                    <td>
+                                    <td class="d-none d-md-table-cell">
                                         <select class="form-select form-select-sm assign-select" 
                                                 data-enquiry-id="{{ enquiry.id }}"
                                                 style="width: auto;">
@@ -259,7 +267,7 @@
                                             {% endfor %}
                                         </select>
                                     </td>
-                                    <td>
+                                    <td class="d-none d-xl-table-cell">
                                         <span class="badge bg-soft-info text-info">
                                             {% if enquiry.days_since_enquiry == 0 %}
                                                 Today
@@ -270,7 +278,7 @@
                                             {% endif %}
                                         </span>
                                     </td>
-                                    <td>
+                                    <td class="d-none d-xl-table-cell">
                                         {% if enquiry.needs_follow_up %}
                                             <span class="badge bg-soft-danger text-danger">
                                                 <i class="ri-alarm-warning-line align-bottom"></i> Needed
@@ -356,14 +364,14 @@
                     {% if page_obj.has_other_pages %}
                     <div class="row g-0 align-items-center pb-4 pt-3">
                         <div class="col-sm-6">
-                            <p class="mb-sm-0 text-muted">
+                            <p class="mb-2 mb-sm-0 text-muted text-center text-sm-start">
                                 Showing <span class="fw-semibold">{{ page_obj.start_index }}</span> to
                                 <span class="fw-semibold">{{ page_obj.end_index }}</span> of
                                 <span class="fw-semibold text-decoration-underline">{{ page_obj.paginator.count }}</span> results
                             </p>
                         </div>
                         <div class="col-sm-6">
-                            <div class="pagination-wrap hstack gap-2 justify-content-end">
+                            <div class="pagination-wrap hstack gap-2 justify-content-center justify-content-sm-end">
                                 {% if page_obj.has_previous %}
                                     <a class="page-item pagination-prev" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">Previous</a>
                                 {% endif %}

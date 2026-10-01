@@ -32,6 +32,12 @@
     .metric-card.danger {
       border-left-color: #f06548;
     }
+    @media (min-width: 1200px) {
+      .scroll-card-xl {
+        height: 500px;
+        overflow-y: auto;
+      }
+    }
     .growth-positive {
       color: #0ab39c;
     }
@@ -425,7 +431,7 @@
             <div class="flex-shrink-0">
               <div class="dropdown">
                 <a class="dropdown-toggle text-reset" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="fw-semibold text-uppercase fs-12">Sort By:</span>
+                  <span class="fw-semibold text-uppercase fs-12 d-none d-sm-inline">Sort By:</span>
                   <span class="text-muted">Monthly<i class="mdi mdi-chevron-down ms-1"></i></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
@@ -438,7 +444,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div id="enrollmentTrendsChart" style="height: 350px;"></div>
+          <div id="enrollmentTrendsChart"></div>
         </div>
       </div>
     </div>
@@ -449,7 +455,7 @@
           <h5 class="card-title mb-0">Program Categories</h5>
         </div>
         <div class="card-body">
-          <div id="categoryDistributionChart" style="min-height: 350px;"></div>
+          <div id="categoryDistributionChart"></div>
         </div>
       </div>
     </div>
@@ -463,7 +469,7 @@
           <h5 class="card-title mb-0">Revenue by Program</h5>
         </div>
         <div class="card-body">
-          <div id="revenueChart" style="min-height: 300px;"></div>
+          <div id="revenueChart"></div>
         </div>
       </div>
     </div>
@@ -474,7 +480,7 @@
           <h5 class="card-title mb-0">Student Interest Areas</h5>
         </div>
         <div class="card-body">
-          <div id="interestChart" style="height: 300px;"></div>
+          <div id="interestChart"></div>
         </div>
       </div>
     </div>
@@ -483,7 +489,7 @@
   <!-- Tables Row -->
   <div class="row">
     <div class="col-xl-8">
-      <div class="card" style="height: 500px; overflow-y: auto;">
+      <div class="card scroll-card-xl">
         <div class="card-header d-flex align-items-center">
           <h5 class="card-title mb-0 flex-grow-1">Top Performing Programs</h5>
           <div class="flex-shrink-0">
@@ -576,7 +582,7 @@
     </div>
 
     <div class="col-xl-4">
-      <div class="card" style="height: 500px; overflow-y: auto;">
+      <div class="card scroll-card-xl">
         <div class="card-header d-flex align-items-center">
           <h5 class="card-title mb-0 flex-grow-1">Recent Enrollments</h5>
           <div class="flex-shrink-0">
@@ -688,6 +694,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 height: 350,
                 toolbar: { show: false }
             },
+            responsive: [{ breakpoint: 576, options: { chart: { height: 260 } } }],
             colors: ['#405189'],
             stroke: {
                 curve: 'smooth',
@@ -726,6 +733,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 height: 350
             },
             labels: categoryLabels,
+            responsive: [{ breakpoint: 576, options: { chart: { height: 300 } } }],
             colors: ['#405189', '#0ab39c', '#f7b84b', '#f06548', '#299cdb'],
             legend: {
                 position: 'bottom'
@@ -763,6 +771,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 height: 300,
                 toolbar: { show: false }
             },
+            responsive: [{ breakpoint: 576, options: { chart: { height: 260 } } }],
             colors: ['#0ab39c'],
             xaxis: {
                 categories: programNames
@@ -799,6 +808,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 height: 300,
                 toolbar: { show: false }
             },
+            responsive: [{ breakpoint: 576, options: { chart: { height: 260 } } }],
             colors: ['#f7b84b'],
             xaxis: {
                 categories: interests

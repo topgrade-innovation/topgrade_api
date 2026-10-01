@@ -10,6 +10,9 @@
 .progress-sm {
     height: 0.5rem;
 }
+.table-min-h {
+    min-height: 300px;
+}
 .stats-card {
     transition: all 0.3s ease;
 }
@@ -49,7 +52,7 @@
                     </div>
                 </div>
                 <h6 class="mb-1">{{ student.fullname|default:"No Name" }}</h6>
-                <p class="text-muted mb-2 fs-13">{{ student.email }}</p>
+                <p class="text-muted mb-2 fs-13 text-break">{{ student.email }}</p>
                 {% if student.phone_number %}
                 <p class="text-muted mb-2 fs-13"><i class="ri-phone-line me-1"></i>{{ student.phone_number }}</p>
                 {% endif %}
@@ -181,12 +184,12 @@
                 <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" data-bs-toggle="tab" href="#enrollments" role="tab">
-                            <i class="fas fa-book me-1"></i> Enrollments
+                            <i class="ri-book-open-line me-1"></i> Enrollments
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#progress" role="tab">
-                            <i class="fas fa-chart-line me-1"></i> Progress
+                            <i class="ri-line-chart-line me-1"></i> Progress
                         </a>
                     </li>
                 </ul>
@@ -195,13 +198,13 @@
                 <div class="tab-content">
                     <!-- Enrollments Tab -->
                     <div class="tab-pane active" id="enrollments">
-                        <div class="table-responsive">
+                        <div class="table-responsive table-min-h">
                             <table class="table table-nowrap align-middle">
                                 <thead class="table-light">
                                     <tr>
                                         <th>Program</th>
-                                        <th>Category</th>
-                                        <th>Enrolled Date</th>
+                                        <th class="d-none d-md-table-cell">Category</th>
+                                        <th class="d-none d-lg-table-cell">Enrolled Date</th>
                                         <th>Status</th>
                                         <th>Amount Paid</th>
                                     </tr>
@@ -222,8 +225,8 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>{{ enrollment.program.category.name }}</td>
-                                        <td>{{ enrollment.purchase_date|date:"M d, Y" }}</td>
+                                        <td class="d-none d-md-table-cell">{{ enrollment.program.category.name }}</td>
+                                        <td class="d-none d-lg-table-cell">{{ enrollment.purchase_date|date:"M d, Y" }}</td>
                                         <td>
                                             {% if enrollment.status == 'completed' %}
                                                 <span class="badge bg-success-subtle text-success">Active</span>

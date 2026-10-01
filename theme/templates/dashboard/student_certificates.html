@@ -6,6 +6,13 @@
 {% block breadcrumb %}
   Student Certificates
 {% endblock %}
+{% block css %}
+  <style>
+    .table-min-h {
+      min-height: 300px;
+    }
+  </style>
+{% endblock %}
 {% block content %}
   <!-- start page title -->
   <div class="row">
@@ -104,14 +111,14 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-header">
-          <div class="row align-items-center">
-            <div class="col">
+          <div class="row align-items-center g-2">
+            <div class="col-12 col-md">
               <h5 class="card-title mb-0">Completed Courses - Certificate Management</h5>
             </div>
-            <div class="col-auto">
+            <div class="col-12 col-md-auto">
               <div class="d-flex gap-2">
                 <!-- Search -->
-                <form method="GET" class="d-flex gap-2">
+                <form method="GET" class="d-flex gap-2 flex-grow-1">
                   <input type="search" name="search" class="form-control" placeholder="Search student or program..." value="{{ search_query }}" />
                   <button type="submit" class="btn btn-primary"><i class="ri-search-line"></i></button>
                 </form>
@@ -120,16 +127,16 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="table-responsive table-card mt-3 mb-1">
+          <div class="table-responsive table-card table-min-h mt-3 mb-1">
             <table class="table align-middle table-nowrap" id="certificateTable">
               <thead class="table-light">
                 <tr>
-                  <th>S No.</th>
+                  <th class="d-none d-md-table-cell">S No.</th>
                   <th data-sort="student_name">Student</th>
                   <th data-sort="program">Program</th>
-                  <th data-sort="completion_date">Completed Date</th>
+                  <th data-sort="completion_date" class="d-none d-lg-table-cell">Completed Date</th>
                   <th data-sort="certificate_status">Certificate Status</th>
-                  <th data-sort="certificate_number">Certificate Number</th>
+                  <th data-sort="certificate_number" class="d-none d-xl-table-cell">Certificate Number</th>
                   <th data-sort="internship">Internship</th>
                   <th data-sort="training">Training</th>
                   <th data-sort="credit">Credit</th>
@@ -141,7 +148,7 @@
               <tbody class="list form-check-all">
                 {% for item in completed_courses %}
                   <tr>
-                    <td>{{ forloop.counter }}</td>
+                    <td class="d-none d-md-table-cell">{{ forloop.counter }}</td>
                     <td class="student_name">
                       <div class="d-flex align-items-center">
                         <div class="flex-shrink-0 me-2">
@@ -163,7 +170,7 @@
                         <p class="text-muted mb-0 fs-11">{{ item.course_progress.purchase.program.category.name }}</p>
                       </div>
                     </td>
-                    <td class="completion_date">
+                    <td class="completion_date d-none d-lg-table-cell">
                       {% if item.course_progress.completed_at %}
                         {{ item.course_progress.completed_at|date:'d/m/Y' }}
                       {% else %}
@@ -185,7 +192,7 @@
                         </span>
                       {% endif %}
                     </td>
-                    <td class="certificate_number">
+                    <td class="certificate_number d-none d-xl-table-cell">
                       {% if item.certificate_number %}
                         <span class="badge bg-primary">{{ item.certificate_number }}</span>
                       {% else %}
@@ -290,6 +297,13 @@
                     <td>
                       <div class="d-flex gap-2">
                         {% if item.certificates_list %}
+                          <button type="button" class="btn btn-sm btn-soft-secondary cert-date-btn"
+                                  data-progress-id="{{ item.course_progress.id }}"
+                                  data-completed-date="{{ item.course_progress.completed_at|date:'Y-m-d' }}"
+                                  data-mode="regenerate"
+                                  title="Edit Completion Date & Regenerate">
+                            <i class="ri-calendar-event-line align-bottom"></i> Edit Date
+                          </button>
                           <!-- Certificates already generated, show send option if not sent -->
                           {% if item.certificate_status != 'sent' %}
                             <button type="button" class="btn btn-sm btn-primary send-certificate-btn" 
@@ -310,8 +324,10 @@
                           {% endif %}
                         {% else %}
                           <!-- No certificates generated yet, show generate button -->
-                          <button type="button" class="btn btn-sm btn-info generate-certificate-btn" 
+                          <button type="button" class="btn btn-sm btn-info cert-date-btn"
                                   data-progress-id="{{ item.course_progress.id }}"
+                                  data-completed-date="{{ item.course_progress.completed_at|date:'Y-m-d' }}"
+                                  data-mode="generate"
                                   data-require-goldpass="{{ item.require_goldpass|lower }}"
                                   title="Generate All Certificates">
                             <span class="btn-text">
@@ -321,10 +337,6 @@
                               {% else %}
                                 (4 certs)
                               {% endif %}
-                            </span>
-                            <span class="btn-loading d-none">
-                              <span class="spinner-border spinner-border-sm me-1" role="status"></span>
-                              Generating...
                             </span>
                           </button>
                         {% endif %}
@@ -350,7 +362,7 @@
 
           <!-- Pagination -->
           {% if completed_courses.has_other_pages %}
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-center justify-content-sm-end">
               <div class="pagination-wrap hstack gap-2">
                 {% if completed_courses.has_previous %}
                   <a class="page-item pagination-prev" href="?page={{ completed_courses.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter != 'all' %}&status={{ status_filter }}{% endif %}">Previous</a>
@@ -380,6 +392,33 @@
               </div>
             </div>
           {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Completion Date Modal -->
+  <div class="modal fade" id="completionDateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="completionDateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="completionDateModalLabel">Generate Certificates</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="completionDateInput" class="form-label">Completion Date <span class="text-danger">*</span></label>
+          <input type="date" class="form-control" id="completionDateInput" required />
+          <p class="text-muted fs-12 mt-2 mb-0" id="completionDateHint">This date will be printed on the certificates and saved as the course completion date.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="completionDateSubmit">
+            <span class="btn-text">Generate</span>
+            <span class="btn-loading d-none">
+              <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+              Please wait...
+            </span>
+          </button>
         </div>
       </div>
     </div>
@@ -442,131 +481,73 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Handle Generate Certificate button click
-    document.querySelectorAll('.generate-certificate-btn').forEach(function(button) {
+    // Generate / Regenerate certificates with chosen completion date
+    const dateModalEl = document.getElementById('completionDateModal');
+    const dateModal = new bootstrap.Modal(dateModalEl);
+    const dateInput = document.getElementById('completionDateInput');
+    const dateSubmit = document.getElementById('completionDateSubmit');
+    const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD in local time
+    dateInput.max = today;
+    let activeProgressId = null;
+
+    document.querySelectorAll('.cert-date-btn').forEach(function(button) {
         button.addEventListener('click', function() {
-            const progressId = this.getAttribute('data-progress-id');
-            const requireGoldpass = this.getAttribute('data-require-goldpass') === 'true';
-            const btnText = this.querySelector('.btn-text');
-            const btnLoading = this.querySelector('.btn-loading');
-            const row = this.closest('tr');
-
-            // Disable button and show loading
-            this.disabled = true;
-            btnText.classList.add('d-none');
-            btnLoading.classList.remove('d-none');
-
-            // Make AJAX request
-            fetch('{% url "dashboard:generate_certificate_ajax" %}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': csrftoken
-                },
-                body: 'course_progress_id=' + progressId
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast(data.message, 'success');
-
-                    // Update the row with new certificate information
-                    updateRowWithCertificates(row, data);
-
-                    // Replace generate button with send button
-                    const actionCell = this.closest('td');
-                    const sendButtonHTML = `
-                        <button type="button" class="btn btn-sm btn-primary send-certificate-btn" 
-                                data-progress-id="${progressId}" 
-                                title="Send All Certificates">
-                            <span class="btn-text">
-                                <i class="ri-mail-send-line align-bottom"></i> Send All
-                            </span>
-                            <span class="btn-loading d-none">
-                                <span class="spinner-border spinner-border-sm me-1" role="status"></span>
-                                Sending...
-                            </span>
-                        </button>
-                    `;
-                    actionCell.innerHTML = sendButtonHTML;
-
-                    // Attach event listener to new send button
-                    attachSendButtonListener(actionCell.querySelector('.send-certificate-btn'));
-                } else {
-                    showToast(data.message, 'error');
-                    // Re-enable button
-                    this.disabled = false;
-                    btnText.classList.remove('d-none');
-                    btnLoading.classList.add('d-none');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showToast('An error occurred while generating certificates', 'error');
-                // Re-enable button
-                this.disabled = false;
-                btnText.classList.remove('d-none');
-                btnLoading.classList.add('d-none');
-            });
+            const isRegenerate = this.getAttribute('data-mode') === 'regenerate';
+            activeProgressId = this.getAttribute('data-progress-id');
+            dateInput.value = this.getAttribute('data-completed-date') || today;
+            document.getElementById('completionDateModalLabel').textContent = isRegenerate ? 'Edit Completion Date' : 'Generate Certificates';
+            document.getElementById('completionDateHint').textContent = isRegenerate
+                ? 'Certificates will be regenerated with this date (same certificate number) and marked Pending so you can send them again.'
+                : 'This date will be printed on the certificates and saved as the course completion date.';
+            dateSubmit.querySelector('.btn-text').textContent = isRegenerate ? 'Save & Regenerate' : 'Generate';
+            dateModal.show();
         });
     });
 
-    // Function to update row with certificate data
-    function updateRowWithCertificates(row, data) {
-        // Update certificate status
-        const statusCell = row.querySelector('.certificate_status');
-        statusCell.innerHTML = `
-            <span class="badge bg-warning-subtle text-warning">
-                <i class="ri-time-line align-middle"></i> Pending
-            </span>
-        `;
+    dateSubmit.addEventListener('click', function() {
+        if (!dateInput.value) {
+            dateInput.classList.add('is-invalid');
+            return;
+        }
+        dateInput.classList.remove('is-invalid');
 
-        // Update certificate number
-        const certNumberCell = row.querySelector('.certificate_number');
-        certNumberCell.innerHTML = `<span class="badge bg-primary">${data.certificate_number}</span>`;
+        const btnText = this.querySelector('.btn-text');
+        const btnLoading = this.querySelector('.btn-loading');
+        this.disabled = true;
+        btnText.classList.add('d-none');
+        btnLoading.classList.remove('d-none');
 
-        // Update certificate columns with download links
-        data.certificates.forEach(function(cert) {
-            let cellClass, btnClass, icon;
-            
-            switch(cert.type) {
-                case 'internship':
-                    cellClass = '.internship-cert';
-                    btnClass = 'btn-outline-success';
-                    icon = 'ri-briefcase-line';
-                    break;
-                case 'training':
-                    cellClass = '.training-cert';
-                    btnClass = 'btn-outline-info';
-                    icon = 'ri-graduation-cap-line';
-                    break;
-                case 'credit':
-                    cellClass = '.credit-cert';
-                    btnClass = 'btn-outline-warning';
-                    icon = 'ri-medal-line';
-                    break;
-                case 'recommendation':
-                    cellClass = '.recommendation-cert';
-                    btnClass = 'btn-outline-primary';
-                    icon = 'ri-thumb-up-line';
-                    break;
-                case 'placement':
-                    cellClass = '.placement-cert';
-                    btnClass = 'btn-outline-danger';
-                    icon = 'ri-building-line';
-                    break;
+        fetch('{% url "dashboard:generate_certificate_ajax" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrftoken
+            },
+            body: new URLSearchParams({
+                course_progress_id: activeProgressId,
+                completion_date: dateInput.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                dateModal.hide();
+                Swal.fire({ icon: 'success', title: 'Done', text: data.message, timer: 2000, showConfirmButton: false })
+                    .then(() => window.location.reload());
+            } else {
+                showToast(data.message, 'error');
             }
-
-            const cell = row.querySelector(cellClass);
-            if (cell) {
-                cell.innerHTML = `
-                    <a href="${cert.url}" target="_blank" class="btn btn-sm ${btnClass}" title="View ${cert.display_name}">
-                        <i class="${icon} me-1"></i>View/Download
-                    </a>
-                `;
-            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('An error occurred while generating certificates', 'error');
+        })
+        .finally(() => {
+            this.disabled = false;
+            btnText.classList.remove('d-none');
+            btnLoading.classList.add('d-none');
         });
-    }
+    });
 
     // Function to attach send button listener
     function attachSendButtonListener(button) {

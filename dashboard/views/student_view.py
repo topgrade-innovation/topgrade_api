@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
-from django.db.models import Count, Q
+from django.db.models import Count, Q, OuterRef, Subquery
 from topgrade_api.models import CustomUser, UserPurchase, Program, Category, UserCourseProgress
 from .auth_view import admin_required
 
@@ -429,7 +429,12 @@ def assign_programs_view(request):
     search_query = request.GET.get('search', '').strip()
     
     # Get all assignments with search functionality
-    assignments_queryset = UserPurchase.objects.select_related('user', 'program', 'program__category').order_by('-purchase_date')
+    # Completion date of the course (None if not completed)
+    completed_progress = UserCourseProgress.objects.filter(purchase=OuterRef('pk'), is_completed=True)
+    assignments_queryset = UserPurchase.objects.select_related('user', 'program', 'program__category').annotate(
+        course_completed_at=Subquery(completed_progress.values('completed_at')[:1]),
+        is_course_completed=models.Exists(completed_progress),
+    ).order_by('-purchase_date')
     
     if search_query:
         assignments_queryset = assignments_queryset.filter(

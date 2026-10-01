@@ -3,6 +3,14 @@
 
 {% block title %}Notifications - Dashboard{% endblock %}
 
+{% block css %}
+<style>
+    .table-min-h {
+        min-height: 300px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-12">
@@ -171,7 +179,7 @@
                     <div class="mb-3" id="studentCheckboxDiv" style="display: none;">
                         <div class="card">
                             <div class="card-header bg-light">
-                                <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
                                     <span><strong>Select Students</strong> ({{ students.count }} available)</span>
                                     <div>
                                         <button type="button" class="btn btn-sm btn-outline-primary" id="checkAllBtn">
@@ -220,7 +228,7 @@
     <!-- Recent Notifications -->
     <div class="col-xl-7">
         <div class="card">
-            <div class="card-header d-flex align-items-center justify-content-between">
+            <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
                 <h5 class="card-title mb-0">
                     <i class="ri-history-line align-middle me-1"></i> Recent Notifications
                 </h5>
@@ -229,16 +237,16 @@
                 </a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
+                <div class="table-responsive table-min-h">
                     <table class="table table-nowrap align-middle table-hover mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th>Title</th>
-                                <th>Type</th>
-                                <th>Recipients</th>
+                                <th class="d-none d-md-table-cell d-xl-none d-xxl-table-cell">Type</th>
+                                <th class="d-none d-md-table-cell d-xl-none d-xxl-table-cell">Recipients</th>
                                 <th>Status</th>
                                 <th>Sent</th>
-                                <th>Date</th>
+                                <th class="d-none d-lg-table-cell d-xl-none d-xxl-table-cell">Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -253,10 +261,10 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="d-none d-md-table-cell d-xl-none d-xxl-table-cell">
                                     <span class="badge bg-light text-dark">{{ notification.get_notification_type_display }}</span>
                                 </td>
-                                <td>{{ notification.total_recipients }}</td>
+                                <td class="d-none d-md-table-cell d-xl-none d-xxl-table-cell">{{ notification.total_recipients }}</td>
                                 <td>
                                     {% if notification.status == 'sent' %}
                                         <span class="badge bg-success">Sent</span>
@@ -270,7 +278,7 @@
                                     <span class="text-success">{{ notification.sent_count }}</span> / 
                                     <span class="text-danger">{{ notification.failed_count }}</span>
                                 </td>
-                                <td>
+                                <td class="d-none d-lg-table-cell d-xl-none d-xxl-table-cell">
                                     <small>{{ notification.created_at|date:"M d, Y H:i" }}</small>
                                 </td>
                                 <td>

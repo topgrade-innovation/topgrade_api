@@ -3,6 +3,14 @@
 
 {% block title %}FCM Tokens - Dashboard{% endblock %}
 
+{% block css %}
+<style>
+    .table-min-h {
+        min-height: 300px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-12">
@@ -114,24 +122,24 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-header d-flex align-items-center justify-content-between">
+            <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
                 <h5 class="card-title mb-0">All FCM Tokens</h5>
                 <a href="{% url 'dashboard:notifications' %}" class="btn btn-sm btn-soft-primary">
                     <i class="ri-arrow-left-line me-1"></i> Back to Notifications
                 </a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
+                <div class="table-responsive table-min-h">
                     <table class="table table-nowrap align-middle table-hover mb-0" id="tokensTable">
                         <thead class="table-light">
                             <tr>
                                 <th>Student</th>
-                                <th>Email</th>
+                                <th class="d-none d-md-table-cell">Email</th>
                                 <th>Device Type</th>
                                 <th>Status</th>
-                                <th>Token</th>
-                                <th>Last Used</th>
-                                <th>Created</th>
+                                <th class="d-none d-xl-table-cell">Token</th>
+                                <th class="d-none d-lg-table-cell">Last Used</th>
+                                <th class="d-none d-xl-table-cell">Created</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -150,7 +158,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{ token.user.email }}</td>
+                                <td class="d-none d-md-table-cell">{{ token.user.email }}</td>
                                 <td>
                                     {% if token.device_type == 'android' %}
                                         <span class="badge bg-info">
@@ -173,19 +181,19 @@
                                         <span class="badge bg-danger">Inactive</span>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="d-none d-xl-table-cell">
                                     <code class="text-muted" style="font-size: 10px;">
                                         {{ token.token|truncatechars:30 }}
                                     </code>
                                 </td>
-                                <td>
+                                <td class="d-none d-lg-table-cell">
                                     {% if token.last_used %}
                                         <small>{{ token.last_used|date:"M d, Y H:i" }}</small>
                                     {% else %}
                                         <span class="text-muted">Never</span>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="d-none d-xl-table-cell">
                                     <small>{{ token.created_at|date:"M d, Y" }}</small>
                                 </td>
                                 <td>

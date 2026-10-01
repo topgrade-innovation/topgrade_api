@@ -3,6 +3,14 @@
 
 {% block title %}Notification Details - Dashboard{% endblock %}
 
+{% block css %}
+<style>
+    .table-min-h {
+        min-height: 300px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-12">
@@ -31,7 +39,7 @@
                     <table class="table table-borderless mb-0">
                         <tbody>
                             <tr>
-                                <th class="ps-0" style="width: 200px;">Title:</th>
+                                <th class="ps-0 pe-3 text-nowrap" style="width: 1%;">Title:</th>
                                 <td class="text-muted">{{ notification.title }}</td>
                             </tr>
                             <tr>
@@ -101,16 +109,16 @@
                 <h5 class="card-title mb-0">Delivery Logs</h5>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
+                <div class="table-responsive table-min-h">
                     <table class="table table-nowrap align-middle table-hover mb-0" id="logsTable">
                         <thead class="table-light">
                             <tr>
                                 <th>Student</th>
-                                <th>Email</th>
+                                <th class="d-none d-md-table-cell">Email</th>
                                 <th>Status</th>
                                 <th>Read</th>
-                                <th>Device</th>
-                                <th>Sent At</th>
+                                <th class="d-none d-lg-table-cell">Device</th>
+                                <th class="d-none d-lg-table-cell">Sent At</th>
                                 <th>Error</th>
                             </tr>
                         </thead>
@@ -129,7 +137,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{ log.user.email }}</td>
+                                <td class="d-none d-md-table-cell">{{ log.user.email }}</td>
                                 <td>
                                     {% if log.status == 'success' %}
                                         <span class="badge bg-success">Success</span>
@@ -146,7 +154,7 @@
                                         <span class="badge bg-secondary">Unread</span>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="d-none d-lg-table-cell">
                                     {% if log.fcm_token %}
                                         <span class="badge bg-light text-dark">
                                             {{ log.fcm_token.get_device_type_display }}
@@ -155,7 +163,7 @@
                                         <span class="text-muted">N/A</span>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="d-none d-lg-table-cell">
                                     <small>{{ log.sent_at|date:"M d, Y H:i" }}</small>
                                 </td>
                                 <td>

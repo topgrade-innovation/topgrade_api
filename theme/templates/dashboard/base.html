@@ -7,6 +7,15 @@
     <meta charset="utf-8" />
     <title>{% block title %}Dashboard{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // Pick sidebar size before first paint so tablets don't flash the full sidebar
+        (function () {
+            var w = document.documentElement.clientWidth;
+            try {
+                sessionStorage.setItem("data-sidebar-size", (w > 767 && w < 1025) ? "sm" : "lg");
+            } catch (e) {}
+        })();
+    </script>
     <script src="{% static 'assets/dashboard/js/layout.js' %}"></script>
     <!-- Bootstrap Css -->
     <link href="{% static 'assets/dashboard/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
@@ -16,6 +25,17 @@
     <link href="{% static 'assets/dashboard/css/custom.min.css' %}" rel="stylesheet" type="text/css" />
     <!-- App Css -->
     <link href="{% static 'assets/dashboard/css/app.min.css' %}" rel="stylesheet" type="text/css" />
+    <style>
+        /* Collapsed sidebar: no label flyout on hover/tap, icons only */
+        [data-layout=vertical][data-sidebar-size=sm] .navbar-menu .navbar-nav .nav-item:hover>a.menu-link {
+            width: auto;
+            background: none;
+        }
+        [data-layout=vertical][data-sidebar-size=sm] .navbar-menu .navbar-nav .nav-item:hover>a.menu-link span,
+        [data-layout=vertical][data-sidebar-size=sm] .navbar-menu .navbar-nav .nav-item:hover .nav-link span {
+            display: none;
+        }
+    </style>
     {% block css %}
     {% endblock %}
 </head>
@@ -27,6 +47,15 @@
             <div class="layout-width">
                 <div class="navbar-header">
                     <div class="d-flex">
+                        <button type="button"
+                            class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger material-shadow-none"
+                            id="topnav-hamburger-icon">
+                            <span class="hamburger-icon">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </span>
+                        </button>
                     </div>
                     <div class="d-flex align-items-center">
                         <div class="ms-1 header-item d-none d-sm-flex">
@@ -77,8 +106,9 @@
             <!-- LOGO -->
             <div class="navbar-brand-box">
                 <!-- Light Logo-->
-                <a href="{% url 'dashboard:dashboard' %}" class="logo logo-light text-white fs-22 fw-bold">
-                    TOP GRADE
+                <a href="{% url 'dashboard:dashboard' %}" class="logo logo-light text-white fw-bold">
+                    <span class="logo-sm fs-18">TG</span>
+                    <span class="logo-lg fs-22">TOP GRADE</span>
                 </a>
                 <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
                     id="vertical-hover">
@@ -121,7 +151,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:dashboard' %}active{% endif %}" href="{% url 'dashboard:dashboard' %}" role="button">
-                                <i class="ri-dashboard-2-line"></i> Dashboard</span>
+                                <i class="ri-dashboard-2-line"></i><span>Dashboard</span>
                             </a>
                         </li>
 
@@ -129,62 +159,62 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:programs' or request.resolver_match.view_name == 'dashboard:program_details' %}active{% endif %}" href="{% url 'dashboard:programs' %}" role="button">
-                                <i class="ri-book-open-line"></i> Programs
+                                <i class="ri-book-open-line"></i><span>Programs</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:students' or request.resolver_match.view_name == 'dashboard:student_details' %}active{% endif %}" href="{% url 'dashboard:students' %}" role="button">
-                                <i class="ri-user-line"></i> Students
+                                <i class="ri-user-line"></i><span>Students</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:assign_programs' %}active{% endif %}" href="{% url 'dashboard:assign_programs' %}" role="button">
-                                <i class="ri-user-add-line"></i> Assign Programs
+                                <i class="ri-user-add-line"></i><span>Assign Programs</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:student_certificates' %}active{% endif %}" href="{% url 'dashboard:student_certificates' %}" role="button">
-                                <i class="ri-award-line"></i> Student Certificates
+                                <i class="ri-award-line"></i><span>Student Certificates</span>
                             </a>
                         </li>
                         {% comment %} <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:chat' %}active{% endif %}" href="{% url 'dashboard:chat' %}" role="button">
-                                <i class="ri-chat-3-line"></i> Chat
+                                <i class="ri-chat-3-line"></i><span>Chat</span>
                             </a>
                         </li> {% endcomment %}
                         <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:carousel' %}active{% endif %}" href="{% url 'dashboard:carousel' %}" role="button">
-                                <i class="ri-image-line"></i> Carousel
+                                <i class="ri-image-line"></i><span>Carousel</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:gallery' %}active{% endif %}" href="{% url 'dashboard:gallery' %}" role="button">
-                                <i class="ri-gallery-line"></i> Gallery
+                                <i class="ri-gallery-line"></i><span>Gallery</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:testimonials' %}active{% endif %}" href="{% url 'dashboard:testimonials' %}" role="button">
-                                <i class="ri-chat-quote-line"></i> Testimonials
+                                <i class="ri-chat-quote-line"></i><span>Testimonials</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:certificates' %}active{% endif %}" href="{% url 'dashboard:certificates' %}" role="button">
-                                <i class="ri-award-line"></i>Sample Certificates
+                                <i class="ri-award-line"></i><span>Sample Certificates</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:program_enquiries' %}active{% endif %}" href="{% url 'dashboard:program_enquiries' %}" role="button">
-                                <i class="ri-question-answer-line"></i> Program Enquiries
+                                <i class="ri-question-answer-line"></i><span>Program Enquiries</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:contact' %}active{% endif %}" href="{% url 'dashboard:contact' %}" role="button">
-                                <i class="ri-mail-line"></i> Contact
+                                <i class="ri-mail-line"></i><span>Contact</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link menu-link {% if request.resolver_match.view_name == 'dashboard:notifications' or request.resolver_match.view_name == 'dashboard:notification_details' or request.resolver_match.view_name == 'dashboard:fcm_tokens' %}active{% endif %}" href="{% url 'dashboard:notifications' %}" role="button">
-                                <i class="ri-notification-3-line"></i> Notifications
+                                <i class="ri-notification-3-line"></i><span>Notifications</span>
                             </a>
                         </li>
                     </ul>
@@ -213,6 +243,11 @@
 
     <!-- JAVASCRIPT -->
     <script src="{% static 'assets/dashboard/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        // Modals close only via Cancel / close button, not outside click or Esc
+        bootstrap.Modal.Default.backdrop = 'static';
+        bootstrap.Modal.Default.keyboard = false;
+    </script>
     <script src="{% static 'assets/dashboard/libs/simplebar/simplebar.min.js' %}"></script>
     <script src="{% static 'assets/dashboard/libs/node-waves/waves.min.js' %}"></script>
     <script src="{% static 'assets/dashboard/libs/feather-icons/feather.min.js' %}"></script>

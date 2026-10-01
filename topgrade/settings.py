@@ -213,6 +213,7 @@ REST_FRAMEWORK = {
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
     "https://topgradeinnovation.com",
     "https://www.topgradeinnovation.com",
     "https://learning.topgradeinnovation.com",
@@ -224,6 +225,7 @@ CORS_ALLOW_ALL_ORIGINS = False
 
 # CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
     "https://topgradeinnovation.com",
     "https://www.topgradeinnovation.com",
     "https://learning.topgradeinnovation.com",
