@@ -114,11 +114,11 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Student</th>
-                                <th class="d-none d-md-table-cell">Email</th>
+                                <th>Email</th>
                                 <th>Status</th>
                                 <th>Read</th>
-                                <th class="d-none d-lg-table-cell">Device</th>
-                                <th class="d-none d-lg-table-cell">Sent At</th>
+                                <th>Device</th>
+                                <th>Sent At</th>
                                 <th>Error</th>
                             </tr>
                         </thead>
@@ -137,7 +137,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="d-none d-md-table-cell">{{ log.user.email }}</td>
+                                <td>{{ log.user.email }}</td>
                                 <td>
                                     {% if log.status == 'success' %}
                                         <span class="badge bg-success">Success</span>
@@ -154,7 +154,7 @@
                                         <span class="badge bg-secondary">Unread</span>
                                     {% endif %}
                                 </td>
-                                <td class="d-none d-lg-table-cell">
+                                <td>
                                     {% if log.fcm_token %}
                                         <span class="badge bg-light text-dark">
                                             {{ log.fcm_token.get_device_type_display }}
@@ -163,7 +163,7 @@
                                         <span class="text-muted">N/A</span>
                                     {% endif %}
                                 </td>
-                                <td class="d-none d-lg-table-cell">
+                                <td>
                                     <small>{{ log.sent_at|date:"M d, Y H:i" }}</small>
                                 </td>
                                 <td>

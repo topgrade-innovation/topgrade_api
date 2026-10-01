@@ -80,9 +80,9 @@
                             <tr>
                                 <th scope="col" style="width: 180px;">Contact Info</th>
                                 <th scope="col" style="width: 130px;">Contact Number</th>
-                                <th scope="col" class="d-none d-lg-table-cell" style="width: 150px;">Subject</th>
-                                <th scope="col" class="d-none d-md-table-cell" style="width: 250px;">Message</th>
-                                <th scope="col" class="d-none d-xl-table-cell" style="width: 120px;">Submitted</th>
+                                <th scope="col" style="width: 150px;">Subject</th>
+                                <th scope="col" style="width: 250px;">Message</th>
+                                <th scope="col" style="width: 120px;">Submitted</th>
                                 <th scope="col" style="width: 100px;">Actions</th>
                             </tr>
                         </thead>
@@ -110,12 +110,12 @@
                                     </span>
                                     {% endif %}
                                 </td>
-                                <td class="d-none d-lg-table-cell" style="width: 150px; max-width: 150px; word-wrap: break-word; white-space: normal;">
+                                <td style="width: 150px; max-width: 150px; word-wrap: break-word; white-space: normal;">
                                     <span class="fw-medium" style="word-break: break-word;">
                                         {{ contact.subject }}
                                     </span>
                                 </td>
-                                <td class="d-none d-md-table-cell" style="width: 250px; max-width: 250px; word-wrap: break-word; white-space: normal;">
+                                <td style="width: 250px; max-width: 250px; word-wrap: break-word; white-space: normal;">
                                     <div class="message-preview" style="word-break: break-word;">
                                         {% if contact.message|length > 100 %}
                                             <span class="message-short">{{ contact.message|slice:":100" }}...</span>
@@ -128,7 +128,7 @@
                                         {% endif %}
                                     </div>
                                 </td>
-                                <td class="d-none d-xl-table-cell" style="width: 120px; max-width: 120px; word-wrap: break-word; white-space: normal;">
+                                <td style="width: 120px; max-width: 120px; word-wrap: break-word; white-space: normal;">
                                     <div class="d-flex flex-column">
                                         <span class="fw-medium" style="word-break: break-word;">{{ contact.created_at|date:"M d, Y" }}</span>
                                         <span class="text-muted small">{{ contact.created_at|date:"g:i A" }}</span>

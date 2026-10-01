@@ -254,11 +254,11 @@
                 <tr>
                   <th scope="col">Student</th>
                   <th scope="col">Program</th>
-                  <th scope="col" class="d-none d-lg-table-cell">Assigned Date</th>
+                  <th scope="col">Assigned Date</th>
                   <th scope="col">Status</th>
                   <th scope="col">Completion</th>
-                  <th scope="col" class="d-none d-xl-table-cell">Amount Paid</th>
-                  <th scope="col" class="d-none d-md-table-cell">Type</th>
+                  <th scope="col">Amount Paid</th>
+                  <th scope="col">Type</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
@@ -282,7 +282,7 @@
                         <small class="text-muted">{{ assignment.program.category.name }}</small>
                       </div>
                     </td>
-                    <td class="d-none d-lg-table-cell">{{ assignment.purchase_date|date:'M d, Y' }}</td>
+                    <td>{{ assignment.purchase_date|date:'M d, Y' }}</td>
                     <td>
                       {% if assignment.status == 'completed' %}
                         <span class="badge bg-success-subtle text-success">Active</span>
@@ -302,14 +302,14 @@
                         <span class="badge bg-info-subtle text-info"><i class="ri-loader-2-line align-middle"></i> In Progress</span>
                       {% endif %}
                     </td>
-                    <td class="d-none d-xl-table-cell">
+                    <td>
                       {% if assignment.amount_paid == 0 %}
                         <span class="text-success fw-medium">Admin Assigned</span>
                       {% else %}
                         &#8377;{{ assignment.amount_paid }}
                       {% endif %}
                     </td>
-                    <td class="d-none d-md-table-cell">
+                    <td>
                       {% if assignment.require_goldpass %}
                         <span class="badge bg-warning-subtle text-warning"><i class="bx bx-star"></i> GoldPass</span>
                       {% else %}

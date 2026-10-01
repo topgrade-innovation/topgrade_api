@@ -59,10 +59,10 @@
                 <tr>
                   <th scope="col">Avatar</th>
                   <th scope="col">Name</th>
-                  <th scope="col" class="d-none d-md-table-cell">Field of Study</th>
-                  <th scope="col" class="d-none d-lg-table-cell">Title</th>
+                  <th scope="col">Field of Study</th>
+                  <th scope="col">Title</th>
                   <th scope="col">Status</th>
-                  <th scope="col" class="d-none d-xl-table-cell">Created</th>
+                  <th scope="col">Created</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
@@ -79,8 +79,8 @@
                       {% endif %}
                     </td>
                     <td>{{ testimonial.name }}</td>
-                    <td class="d-none d-md-table-cell">{{ testimonial.field_of_study }}</td>
-                    <td class="d-none d-lg-table-cell">{{ testimonial.title|truncatechars:30 }}</td>
+                    <td>{{ testimonial.field_of_study }}</td>
+                    <td>{{ testimonial.title|truncatechars:30 }}</td>
                     <td>
                       <form method="post" action="{% url 'dashboard:toggle_testimonial_status' testimonial.id %}" class="d-inline">
                         {% csrf_token %}
@@ -91,7 +91,7 @@
                         {% endif %}
                       </form>
                     </td>
-                    <td class="d-none d-xl-table-cell">{{ testimonial.created_at|date:'M d, Y' }}</td>
+                    <td>{{ testimonial.created_at|date:'M d, Y' }}</td>
                     <td>
                       <div class="d-flex gap-2">
                         <button type="button" class="btn btn-sm btn-soft-primary edit-testimonial-btn" 

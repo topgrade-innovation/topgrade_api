@@ -59,7 +59,7 @@
                 <tr>
                   <th scope="col">Preview</th>
                   <th scope="col">Program</th>
-                  <th scope="col" class="d-none d-md-table-cell">Uploaded</th>
+                  <th scope="col">Uploaded</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
@@ -79,7 +79,7 @@
                         {% endif %}
                       </div>
                     </td>
-                    <td class="d-none d-md-table-cell">{{ certificate.created_at|date:'M d, Y' }}</td>
+                    <td>{{ certificate.created_at|date:'M d, Y' }}</td>
                     <td>
                       <div class="d-flex gap-2">
                         <button type="button" class="btn btn-sm btn-soft-info" data-bs-toggle="modal" data-bs-target="#viewCertificateModal" data-image-url="{{ certificate.certificate_image.url }}" data-program-title="{{ certificate.program.title }}"><i class="ri-eye-line"></i></button>

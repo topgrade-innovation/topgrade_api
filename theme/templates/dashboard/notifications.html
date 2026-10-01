@@ -242,11 +242,11 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Title</th>
-                                <th class="d-none d-md-table-cell d-xl-none d-xxl-table-cell">Type</th>
-                                <th class="d-none d-md-table-cell d-xl-none d-xxl-table-cell">Recipients</th>
+                                <th>Type</th>
+                                <th>Recipients</th>
                                 <th>Status</th>
                                 <th>Sent</th>
-                                <th class="d-none d-lg-table-cell d-xl-none d-xxl-table-cell">Date</th>
+                                <th>Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -261,10 +261,10 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="d-none d-md-table-cell d-xl-none d-xxl-table-cell">
+                                <td>
                                     <span class="badge bg-light text-dark">{{ notification.get_notification_type_display }}</span>
                                 </td>
-                                <td class="d-none d-md-table-cell d-xl-none d-xxl-table-cell">{{ notification.total_recipients }}</td>
+                                <td>{{ notification.total_recipients }}</td>
                                 <td>
                                     {% if notification.status == 'sent' %}
                                         <span class="badge bg-success">Sent</span>
@@ -278,7 +278,7 @@
                                     <span class="text-success">{{ notification.sent_count }}</span> / 
                                     <span class="text-danger">{{ notification.failed_count }}</span>
                                 </td>
-                                <td class="d-none d-lg-table-cell d-xl-none d-xxl-table-cell">
+                                <td>
                                     <small>{{ notification.created_at|date:"M d, Y H:i" }}</small>
                                 </td>
                                 <td>

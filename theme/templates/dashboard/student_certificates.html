@@ -131,12 +131,12 @@
             <table class="table align-middle table-nowrap" id="certificateTable">
               <thead class="table-light">
                 <tr>
-                  <th class="d-none d-md-table-cell">S No.</th>
+                  <th>S No.</th>
                   <th data-sort="student_name">Student</th>
                   <th data-sort="program">Program</th>
-                  <th data-sort="completion_date" class="d-none d-lg-table-cell">Completed Date</th>
+                  <th data-sort="completion_date">Completed Date</th>
                   <th data-sort="certificate_status">Certificate Status</th>
-                  <th data-sort="certificate_number" class="d-none d-xl-table-cell">Certificate Number</th>
+                  <th data-sort="certificate_number">Certificate Number</th>
                   <th data-sort="internship">Internship</th>
                   <th data-sort="training">Training</th>
                   <th data-sort="credit">Credit</th>
@@ -148,7 +148,7 @@
               <tbody class="list form-check-all">
                 {% for item in completed_courses %}
                   <tr>
-                    <td class="d-none d-md-table-cell">{{ forloop.counter }}</td>
+                    <td>{{ forloop.counter }}</td>
                     <td class="student_name">
                       <div class="d-flex align-items-center">
                         <div class="flex-shrink-0 me-2">
@@ -170,7 +170,7 @@
                         <p class="text-muted mb-0 fs-11">{{ item.course_progress.purchase.program.category.name }}</p>
                       </div>
                     </td>
-                    <td class="completion_date d-none d-lg-table-cell">
+                    <td class="completion_date">
                       {% if item.course_progress.completed_at %}
                         {{ item.course_progress.completed_at|date:'d/m/Y' }}
                       {% else %}
@@ -192,7 +192,7 @@
                         </span>
                       {% endif %}
                     </td>
-                    <td class="certificate_number d-none d-xl-table-cell">
+                    <td class="certificate_number">
                       {% if item.certificate_number %}
                         <span class="badge bg-primary">{{ item.certificate_number }}</span>
                       {% else %}

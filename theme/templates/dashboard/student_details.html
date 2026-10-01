@@ -203,8 +203,8 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>Program</th>
-                                        <th class="d-none d-md-table-cell">Category</th>
-                                        <th class="d-none d-lg-table-cell">Enrolled Date</th>
+                                        <th>Category</th>
+                                        <th>Enrolled Date</th>
                                         <th>Status</th>
                                         <th>Amount Paid</th>
                                     </tr>
@@ -225,8 +225,8 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="d-none d-md-table-cell">{{ enrollment.program.category.name }}</td>
-                                        <td class="d-none d-lg-table-cell">{{ enrollment.purchase_date|date:"M d, Y" }}</td>
+                                        <td>{{ enrollment.program.category.name }}</td>
+                                        <td>{{ enrollment.purchase_date|date:"M d, Y" }}</td>
                                         <td>
                                             {% if enrollment.status == 'completed' %}
                                                 <span class="badge bg-success-subtle text-success">Active</span>

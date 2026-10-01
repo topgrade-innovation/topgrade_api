@@ -183,9 +183,9 @@
                     <th>S No.</th>
                     <th data-sort="customer_name">Student</th>
                     <th data-sort="email">Email</th>
-                    <th data-sort="phone" class="d-none d-md-table-cell">Phone</th>
-                    <th data-sort="date" class="d-none d-xl-table-cell">Joined Date</th>
-                    <th data-sort="interest" class="d-none d-lg-table-cell">Interest Area</th>
+                    <th data-sort="phone">Phone</th>
+                    <th data-sort="date">Joined Date</th>
+                    <th data-sort="interest">Interest Area</th>
                     <th data-sort="status">Status</th>
                     <th data-sort="action">Action</th>
                   </tr>
@@ -205,9 +205,9 @@
                         </div>
                       </td>
                       <td class="email">{{ student.email }}</td>
-                      <td class="phone d-none d-md-table-cell">{{ student.phone_number|default:'N/A' }}</td>
-                      <td class="date d-none d-xl-table-cell">{{ student.date_joined|date:'d/m/Y' }}</td>
-                      <td class="interest d-none d-lg-table-cell">
+                      <td class="phone">{{ student.phone_number|default:'N/A' }}</td>
+                      <td class="date">{{ student.date_joined|date:'d/m/Y' }}</td>
+                      <td class="interest">
                         {% if student.area_of_intrest %}
                           <span class="badge bg-primary">{{ student.area_of_intrest|title|truncatechars:13 }}</span>
                         {% else %}
