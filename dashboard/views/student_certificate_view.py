@@ -104,9 +104,9 @@ def generate_certificate_ajax(request):
                 certificate.status = 'pending'
                 certificate.sent_date = None
 
-            # Save the PDF file
+            # Save the PDF file (timestamp in name gives a new URL each time, so cached old PDFs aren't served)
             certificate.certificate_file.save(
-                f"{cert_type}_certificate_{base_certificate_number}.pdf",
+                f"{cert_type}_certificate_{base_certificate_number}_{timezone.now():%Y%m%d%H%M%S}.pdf",
                 pdf_file,
                 save=True
             )

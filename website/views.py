@@ -448,8 +448,12 @@ def verify_certificate(request):
             program_name = f"{first_cert.program.title} - {first_cert.program.subtitle}"
             program_description = first_cert.program.description or f"Course in {first_cert.program.category.name}"
             program_duration = first_cert.program.duration  # Get duration from program model
-            issue_date = first_cert.issued_date.strftime('%B %d, %Y')
-            completion_date = first_cert.course_progress.completed_at.strftime('%B %d, %Y') if first_cert.course_progress.completed_at else 'N/A'
+            # Issued date matches the completion date printed on the certificate (admin can edit it)
+            from django.utils import timezone
+            completed_at = first_cert.course_progress.completed_at
+            cert_date = timezone.localtime(completed_at or first_cert.issued_date).strftime('%B %d, %Y')
+            issue_date = cert_date
+            completion_date = cert_date if completed_at else 'N/A'
             
             # Determine certificate package type first
             has_placement = any(cert.certificate_type == 'placement' for cert in certificates)
@@ -463,7 +467,7 @@ def verify_certificate(request):
                     'type_code': cert.certificate_type,
                     'file_url': cert.certificate_file.url if cert.certificate_file else None,
                     'status': cert.get_status_display(),
-                    'issued_date': cert.issued_date.strftime('%B %d, %Y'),
+                    'issued_date': cert_date,
                     'has_file': bool(cert.certificate_file),
                 }
                 certificate_types.append(cert_info)
